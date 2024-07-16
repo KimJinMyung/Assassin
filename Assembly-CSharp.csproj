@@ -61,15 +61,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Data\Monster\MonsterDataExtension.cs" />
+    <Compile Include="Assets\Scripts\BT\SelectorNode.cs" />
     <Compile Include="Assets\Scripts\Player\Extension\PlayerViewModelExtension.cs" />
     <Compile Include="Assets\Scripts\Data\Player\PlayerData.cs" />
     <Compile Include="Assets\Scripts\Data\Player\PlayerDataMappingExtension.cs" />
     <Compile Include="Assets\Scripts\LogicManager\LogicManager.cs" />
+    <Compile Include="Assets\Scripts\BT\IBTNode.cs" />
+    <Compile Include="Assets\Scripts\BT\ActionNode.cs" />
     <Compile Include="Assets\Scripts\Monster\MonsterView.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerView.cs" />
     <Compile Include="Assets\Scripts\Data\Manager\DataManager.cs" />
     <Compile Include="Assets\Scripts\Data\Monster\MonsterData.cs" />
     <Compile Include="Assets\Scripts\Player\ViewModel\PlayerViewModel.cs" />
+    <Compile Include="Assets\Scripts\BT\SequenceNode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Monster_data.xml" />
@@ -926,6 +930,10 @@
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="com.unity.cinemachine.editor">
+      <HintPath>Library\ScriptAssemblies\com.unity.cinemachine.editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Performance.Profile-Analyzer.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Performance.Profile-Analyzer.Editor.dll</HintPath>
       <Private>False</Private>
@@ -988,6 +996,10 @@
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cinemachine">
+      <HintPath>Library\ScriptAssemblies\Cinemachine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.Flow">
