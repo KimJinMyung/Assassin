@@ -25,11 +25,11 @@ public class DataManager : MonoBehaviour
 
     void LoadFile()
     {
-        textAssetDic.Add(MonsterFileType.Monster_Info, Resources.Load(nameof(MonsterData)) as TextAsset);
-        textAssetDic.Add(MonsterFileType.Monster_Attack, Resources.Load(nameof(Monster_Attack)) as TextAsset);
+        textAssetDic.Add(MonsterFileType.Monster_Info, Resources.Load("Monster_data") as TextAsset);
+        textAssetDic.Add(MonsterFileType.Monster_Attack, Resources.Load("Monster_Attack") as TextAsset);
 
 
-        playerTextAsset = Resources.Load(nameof(PlayerData)) as TextAsset;
+        playerTextAsset = Resources.Load("Player_data") as TextAsset;
     }
 
     private void ReadDataOnAwake()

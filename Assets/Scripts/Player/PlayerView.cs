@@ -19,6 +19,12 @@ public class PlayerView : MonoBehaviour
         }
 
         SetPlayerInfo();
+
+        Debug.Log(platerData.HP);
+        Debug.Log(platerData.Stamina);
+        Debug.Log("=====================");
+        Debug.Log(vm.HP);
+        Debug.Log(vm.Stamina);
     }
 
     private void OnDisable()
