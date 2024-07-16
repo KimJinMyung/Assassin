@@ -60,10 +60,15 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.35f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Data\PlayerData.cs" />
+    <Compile Include="Assets\Scripts\Data\Player\PlayerData.cs" />
+    <Compile Include="Assets\Scripts\Data\Manager\DataManager.cs" />
+    <Compile Include="Assets\Scripts\Data\Monster\MonsterData.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Resources\Monster_data.xml" />
+    <None Include="Assets\Resources\Player_data.xml" />
     <None Include="Assets\PolygonSamurai\Scenes\README.txt" />
+    <None Include="Assets\Resources\Monster_Attack.xml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

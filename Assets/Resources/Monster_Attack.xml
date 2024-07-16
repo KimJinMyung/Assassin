@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<MonsterAttack>
+  <dataCategory>
+    <data DataName="SwordAttack" AttackType="Short" AttackRange="2.5" AttackSpeed="5" />
+    <data DataName="SpearAttack" AttackType="Short" AttackRange="2.8" AttackSpeed="5" />
+    <data DataName="ShurikenAttack" AttackType="Long" AttackRange="8" AttackSpeed="6" />
+    <data DataName="DaggerAttack" AttackType="Short" AttackRange="2.5" AttackSpeed="3" />
+    <data DataName="GreateSwordAttack" AttackType="Short" AttackRange="5" AttackSpeed="4" />
+  </dataCategory>
+</MonsterAttack>
