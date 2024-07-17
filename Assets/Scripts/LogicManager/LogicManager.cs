@@ -45,4 +45,46 @@ public class LogicManager : MonoBehaviour
         _playerStaminaChangedCallback.Invoke(playerHP);
     }
     #endregion
+    #region Move
+    private Action<float, float> _moveVelocityChangedCallback;
+
+    public void RegisterMoveVelocityChangedCallback(Action<float, float> moveVelocityChangedCallback, bool isRegister)
+    {
+        if (isRegister)
+        {
+            _moveVelocityChangedCallback += moveVelocityChangedCallback;
+        }
+        else
+        {
+            _moveVelocityChangedCallback -= moveVelocityChangedCallback;
+        }
+    }
+
+    public void OnMoveInput(float x, float y)
+    {
+        if (_moveVelocityChangedCallback == null) return;
+        _moveVelocityChangedCallback.Invoke(x, y);
+    }
+    #endregion
+    #region Rotate
+    private Action<float, float, float> _targetAngleChangedCallback;
+
+    public void RegisterActorRotateChangedCallback(Action<float, float, float> targetAngleChangedCallback, bool isRegister)
+    {
+        if (isRegister)
+        {
+            _targetAngleChangedCallback += targetAngleChangedCallback;
+        }
+        else
+        {
+            _targetAngleChangedCallback -= targetAngleChangedCallback;
+        }
+    }
+
+    public void OnActorRotate(float x, float y, float z)
+    {
+        if (_targetAngleChangedCallback == null) return;
+        _targetAngleChangedCallback.Invoke(x, y, z);
+    }
+    #endregion
 }

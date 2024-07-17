@@ -50,6 +50,14 @@ public class PlayerView : MonoBehaviour
 
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-
+        switch (e.PropertyName)
+        {
+            case nameof(vm.HP):
+                //眉仿 UI客 楷包
+                break;
+            case nameof(vm.Stamina):
+                //stamina UI客 楷包
+                break;
+        }
     }
 }

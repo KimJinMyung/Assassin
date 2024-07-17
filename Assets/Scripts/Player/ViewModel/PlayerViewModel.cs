@@ -18,7 +18,7 @@ public class PlayerViewModel : MonoBehaviour
         }
     }
 
-    public float _stamina;
+    private float _stamina;
     public float Stamina
     {
         get { return _stamina; }
@@ -30,6 +30,27 @@ public class PlayerViewModel : MonoBehaviour
         }
     }
 
+    private Vector2 _movement;
+    public Vector2 Movement
+    {
+        get { return _movement; }
+        set
+        {
+            if(_movement == value) return;
+            _movement = value;
+            OnPropertyChanged(nameof(Movement));
+        }
+    }
+    private Quaternion _rotation;
+    public Quaternion Rotation
+    {
+        get { return _rotation; }
+        set
+        {
+            _rotation = value;
+            OnPropertyChanged(nameof(Rotation));
+        }
+    }
     #region propertyEvent
     public event PropertyChangedEventHandler PropertyChanged;
 
