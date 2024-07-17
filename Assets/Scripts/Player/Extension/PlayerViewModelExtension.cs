@@ -38,29 +38,29 @@ public static class PlayerViewModelExtension
     {
         LogicManager.instance.RegisterMoveVelocityChangedCallback(vm.OnResponseMoveVelocityChangedEvent, isRegister);
     }
-    public static void RequestMoveOnInput(this PlayerViewModel input, float x, float y)
+    public static void RequestMoveOnInput(this PlayerViewModel vm, float x, float y)
     {
         LogicManager.instance.OnMoveInput(x, y);
     }
 
-    public static void OnResponseMoveVelocityChangedEvent(this PlayerViewModel input, float contextValueX, float contextValueY)
+    public static void OnResponseMoveVelocityChangedEvent(this PlayerViewModel vm, float contextValueX, float contextValueY)
     {
-        input.Movement = new Vector2(contextValueX, contextValueY);
+        vm.Movement = new Vector2(contextValueX, contextValueY);
     }
     #endregion
     #region Rotate
-    public static void RegisterActorRotate(this PlayerViewModel input, bool isRegister)
+    public static void RegisterActorRotate(this PlayerViewModel vm, bool isRegister)
     {
-        LogicManager.instance.RegisterActorRotateChangedCallback(input.OnResponseActorRotateChangedEvent, isRegister);
+        LogicManager.instance.RegisterActorRotateChangedCallback(vm.OnResponseActorRotateChangedEvent, isRegister);
     }
-    public static void RequestActorRotate(this PlayerViewModel input, float x, float y, float z)
+    public static void RequestActorRotate(this PlayerViewModel vm, float x, float y, float z)
     {
         LogicManager.instance.OnActorRotate(x, y, z);
     }
 
-    public static void OnResponseActorRotateChangedEvent(this PlayerViewModel input, float contextValueX, float contextValueY, float contextValueZ)
+    public static void OnResponseActorRotateChangedEvent(this PlayerViewModel vm, float contextValueX, float contextValueY, float contextValueZ)
     {
-        input.Rotation = Quaternion.Euler(new Vector3(contextValueX, contextValueY, contextValueZ));
+        vm.Rotation = Quaternion.Euler(new Vector3(contextValueX, contextValueY, contextValueZ));
     }
     #endregion
 }

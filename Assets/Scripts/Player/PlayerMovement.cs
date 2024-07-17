@@ -14,6 +14,8 @@ public class PlayerMovement : MonoBehaviour
 
     private PlayerViewModel vm;
 
+    private Quaternion mouseRotation;
+
     private void OnEnable()
     {
         if (vm == null)
@@ -23,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
             vm.RegisterActorRotate(true);
             vm.RegisterMoveVelocity(true);
         }
+
+        InitCameraRotation();
     }
     private void OnDisable()
     {
@@ -40,12 +44,24 @@ public class PlayerMovement : MonoBehaviour
         CameraRotation_Move();
     }
 
+    private void InitCameraRotation()
+    {
+        x_Axis.Value = 0;
+        y_Axis.Value = 0;
+
+        Vector3 initEulerAngle = _lookAt.rotation.eulerAngles;
+        x_Axis.Value = initEulerAngle.y;
+        y_Axis.Value = initEulerAngle.x;
+
+        mouseRotation = _lookAt.rotation;
+    }
+
     private void CameraRotation_Move()
     {
         x_Axis.Update(Time.fixedDeltaTime);
         y_Axis.Update(Time.fixedDeltaTime);
 
-        Quaternion mouseRotation = Quaternion.Euler(y_Axis.Value, x_Axis.Value, 0f);
+        mouseRotation = Quaternion.Euler(y_Axis.Value, x_Axis.Value, 0f);
         _lookAt.rotation = Quaternion.Lerp(_lookAt.rotation, mouseRotation, 1f);
     }
 

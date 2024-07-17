@@ -47,6 +47,7 @@ public class PlayerViewModel : MonoBehaviour
         get { return _rotation; }
         set
         {
+            if (_rotation == value) return;
             _rotation = value;
             OnPropertyChanged(nameof(Rotation));
         }
