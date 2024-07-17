@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 
-public class PlayerViewModel : MonoBehaviour
+public class PlayerViewModel
 {
     private float _hp;
     public float HP

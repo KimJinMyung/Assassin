@@ -63,11 +63,11 @@
     <Compile Include="Assets\Scripts\Data\Monster\MonsterDataExtension.cs" />
     <Compile Include="Assets\Scripts\BT\SelectorNode.cs" />
     <Compile Include="Assets\Scripts\Player\Extension\PlayerViewModelExtension.cs" />
-    <Compile Include="Assets\ScriptsManager.cs" />
     <Compile Include="Assets\Scripts\Data\Player\PlayerData.cs" />
     <Compile Include="Assets\Scripts\Data\Player\PlayerDataMappingExtension.cs" />
     <Compile Include="Assets\Scripts\LogicManager\LogicManager.cs" />
     <Compile Include="Assets\Scripts\BT\IBTNode.cs" />
+    <Compile Include="Assets\Scripts\ScriptsManager.cs" />
     <Compile Include="Assets\Scripts\BT\ActionNode.cs" />
     <Compile Include="Assets\Scripts\Monster\MonsterView.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerView.cs" />

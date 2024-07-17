@@ -6,7 +6,7 @@ using static UnityEditor.Profiling.HierarchyFrameDataView;
 
 public class PlayerView : MonoBehaviour
 {
-    private PlayerData platerData;
+    public PlayerData platerData {  get; private set; }
     private PlayerViewModel vm;
     private void OnEnable()
     {
