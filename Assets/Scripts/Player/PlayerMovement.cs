@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
 
     private PlayerView owner;
     private PlayerViewModel vm;
+    private Animator animator;
 
     private CharacterController playerController;
 
@@ -28,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
     {
         owner = GetComponent<PlayerView>();
         playerController = GetComponent<CharacterController>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     private void OnEnable()
@@ -60,14 +62,15 @@ public class PlayerMovement : MonoBehaviour
         Movement();
     }
 
+    private void FixedUpdate()
+    {
+        MeshRotation();
+    }
+
     private void InitCameraRotation()
     {
         x_Axis.Value = 0;
-        y_Axis.Value = 0;
-
-        Vector3 initEulerAngle = _lookAt.rotation.eulerAngles;
-        x_Axis.Value = initEulerAngle.y;
-        y_Axis.Value = initEulerAngle.x;
+        y_Axis.Value = 0.5f;
 
         mouseRotation = _lookAt.rotation;
     }
@@ -98,6 +101,38 @@ public class PlayerMovement : MonoBehaviour
             Vector3 dir = Quaternion.Euler(0, MoveAngle, 0) * Vector3.forward;
 
             playerController.Move(dir.normalized * MoveSpeed * Time.deltaTime);
+        }
+
+        PlayerMeshAnimation();
+    }
+
+    private void MeshRotation()
+    {
+        if(vm.Movement.magnitude >= 0.1f)
+        {
+            Quaternion cameraDir = Quaternion.Euler(0, MoveAngle, 0);
+            Quaternion targetRotate = Quaternion.Lerp(transform.rotation, cameraDir, 100f * Time.fixedDeltaTime);
+            vm.RequestActorRotate(targetRotate.x, targetRotate.y, targetRotate.z);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotate, 10f * Time.fixedDeltaTime);
+        }
+    }
+
+    private void PlayerMeshAnimation()
+    {
+        if (!animator.GetBool("LockOn"))
+        {
+            //float angleValue = Vector3.Dot(owner.transform.forward, owner._moveDir.normalized * 0.3f);
+
+            float MoveValue = Mathf.Abs(vm.Movement.y) < 0.1f && Mathf.Abs(vm.Movement.x) < 0.1f ? 0f : isRun ? 3f : 1f;
+
+            animator.SetFloat("z", Mathf.Lerp(animator.GetFloat("z"), MoveValue, 10f * Time.deltaTime));
+        }
+        else
+        {
+            float MoveValue = Mathf.Abs(vm.Movement.y) < 0.1f && Mathf.Abs(vm.Movement.x) < 0.1f ? 0f : isRun ? 3f : 1f;
+
+            animator.SetFloat("z", Mathf.Lerp(animator.GetFloat("z"), vm.Movement.y * MoveValue, 10f * Time.deltaTime));
+            animator.SetFloat("x", Mathf.Lerp(animator.GetFloat("x"), vm.Movement.x * MoveValue, 10f * Time.deltaTime));
         }
     }
 
