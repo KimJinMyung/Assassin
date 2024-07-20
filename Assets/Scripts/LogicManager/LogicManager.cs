@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class LogicManager : MonoBehaviour
@@ -85,6 +86,80 @@ public class LogicManager : MonoBehaviour
     {
         if (_targetAngleChangedCallback == null) return;
         _targetAngleChangedCallback.Invoke(x, y, z);
+    }
+    #endregion
+
+    #region MonsterHP
+    private Dictionary<int, Action<float>> _monsterHP = new Dictionary<int, Action<float>>();
+
+    public void RegisterMonsterHPChangedCallback(int monsterId, Action<float> monsterHP, bool isRegister)
+    {
+        if(isRegister)
+        {
+            if(!_monsterHP.ContainsKey(monsterId)) _monsterHP.Add(monsterId, monsterHP);
+            else _monsterHP[monsterId] = monsterHP;
+        }else
+        {
+            if(_monsterHP.ContainsKey(monsterId))
+            {
+                _monsterHP[monsterId] -= monsterHP;
+                if (_monsterHP[monsterId] == null) _monsterHP.Remove(monsterId);
+            }
+
+        }
+    }
+    public void OnMonsterHPChanged(int monsterId, float HP)
+    {
+        if (_monsterHP.ContainsKey(monsterId)) _monsterHP[monsterId]?.Invoke(HP);
+    }
+    #endregion
+    #region MonsterStamina
+    private Dictionary<int, Action<float>> _monsterStamina = new Dictionary<int, Action<float>>();
+
+    public void RegisterMonsterStaminaChangedCallback(int monsterId, Action<float> monsterHP, bool isRegister)
+    {
+        if (isRegister)
+        {
+            if (!_monsterStamina.ContainsKey(monsterId)) _monsterStamina.Add(monsterId, monsterHP);
+            else _monsterStamina[monsterId] = monsterHP;
+        }
+        else
+        {
+            if (_monsterStamina.ContainsKey(monsterId))
+            {
+                _monsterStamina[monsterId] -= monsterHP;
+                if (_monsterStamina[monsterId] == null) _monsterStamina.Remove(monsterId);
+            }
+
+        }
+    }
+    public void OnMonsterStaminaChanged(int monsterId, float HP)
+    {
+        if (_monsterStamina.ContainsKey(monsterId)) _monsterStamina[monsterId]?.Invoke(HP);
+    }
+    #endregion
+    #region MonsterAttackMethod
+    private Dictionary<int, Action<List<Monster_Attack>, MonsterView>> _monsterAttackMethodList = new Dictionary<int, Action<List<Monster_Attack>, MonsterView>>();
+
+    public void RegisterAttackMethodChangedCallback(int monsterId, Action<List<Monster_Attack>, MonsterView> AttackMethodChangedCallback, bool isRegister)
+    {
+        if (isRegister)
+        {
+            if (!_monsterAttackMethodList.ContainsKey(monsterId)) _monsterAttackMethodList.Add(monsterId, AttackMethodChangedCallback);
+            else _monsterAttackMethodList[monsterId] = AttackMethodChangedCallback;
+        }else
+        {
+            if (_monsterAttackMethodList.ContainsKey(monsterId))
+            {
+                _monsterAttackMethodList[monsterId] -= AttackMethodChangedCallback;
+                if (_monsterAttackMethodList[monsterId] == null) _monsterAttackMethodList.Remove(monsterId);
+            }
+        }
+    }
+
+    public void OnAttackMethodChanged(int actorId, List<Monster_Attack> attackList, MonsterView owner)
+    {
+        if (_monsterAttackMethodList.ContainsKey(actorId)) _monsterAttackMethodList[actorId]?.Invoke(attackList, owner);
     }
     #endregion
 }
