@@ -8,6 +8,7 @@ public class PlayerView : MonoBehaviour
 {
     public PlayerData platerData {  get; private set; }
     private PlayerViewModel vm;
+    public PlayerViewModel ViewModel { get {  return vm; } }
     private void OnEnable()
     {
         if(vm == null)

@@ -29,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
     {
         owner = GetComponent<PlayerView>();
         playerController = GetComponent<CharacterController>();
-        animator = GetComponentInChildren<Animator>();
+        animator = GetComponent<Animator>();
     }
 
     private void OnEnable()
@@ -93,6 +93,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Movement()
     {
+        if (!animator.GetBool("isMoveAble")) return;
         Vector3 moveDir = new Vector3(vm.Movement.x, 0, vm.Movement.y).normalized;
 
         if(moveDir.magnitude >= 0.1f)
@@ -108,7 +109,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void MeshRotation()
     {
-        if(vm.Movement.magnitude >= 0.1f)
+        if (!animator.GetBool("isMoveAble")) return;
+        if (vm.Movement.magnitude >= 0.1f)
         {
             Quaternion cameraDir = Quaternion.Euler(0, MoveAngle, 0);
             Quaternion targetRotate = Quaternion.Lerp(transform.rotation, cameraDir, 100f * Time.fixedDeltaTime);
