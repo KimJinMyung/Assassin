@@ -91,6 +91,11 @@ public class PlayerMovement : MonoBehaviour
         vm.RequestMoveOnInput(context.ReadValue<Vector2>().x, context.ReadValue<Vector2>().y);
     }
 
+    public void OnSprint(InputAction.CallbackContext context)
+    {
+        isRun = context.ReadValue<float>() > 0.5f;
+    }
+
     private void Movement()
     {
         if (!animator.GetBool("isMoveAble")) return;
