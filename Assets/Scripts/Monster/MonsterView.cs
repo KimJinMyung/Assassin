@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements.Experimental;
 
 public enum MonsterType
 {
@@ -53,6 +54,7 @@ public class MonsterView : MonoBehaviour
 
     public int monsterId { get; private set; }
 
+    private bool isHurt;
     private bool isDead;
 
     private void Awake()
@@ -184,7 +186,7 @@ public class MonsterView : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            isDead = true;
+            Hurt(50, transform);
         }
 
         Debug.Log(vm.CurrentAttackMethod.DataName);
@@ -201,17 +203,26 @@ public class MonsterView : MonoBehaviour
         DieNodeList.Add(new ActionNode(CompleteDieAnimation));
         var DieSeqNode = new SequenceNode(DieNodeList);
 
+        var HurtNodeList = new List<IBTNode>();
+        HurtNodeList.Add(new ActionNode(CheckMonsterHPOnUPdate));
+        HurtNodeList.Add(new ActionNode(CompleteHurtAnimation));
+        var HurtSeqNode = new SequenceNode(HurtNodeList);
+
         var rootNodeList = new List<IBTNode>();
         rootNodeList.Add(DieSeqNode);
+        rootNodeList.Add(HurtSeqNode);
         var rootSelectNode = new SelectorNode(rootNodeList);
         return rootSelectNode;
     }
+
+    #region Die
 
     IBTNode.EBTNodeState CheckIsDeadOnUpdate()
     {
         if (!isDead) return IBTNode.EBTNodeState.Fail;
         if (animator.GetBool("Dead")) return IBTNode.EBTNodeState.Success;
 
+        isHurt = false;
         agent.speed = 0;
         agent.ResetPath();
 
@@ -243,6 +254,51 @@ public class MonsterView : MonoBehaviour
         yield return new WaitForSeconds(3f);
         gameObject.SetActive(false);
     }
+
+    #endregion
+
+    #region Hurt
+    public void Hurt(float Damage, Transform attacker)
+    {
+        vm.RequestMonsterHPChanged(monsterId, vm.HP - Damage);
+        Debug.Log(vm.HP);
+
+        if(vm.HP <= 0)
+        {
+            isDead = true;
+        }
+        else
+        {
+            isHurt = true;
+            //³Ë¹é ±¸°£
+        }
+    }
+    
+    IBTNode.EBTNodeState CheckMonsterHPOnUPdate()
+    {
+        if (!isHurt || isDead) return IBTNode.EBTNodeState.Fail;
+        if (animator.GetBool("Hit")) return IBTNode.EBTNodeState.Success;
+
+        animator.SetBool("Hit", true);
+        animator.SetTrigger("Hurt");
+        //rb.isKinematic = false;
+        return IBTNode.EBTNodeState.Success;
+    }
+
+    IBTNode.EBTNodeState CompleteHurtAnimation()
+    {
+        if (!isHurt || isDead) return IBTNode.EBTNodeState.Fail;
+
+        if (IsAnimationRunning("Hurt"))
+        {
+            return IBTNode.EBTNodeState.Running;
+        }
+
+        isHurt = false;
+        animator.SetBool("Hit", false);
+        return IBTNode.EBTNodeState.Success;
+    }
+    #endregion
 
     private bool IsAnimationRunning(string animationName)
     {
