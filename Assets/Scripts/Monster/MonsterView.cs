@@ -60,7 +60,7 @@ public class MonsterView : MonoBehaviour
     private float moveSpeed;
     private Vector3 patrolPos;
     private float circleDelayTimer;
-    [SerializeField] private float circlingSpeed = 20f;
+    //[SerializeField] private float circlingSpeed = 20f;
     private float circlingDir;
     private float circlingTImer;
     private bool isPatrol;
@@ -82,6 +82,7 @@ public class MonsterView : MonoBehaviour
         isDead = false;
         patrolWaitTime = UnityEngine.Random.Range(1.5f, 3f);
         patrolWaitTimer = patrolWaitTime;
+        circleDelayTimer = UnityEngine.Random.Range(2f, 5f);
         gameObject.layer = LayerMask.NameToLayer("Monster");
 
         if (vm == null)
@@ -220,14 +221,9 @@ public class MonsterView : MonoBehaviour
         if (isCircling)
         {
             var VecToTarget = transform.position - vm.TraceTarget.position;
-            var rotatedPos = Quaternion.Euler(0, circlingDir * circlingSpeed * Time.fixedDeltaTime, 0) * VecToTarget;
-            // 새로운 목표 위치를 계산
-            var newTargetPosition = vm.TraceTarget.position + rotatedPos;
+            var rotatedPos = Quaternion.Euler(0, circlingDir * 20f * Time.fixedDeltaTime, 0) * VecToTarget;
 
-            // 이동할 벡터를 계산
-            var moveDirection = newTargetPosition - transform.position;
-
-            agent.Move(moveDirection * Time.fixedDeltaTime);
+            agent.Move(rotatedPos - VecToTarget);
             transform.rotation = Quaternion.LookRotation(-rotatedPos);
         }
     }
