@@ -3496,7 +3496,9 @@ GameObject:
   - component: {fileID: 8737124063567274580}
   - component: {fileID: 2885436463287907204}
   - component: {fileID: 396796501852591606}
-  m_Layer: 0
+  - component: {fileID: 6239209127238505808}
+  - component: {fileID: 4282896214033846913}
+  m_Layer: 7
   m_Name: Monster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3563,10 +3565,66 @@ MonoBehaviour:
   monsterMeshes:
   - _monsterType: 0
     mesh: {fileID: 6494053223894862513}
+    animation_controller: {fileID: 9100000, guid: f08389b247379e74d8b8da11196e323b, type: 2}
+  - _monsterType: 1
+    mesh: {fileID: 3945191583566021346}
     animation_controller: {fileID: 0}
   monsterWeapons:
   - WeaponsType: 0
     weaponMesh: {fileID: 7209411996648041310}
+  - WeaponsType: 2
+    weaponMesh: {fileID: 7209411996648041310}
+  - WeaponsType: 3
+    weaponMesh: {fileID: 7209411996648041310}
+--- !u!195 &6239209127238505808
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8927993104135698521}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!54 &4282896214033846913
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8927993104135698521}
+  serializedVersion: 4
+  m_Mass: 80
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &8963927133777674826
 GameObject:
   m_ObjectHideFlags: 0

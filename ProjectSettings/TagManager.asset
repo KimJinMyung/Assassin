@@ -12,11 +12,11 @@ TagManager:
   - Water
   - UI
   - player
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Monster
+  - LockOnAble
+  - LockOn
+  - Die
+  - GrapplingPoint
   - 
   - 
   - 

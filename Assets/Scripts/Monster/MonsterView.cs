@@ -45,19 +45,28 @@ public class MonsterView : MonoBehaviour
     private MonsterData _initMonsterData;
     private List<Monster_Attack> monsterAttackMethodList = new List<Monster_Attack>();
 
+    private MonsterBTRunner _monsterBTRunner;
+
     private NavMeshAgent agent;
     private Animator animator;
+    private Rigidbody rb;
+
     public int monsterId { get; private set; }
+
+    private bool isDead;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
     }
 
     private void OnEnable()
     {
         monsterId = gameObject.GetInstanceID();
+        isDead = false;
+        gameObject.layer = LayerMask.NameToLayer("Monster");
 
         if (vm == null)
         {
@@ -69,6 +78,7 @@ public class MonsterView : MonoBehaviour
         }
 
         SetMonsterInfo(_type);
+        _monsterBTRunner = new MonsterBTRunner(SetMonsterBT());
     }
 
     private void OnDisable()
@@ -94,7 +104,20 @@ public class MonsterView : MonoBehaviour
         vm.RequestMonsterHPChanged(monsterId, _initMonsterData.HP);
         vm.RequestMonsterStaminaChanged(_initMonsterData.Stamina, monsterId);
 
+        ChangedMonsterAnimationController();
         UpdateAttackMethod_Data(monster);
+
+    }
+
+    private void ChangedMonsterAnimationController()
+    {
+        foreach(var monsterMesh in monsterMeshes)
+        {
+            if(_type == monsterMesh._monsterType)
+            {
+                animator.runtimeAnimatorController = monsterMesh.animation_controller;
+            }
+        }
     }
 
     private void UpdateAttackMethod_Data(MonsterData monsterData)
@@ -138,13 +161,102 @@ public class MonsterView : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void UpdateAttackMethod()
     {
+        //if (vm.TraceTarget == null) return;
 
+        vm.RequestAttackMethodChanged(monsterId, monsterAttackMethodList, this);
     }
 
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     { 
-    
+        switch (e.PropertyName)
+        {           
+            case nameof(vm.CurrentAttackMethod):
+                ChangedWeaponsMesh();
+                break;
+        }
+    }
+
+    private void Update()
+    {
+        _monsterBTRunner.Execute();
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            isDead = true;
+        }
+
+        Debug.Log(vm.CurrentAttackMethod.DataName);
+
+        UpdateAttackMethod();
+        //디버그 용
+        //animator.SetTrigger(vm.CurrentAttackMethod.DataName.ToString());
+    }
+
+    IBTNode SetMonsterBT()
+    {
+        var DieNodeList = new List<IBTNode>();
+        DieNodeList.Add(new ActionNode(CheckIsDeadOnUpdate));
+        DieNodeList.Add(new ActionNode(CompleteDieAnimation));
+        var DieSeqNode = new SequenceNode(DieNodeList);
+
+        var rootNodeList = new List<IBTNode>();
+        rootNodeList.Add(DieSeqNode);
+        var rootSelectNode = new SelectorNode(rootNodeList);
+        return rootSelectNode;
+    }
+
+    IBTNode.EBTNodeState CheckIsDeadOnUpdate()
+    {
+        if (!isDead) return IBTNode.EBTNodeState.Fail;
+        if (animator.GetBool("Dead")) return IBTNode.EBTNodeState.Success;
+
+        agent.speed = 0;
+        agent.ResetPath();
+
+        if(animator.layerCount > 1) animator.SetLayerWeight(1, 0);
+
+        gameObject.layer = LayerMask.NameToLayer("Die");
+        animator.SetBool("Dead", true);
+        animator.SetTrigger("Die");
+        return IBTNode.EBTNodeState.Success;
+    }
+
+    IBTNode.EBTNodeState CompleteDieAnimation()
+    {
+        if (!isDead) return IBTNode.EBTNodeState.Fail;
+
+        if (IsAnimationRunning("Die"))
+        {
+            return IBTNode.EBTNodeState.Running;
+        }
+
+        //모습을 제거
+        StartCoroutine(DeadMonsterActive());
+
+        return IBTNode.EBTNodeState.Success;
+    }
+
+    IEnumerator DeadMonsterActive()
+    {
+        yield return new WaitForSeconds(3f);
+        gameObject.SetActive(false);
+    }
+
+    private bool IsAnimationRunning(string animationName)
+    {
+        if (animator == null) return false;
+
+        bool isRunning = false;
+        var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        if (stateInfo.IsName(animationName))
+        {
+            float normalizedTime = stateInfo.normalizedTime;
+            isRunning = normalizedTime >= 0 && normalizedTime < 1.0f;
+        }
+
+        return isRunning;
     }
 }
