@@ -60,7 +60,6 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.35f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\PlayerAttackAnimation.cs" />
     <Compile Include="Assets\Scripts\Data\Monster\MonsterDataExtension.cs" />
     <Compile Include="Assets\Scripts\BT\SelectorNode.cs" />
     <Compile Include="Assets\Scripts\Player\Extension\PlayerViewModelExtension.cs" />
@@ -72,13 +71,14 @@
     <Compile Include="Assets\Scripts\ScriptsManager.cs" />
     <Compile Include="Assets\Scripts\BT\ActionNode.cs" />
     <Compile Include="Assets\Scripts\Monster\MonsterView.cs" />
+    <Compile Include="Assets\Scripts\Player\Animation\PlayerAttackAnimation.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerView.cs" />
     <Compile Include="Assets\Scripts\Data\Manager\DataManager.cs" />
     <Compile Include="Assets\Scripts\Data\Monster\MonsterData.cs" />
     <Compile Include="Assets\Scripts\Player\ViewModel\PlayerViewModel.cs" />
     <Compile Include="Assets\Scripts\BT\SequenceNode.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
-    <Compile Include="Assets\PlayerAttack_NextAttackAble.cs" />
+    <Compile Include="Assets\Scripts\Player\Animation\PlayerAttack_NextAttackAble.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Monster_data.xml" />
