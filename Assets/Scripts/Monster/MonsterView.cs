@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements.Experimental;
+using static UnityEngine.GridBrushBase;
 
 public enum MonsterType
 {
@@ -54,6 +55,12 @@ public class MonsterView : MonoBehaviour
 
     public int monsterId { get; private set; }
 
+    [SerializeField] private LayerMask GroundLayer;
+    private float patrolWaitTimer;
+    private float patrolWaitTime;
+    private float moveSpeed;
+    private Vector3 patrolPos;
+    private bool isPatrol;
     private bool isHurt;
     private bool isDead;
 
@@ -68,6 +75,8 @@ public class MonsterView : MonoBehaviour
     {
         monsterId = gameObject.GetInstanceID();
         isDead = false;
+        patrolWaitTime = UnityEngine.Random.Range(1.5f, 3f);
+        patrolWaitTimer = patrolWaitTime;
         gameObject.layer = LayerMask.NameToLayer("Monster");
 
         if (vm == null)
@@ -208,9 +217,17 @@ public class MonsterView : MonoBehaviour
         HurtNodeList.Add(new ActionNode(CompleteHurtAnimation));
         var HurtSeqNode = new SequenceNode(HurtNodeList);
 
+        var IdleNodeList = new List<IBTNode>();
+        IdleNodeList.Add(new ActionNode(WaitPatrolDelay));
+        IdleNodeList.Add(new ActionNode(RandomPatrolPosOnUpdate));
+        IdleNodeList.Add(new ActionNode(CheckMoveDirToTransformForward));
+        IdleNodeList.Add(new ActionNode(PatrolMoveOnUpdate));
+        var IdleSeqNode = new SequenceNode(IdleNodeList);
+
         var rootNodeList = new List<IBTNode>();
         rootNodeList.Add(DieSeqNode);
         rootNodeList.Add(HurtSeqNode);
+        rootNodeList.Add(IdleSeqNode);
         var rootSelectNode = new SelectorNode(rootNodeList);
         return rootSelectNode;
     }
@@ -300,6 +317,88 @@ public class MonsterView : MonoBehaviour
     }
     #endregion
 
+    #region Idle
+    IBTNode.EBTNodeState WaitPatrolDelay()
+    {
+        if (vm.TraceTarget != null) return IBTNode.EBTNodeState.Fail;
+        if (isPatrol) return IBTNode.EBTNodeState.Success;
+
+        if(patrolWaitTimer > 0)
+        {
+            patrolWaitTimer -= Time.deltaTime;
+            return IBTNode.EBTNodeState.Running;
+        }
+        else
+        {
+            isPatrol = true;
+            patrolWaitTime = UnityEngine.Random.Range(1.5f, 3f);
+            patrolWaitTimer = patrolWaitTime;
+            return IBTNode.EBTNodeState.Success;
+        }
+    }
+
+    IBTNode.EBTNodeState RandomPatrolPosOnUpdate()
+    {
+        if (vm.TraceTarget != null) return IBTNode.EBTNodeState.Fail;
+        if (Vector3.Distance(transform.position, patrolPos) > 0.1f) return IBTNode.EBTNodeState.Success;
+
+        if(RandomPatrolEndPosition(transform.position, _initMonsterData.ViewRange) != Vector3.zero)
+        {
+            return IBTNode.EBTNodeState.Success;
+        }
+
+        return IBTNode.EBTNodeState.Running;
+    }
+
+    IBTNode.EBTNodeState CheckMoveDirToTransformForward()
+    {
+        if (vm.TraceTarget != null) return IBTNode.EBTNodeState.Fail;
+
+        Vector3 dir = (patrolPos - transform.position);
+        dir.y = 0f;
+        dir.Normalize();
+
+        float angle = Vector3.Angle(transform.forward, dir);
+
+        float rotationDirection = Vector3.SignedAngle(transform.forward, dir, Vector3.up) > 0 ? 1f : -1f;
+
+        if (angle > 20f)
+        {            
+            Quaternion rotation = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, agent.angularSpeed * Time.deltaTime);
+            animator.SetBool("Rotate", true);
+            animator.SetFloat("Rotation", rotationDirection);
+            return IBTNode.EBTNodeState.Running;
+        }
+
+        animator.SetBool("Rotate", false);
+        animator.SetFloat("Rotation", 0);
+        return IBTNode.EBTNodeState.Success;
+    }
+
+    IBTNode.EBTNodeState PatrolMoveOnUpdate()
+    {
+        if (vm.TraceTarget != null) return IBTNode.EBTNodeState.Fail;
+
+        agent.stoppingDistance = 0.1f;
+        agent.speed = _initMonsterData.WalkSpeed;
+
+        MoveToTarget(patrolPos);
+
+        moveSpeed = Vector3.Distance(transform.position, patrolPos) > 0.1f ? 1 : 0;
+
+        Debug.Log(moveSpeed);
+
+        animator.SetFloat("MoveSpeed", moveSpeed);
+
+        if (agent.remainingDistance > 0.1f) return IBTNode.EBTNodeState.Running;
+
+        isPatrol = false;
+        return IBTNode.EBTNodeState.Success;
+    }
+
+    #endregion
+
     private bool IsAnimationRunning(string animationName)
     {
         if (animator == null) return false;
@@ -314,5 +413,29 @@ public class MonsterView : MonoBehaviour
         }
 
         return isRunning;
+    }
+
+    private void MoveToTarget(Vector3 targetPos)
+    {
+        agent.SetDestination(targetPos);
+    }
+
+    private Vector3 RandomPatrolEndPosition(Vector3 originPosition, float distance)
+    {
+        Vector3 randomPoint = originPosition + UnityEngine.Random.insideUnitSphere * distance;
+
+        if (Physics.Raycast(randomPoint + Vector3.up * (distance + 1f), Vector3.down, out RaycastHit hitInfo, distance + 5f, GroundLayer))
+        {
+            randomPoint.y = hitInfo.point.y;
+
+            int walkableAreaMask = 1 << NavMesh.GetAreaFromName("Walkable");
+            if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, 1.0f, walkableAreaMask))
+            {
+                patrolPos = hit.position;
+                return patrolPos;
+            }
+        }
+
+        return Vector3.zero;
     }
 }

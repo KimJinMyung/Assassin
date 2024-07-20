@@ -3541,7 +3541,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: d62af11c372059a4d9c2feacf46a754a, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -3576,6 +3576,9 @@ MonoBehaviour:
     weaponMesh: {fileID: 7209411996648041310}
   - WeaponsType: 3
     weaponMesh: {fileID: 7209411996648041310}
+  GroundLayer:
+    serializedVersion: 2
+    m_Bits: 4097
 --- !u!195 &6239209127238505808
 NavMeshAgent:
   m_ObjectHideFlags: 0
