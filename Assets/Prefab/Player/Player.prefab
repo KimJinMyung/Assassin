@@ -1121,6 +1121,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 06cf37cc-3b15-41a3-8fab-02cf55cd0510
     m_ActionName: Player/Attack[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4754691725861442462}
+        m_TargetAssemblyTypeName: PlayerBattleManager, Assembly-CSharp
+        m_MethodName: OnDefense
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: f9ddfa5f-1f96-46ef-ba9c-e7979959faa8
+    m_ActionName: Player/Defense[/Mouse/rightButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

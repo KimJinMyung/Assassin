@@ -26,6 +26,8 @@ public class PlayerBattleManager : MonoBehaviour
             if (isDefence)
             {
                 //ÆÐ¸µ
+                if(animator.GetBool("ParryAble")) animator.SetTrigger("Parry");
+                return;
             }
             else
             {
@@ -33,5 +35,19 @@ public class PlayerBattleManager : MonoBehaviour
                 animator.SetTrigger("Attack");
             }            
         }
+    }
+
+    public void OnDefense(InputAction.CallbackContext context)
+    {
+        if (!animator.GetBool("AttackAble")) return;
+
+        isDefence = context.ReadValue<float>() > 0.5f;
+
+        if (isDefence && !animator.GetBool("Defense"))
+        {
+            animator.SetTrigger("DefenseStart");
+        }
+
+        animator.SetBool("Defense", isDefence);
     }
 }
