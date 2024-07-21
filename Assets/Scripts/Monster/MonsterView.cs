@@ -58,9 +58,10 @@ public class MonsterView : MonoBehaviour
     private float patrolWaitTimer;
     private float patrolWaitTime;
     private float moveSpeed;
+    private float distance;
+    private float AttackRange;
     private Vector3 patrolPos;
     private float circleDelayTimer;
-    //[SerializeField] private float circlingSpeed = 20f;
     private float circlingDir;
     private float circlingTImer;
     private bool isPatrol;
@@ -83,6 +84,7 @@ public class MonsterView : MonoBehaviour
         patrolWaitTime = UnityEngine.Random.Range(1.5f, 3f);
         patrolWaitTimer = patrolWaitTime;
         circleDelayTimer = UnityEngine.Random.Range(2f, 5f);
+        circlingTImer = UnityEngine.Random.Range(3f, 6f);
         gameObject.layer = LayerMask.NameToLayer("Monster");
 
         if (vm == null)
@@ -194,6 +196,7 @@ public class MonsterView : MonoBehaviour
         {           
             case nameof(vm.CurrentAttackMethod):
                 ChangedWeaponsMesh();
+                AttackRange = vm.CurrentAttackMethod.AttackRange;
                 break;
             case nameof(vm.TraceTarget):
                 animator.SetBool("ComBatMode", vm.TraceTarget!= null);
@@ -214,6 +217,13 @@ public class MonsterView : MonoBehaviour
         }
 
         Debug.Log(vm.CurrentAttackMethod.DataName);
+
+        if(vm.TraceTarget != null)
+        {
+            distance = Vector3.Distance(transform.position, vm.TraceTarget.position);
+        }
+
+        animator.SetBool("Circling", isCircling);
     }
 
     private void FixedUpdate()
@@ -225,6 +235,7 @@ public class MonsterView : MonoBehaviour
 
             agent.Move(rotatedPos - VecToTarget);
             transform.rotation = Quaternion.LookRotation(-rotatedPos);
+            animator.SetFloat("CirclingDir", circlingDir);
         }
     }
 
@@ -353,6 +364,8 @@ public class MonsterView : MonoBehaviour
         if (vm.TraceTarget != null) return IBTNode.EBTNodeState.Fail;
         if (isPatrol) return IBTNode.EBTNodeState.Success;
 
+        agent.speed = _initMonsterData.WalkSpeed;
+
         if(patrolWaitTimer > 0)
         {
             patrolWaitTimer -= Time.deltaTime;
@@ -436,12 +449,13 @@ public class MonsterView : MonoBehaviour
     {
         if (vm.TraceTarget == null) return IBTNode.EBTNodeState.Fail;
 
-        float distance = Vector3.Distance(transform.position, vm.TraceTarget.position);
-        float AttackRange = vm.CurrentAttackMethod.AttackRange;
+        agent.speed = _initMonsterData.RunSpeed;
 
         if (distance > AttackRange + 1.5f)
         {
-            agent.stoppingDistance = AttackRange;
+            isCircling = false;
+            isAttackAble = false;
+            agent.stoppingDistance = AttackRange + 1.5f;
             animator.SetFloat("MoveSpeed", 1);
             MoveToTarget(vm.TraceTarget.position);
             return IBTNode.EBTNodeState.Running;
@@ -456,6 +470,7 @@ public class MonsterView : MonoBehaviour
     IBTNode.EBTNodeState WaitCirclingDelay()
     {
         if (vm.TraceTarget == null) return IBTNode.EBTNodeState.Fail;
+        if (distance > AttackRange + 1.5f) return IBTNode.EBTNodeState.Fail;
         if (isCircling) return IBTNode.EBTNodeState.Success;
 
         if(circleDelayTimer > 0)
@@ -470,6 +485,7 @@ public class MonsterView : MonoBehaviour
         {
             circlingDir = UnityEngine.Random.Range(0, 2) == 0 ? 1 : -1;
             isCircling = true;
+            isAttackAble = false;
             return IBTNode.EBTNodeState.Success;
         }
 
@@ -479,6 +495,7 @@ public class MonsterView : MonoBehaviour
     IBTNode.EBTNodeState Circling()
     {
         if (vm.TraceTarget == null) return IBTNode.EBTNodeState.Fail;
+        if (distance > AttackRange + 1.5f) return IBTNode.EBTNodeState.Fail;
         if (!isCircling) return IBTNode.EBTNodeState.Fail;
 
         if (circlingTImer > 0)
@@ -487,6 +504,8 @@ public class MonsterView : MonoBehaviour
             return IBTNode.EBTNodeState.Running;
         }
 
+        isCircling = false;
+        circlingTImer = UnityEngine.Random.Range(3f, 6f);
         return IBTNode.EBTNodeState.Success;
     }
     #endregion
