@@ -63,4 +63,20 @@ public static class PlayerViewModelExtension
         vm.Rotation = Quaternion.Euler(new Vector3(contextValueX, contextValueY, contextValueZ));
     }
     #endregion
+    #region LockOnTarget
+    public static void ReigsterLockOnTargetChanged(this PlayerViewModel vm, bool isRegister)
+    {
+        LogicManager.instance.RegisterLockOnTargetChangedCallback(vm.OnResponseLockOnTargetChangedEvent, isRegister);
+    }
+
+    public static void RequestLockOnTarget(this PlayerViewModel vm, Transform target)
+    {
+        LogicManager.instance.OnLockOnTarget(target);
+    }
+
+    public static void OnResponseLockOnTargetChangedEvent(this PlayerViewModel vm, Transform tartget)
+    {
+        vm.LockOnTarget = tartget;
+    }
+    #endregion
 }

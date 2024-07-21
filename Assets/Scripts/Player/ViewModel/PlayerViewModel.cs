@@ -50,6 +50,18 @@ public class PlayerViewModel
             OnPropertyChanged(nameof(Rotation));
         }
     }
+
+    private Transform _lockOnTarget;
+    public Transform LockOnTarget
+    {
+        get { return _lockOnTarget; }
+        set
+        {
+            if (_lockOnTarget == value) return;
+            _lockOnTarget = value;
+            OnPropertyChanged(nameof(LockOnTarget));
+        }
+    }
     #region propertyEvent
     public event PropertyChangedEventHandler PropertyChanged;
 

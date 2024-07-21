@@ -15,6 +15,7 @@ public class PlayerAttackAnimation : StateMachineBehaviour
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.ResetTrigger("Attack");
+        animator.SetBool("isMoveAble", true);
     }
 
     public override void OnStateMachineExit(Animator animator, int stateMachinePathHash)
@@ -23,7 +24,6 @@ public class PlayerAttackAnimation : StateMachineBehaviour
         animator.SetInteger("AttackIndex", 0);
         animator.ResetTrigger("Attack");
         animator.SetBool("AttackAble", true);
-        animator.SetBool("isMoveAble", true);
         animator.applyRootMotion =false;
     }
 }

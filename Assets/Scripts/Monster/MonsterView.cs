@@ -54,16 +54,29 @@ public class MonsterView : MonoBehaviour
 
     public int monsterId { get; private set; }
 
+    #region Patrol
     [SerializeField] private LayerMask GroundLayer;
     private float patrolWaitTimer;
     private float patrolWaitTime;
+    private Vector3 patrolPos;
     private float moveSpeed;
+    #endregion
+    #region Battle
     private float distance;
     private float AttackRange;
-    private Vector3 patrolPos;
+    #endregion
+    #region Circling
     private float circleDelayTimer;
     private float circlingDir;
     private float circlingTImer;
+    #endregion
+    #region attack
+    public float CombatMovementTimer { get; private set; }
+    private string AttackName;
+    private int AttackIndex;
+    private int AttackMethodCount;
+    #endregion
+
     private bool isPatrol;
     public bool isAttackAble { get; private set; }
     private bool isAttacking;
@@ -71,10 +84,6 @@ public class MonsterView : MonoBehaviour
     public bool isCircling { get; private set; }
     private bool isHurt;
     private bool isDead;
-    public float CombatMovementTimer { get; private set; }
-    private string AttackName;
-    private int AttackIndex;
-    [SerializeField] private int AttackMethodCount;
 
     private void Awake()
     {
@@ -323,7 +332,7 @@ public class MonsterView : MonoBehaviour
 
         if(animator.layerCount > 1) animator.SetLayerWeight(1, 0);
 
-        gameObject.layer = LayerMask.NameToLayer("Die");
+        gameObject.layer = LayerMask.NameToLayer("Dead");
         animator.SetBool("Dead", true);
         animator.SetTrigger("Die");
         return IBTNode.EBTNodeState.Success;
@@ -636,7 +645,6 @@ public class MonsterView : MonoBehaviour
 
         bool isRunning = false;
         var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        Debug.Log(animationName);
         if (stateInfo.IsName(animationName))
         {
             float normalizedTime = stateInfo.normalizedTime;
@@ -669,4 +677,5 @@ public class MonsterView : MonoBehaviour
 
         return Vector3.zero;
     }
+
 }
