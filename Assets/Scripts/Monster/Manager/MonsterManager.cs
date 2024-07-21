@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -19,6 +19,8 @@ public class MonsterManager : MonoBehaviour
     private List<Transform> _lockOnAbleMonsterList = new List<Transform>();
     public List<Transform> LockOnAbleMonsterList { get { return _lockOnAbleMonsterList; } }
 
+    private Dictionary<int, Action> monsterAttackMethodsList = new Dictionary<int, Action>();
+
     private float _attackingTimer;
 
     #region MonsterList
@@ -27,6 +29,7 @@ public class MonsterManager : MonoBehaviour
         if (_monsterLists.ContainsKey(monster.monsterId)) return;
 
         _monsterLists.Add(monster.monsterId, monster);
+        RegisterMonsgterAttackMethod(monster.monsterId, monster.Attack, true);
     }
 
     public void LockOnAbleMonsterListChanged(List<Transform> monster)
@@ -36,11 +39,12 @@ public class MonsterManager : MonoBehaviour
         _lockOnAbleMonsterList = monster;
     }
 
-    public void DeadMonster_Update(int monster_id)
+    public void DeadMonster_Update(MonsterView monster)
     {
-        if (_monsterLists.ContainsKey(monster_id))
+        if (_monsterLists.ContainsKey(monster.monsterId))
         {
-            _monsterLists.Remove(monster_id);
+            _monsterLists.Remove(monster.monsterId);
+            RegisterMonsgterAttackMethod(monster.monsterId, monster.Attack, false);
         }
     }
 
@@ -64,6 +68,11 @@ public class MonsterManager : MonoBehaviour
                 if (attackMonster == null) return;
 
                 _attackingTimer = UnityEngine.Random.Range(2f, 4f);
+                //몬스터 공격 수행
+                if (monsterAttackMethodsList.ContainsKey(attackMonster.monsterId))
+                {
+                    monsterAttackMethodsList[attackMonster.monsterId]?.Invoke();
+                }
             }
         }
     }
@@ -116,4 +125,21 @@ public class MonsterManager : MonoBehaviour
         return monsterList.OrderByDescending(e => e.CombatMovementTimer).FirstOrDefault();
     }
     #endregion
+
+    public void RegisterMonsgterAttackMethod(int monsterId, Action attackMethod, bool isRegister)
+    {
+        if(isRegister)
+        {
+            if(monsterAttackMethodsList.ContainsKey(monsterId)) monsterAttackMethodsList[monsterId] = attackMethod;
+            else monsterAttackMethodsList.Add(monsterId, attackMethod);
+        }
+        else
+        {
+            if (monsterAttackMethodsList.ContainsKey(monsterId))
+            {
+                monsterAttackMethodsList[monsterId] -= attackMethod;
+                if (monsterAttackMethodsList[monsterId] == null) monsterAttackMethodsList.Remove(monsterId);
+            }
+        }
+    }
 }

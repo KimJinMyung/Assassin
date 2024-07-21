@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 
-public class MonsterViewModel : MonoBehaviour
+public class MonsterViewModel
 {
     private float _hp;
     public float HP

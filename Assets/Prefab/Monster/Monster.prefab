@@ -3572,10 +3572,6 @@ MonoBehaviour:
   monsterWeapons:
   - WeaponsType: 0
     weaponMesh: {fileID: 7209411996648041310}
-  - WeaponsType: 2
-    weaponMesh: {fileID: 7209411996648041310}
-  - WeaponsType: 3
-    weaponMesh: {fileID: 7209411996648041310}
   GroundLayer:
     serializedVersion: 2
     m_Bits: 4097
