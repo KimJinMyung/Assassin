@@ -41,7 +41,7 @@ public class MonsterView : MonoBehaviour
     [SerializeField]
     WeaponsMesh[] monsterWeapons;
 
-    private MonsterViewModel vm;
+    public MonsterViewModel vm { get; private set; }
 
     private MonsterData _initMonsterData;
     private List<Monster_Attack> monsterAttackMethodList = new List<Monster_Attack>();
@@ -69,6 +69,7 @@ public class MonsterView : MonoBehaviour
     public bool isCircling { get; private set; }
     private bool isHurt;
     private bool isDead;
+    public float CombatMovementTimer { get; private set; }
 
     private void Awake()
     {
@@ -210,6 +211,13 @@ public class MonsterView : MonoBehaviour
 
         _monsterBTRunner.Execute();
 
+        animator.SetBool("Circling", isCircling);
+
+        if (vm.TraceTarget != null)
+        {
+            CombatMovementTimer += Time.deltaTime;
+        }
+
         //디버그 용
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -222,8 +230,6 @@ public class MonsterView : MonoBehaviour
         {
             distance = Vector3.Distance(transform.position, vm.TraceTarget.position);
         }
-
-        animator.SetBool("Circling", isCircling);
     }
 
     private void FixedUpdate()
