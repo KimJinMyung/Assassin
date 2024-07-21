@@ -470,8 +470,6 @@ public class MonsterView : MonoBehaviour
 
         moveSpeed = Vector3.Distance(transform.position, patrolPos) > 0.1f ? 1 : 0;
 
-        Debug.Log(moveSpeed);
-
         animator.SetFloat("MoveSpeed", moveSpeed);
 
         if (agent.remainingDistance > 0.1f) return IBTNode.EBTNodeState.Running;
@@ -575,11 +573,13 @@ public class MonsterView : MonoBehaviour
         {
             isAttackAble = false;
             CombatMovementTimer = 0f;
+            animator.SetFloat("MoveSpeed", 0);
             animator.SetTrigger($"{AttackName}");
             if(IsAnimationRunning($"{AttackName}.attack{AttackIndex}")) return IBTNode.EBTNodeState.Success;
             return IBTNode.EBTNodeState.Running;
         }
 
+        animator.SetFloat("MoveSpeed", 1);
         agent.SetDestination(vm.TraceTarget.position);
         return IBTNode.EBTNodeState.Running;
     }
@@ -610,7 +610,7 @@ public class MonsterView : MonoBehaviour
         }
 
         agent.speed = _initMonsterData.WalkSpeed;
-
+        animator.SetFloat("MoveSpeed", -1);
         Vector3 targetDir = vm.TraceTarget.position - transform.position;
         targetDir.y = 0;
 
