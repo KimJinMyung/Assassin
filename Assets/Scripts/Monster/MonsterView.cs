@@ -427,7 +427,8 @@ public class MonsterView : MonoBehaviour
         if (_type != MonsterType.Boss) addParriedPower = attacker.playerData.Strength * 3;
         else addParriedPower = attacker.playerData.Strength * 10;
 
-        vm.RequestMonsterStaminaChanged(vm.Stamina - attacker.playerData.Strength, monsterId);
+        vm.RequestMonsterStaminaChanged(vm.Stamina - addParriedPower, monsterId);
+        Debug.Log($"Monster Stamina : {vm.Stamina}");
     }
 
     IBTNode.EBTNodeState CheckMonsterHPOnUPdate()
@@ -475,6 +476,8 @@ public class MonsterView : MonoBehaviour
         return isRunning;
     }
     #endregion
+
+    // Subdued Node Ãß°¡
 
     #region Idle
     IBTNode.EBTNodeState WaitPatrolDelay()

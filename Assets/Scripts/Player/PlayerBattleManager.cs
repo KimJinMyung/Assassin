@@ -31,7 +31,11 @@ public class PlayerBattleManager : MonoBehaviour
             if (isDefence)
             {
                 //ÆÐ¸µ
-                if(animator.GetBool("ParryAble")) animator.SetTrigger("Parry");
+                if(animator.GetBool("ParryAble"))
+                {
+                    //animator.SetBool("Parring", true);
+                    animator.SetTrigger("Parry");
+                }
                 return;
             }
             else

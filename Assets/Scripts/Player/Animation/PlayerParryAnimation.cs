@@ -12,7 +12,7 @@ public class PlayerParryAnimation : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(stateInfo.normalizedTime >= 0f && stateInfo.normalizedTime <= 0.08f)
+        if(stateInfo.normalizedTime >= 0f && stateInfo.normalizedTime <= 0.5f)
         {
             animator.SetBool("Parring", true);
         }
