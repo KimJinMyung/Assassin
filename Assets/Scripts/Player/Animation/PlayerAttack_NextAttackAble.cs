@@ -1,17 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAttack_NextAttackAble : StateMachineBehaviour
 {
-    [SerializeField] private float MoveStartTime;
-    [SerializeField] private float MoveEndTime;
+    private AttackBox attackBox;
 
-    [SerializeField] private float NextAttackAbleTime;
+    [SerializeField] 
+    private float NextAttackAbleTime = 0.25f;
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.SetBool("isMoveAble", true);
+
+        if(attackBox == null)
+        attackBox = animator.GetComponentInChildren<AttackBox>();
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -20,10 +21,12 @@ public class PlayerAttack_NextAttackAble : StateMachineBehaviour
 
         if (stateInfo.normalizedTime >= NextAttackAbleTime)
         {
+            attackBox.enabled = false;
             animator.SetBool("AttackAble", true);
         }
         else
         {
+            attackBox.enabled = true;
             animator.SetBool("AttackAble", false);
         }
 

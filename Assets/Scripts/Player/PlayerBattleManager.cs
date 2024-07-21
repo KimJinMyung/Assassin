@@ -8,12 +8,15 @@ public class PlayerBattleManager : MonoBehaviour
     private PlayerView owner;
     private Animator animator;
 
+    private PlayerLockOn playerSight;
+
     private bool isDefence;
 
     private void Awake()
     {
         owner = GetComponent<PlayerView>();
-        animator = GetComponent<Animator>();    
+        animator = GetComponent<Animator>();
+        playerSight = GetComponent<PlayerLockOn>();
     }
 
     public void OnAttack(InputAction.CallbackContext context)
@@ -31,6 +34,15 @@ public class PlayerBattleManager : MonoBehaviour
             }
             else
             {
+                //LockOnTarget을 지정하지 않았다면 LockOnAbleTarget을 바라보며 공격
+                if (owner.ViewModel.LockOnTarget == null && playerSight.ViewModel.LockOnAbleTarget != null)
+                {
+                    Vector3 dirTarget = playerSight.ViewModel.LockOnAbleTarget.position - transform.position;
+                    dirTarget.y = 0;
+                    Quaternion rotation = Quaternion.LookRotation(dirTarget);
+                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, rotation.eulerAngles.y, 0), 100f * Time.fixedDeltaTime);
+                }
+
                 //공격
                 animator.SetTrigger("Attack");
             }            

@@ -82,7 +82,6 @@ public class PlayerLockOn : MonoBehaviour
         }
 
         _lockOnAbleObject = DetectingTarget();
-        Debug.Log(_lockOnAbleObject);
         _viewModel.RequestLockOnAbleTarget(_lockOnAbleObject);
     }
 
@@ -107,11 +106,6 @@ public class PlayerLockOn : MonoBehaviour
     private Transform DetectingTarget()
     {
         Collider[] colliders = Physics.OverlapSphere(Eye.position, _viewRange, _lockOnAbleMask);
-
-        foreach(var child in colliders)
-        {
-            Debug.Log(child.name);
-        }
 
         return ReturnTarget(colliders);
     }

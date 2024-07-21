@@ -43,7 +43,7 @@ public class MonsterView : MonoBehaviour
 
     public MonsterViewModel vm { get; private set; }
 
-    private MonsterData _initMonsterData;
+    public MonsterData _monsterData { get; private set; }
     private List<Monster_Attack> monsterAttackMethodList = new List<Monster_Attack>();
 
     private MonsterBTRunner _monsterBTRunner;
@@ -51,6 +51,7 @@ public class MonsterView : MonoBehaviour
     private NavMeshAgent agent;
     private Animator animator;
     private Rigidbody rb;
+    private Collider Collider;
 
     public int monsterId { get; private set; }
 
@@ -76,6 +77,9 @@ public class MonsterView : MonoBehaviour
     private int AttackIndex;
     private int AttackMethodCount;
     #endregion
+    #region Hurt
+    private Vector3 KnockbackDir;
+    #endregion
 
     private bool isPatrol;
     public bool isAttackAble { get; private set; }
@@ -89,7 +93,8 @@ public class MonsterView : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>(); 
+        Collider = GetComponent<Collider>();
     }
 
     private void OnEnable()
@@ -101,7 +106,10 @@ public class MonsterView : MonoBehaviour
         circleDelayTimer = UnityEngine.Random.Range(2f, 5f);
         circlingTImer = UnityEngine.Random.Range(3f, 6f);
         AttackIndex = -1;
+        KnockbackDir = Vector3.zero;
+
         gameObject.layer = LayerMask.NameToLayer("Monster");
+        Collider.enabled = true;
 
         if (vm == null)
         {
@@ -131,8 +139,6 @@ public class MonsterView : MonoBehaviour
             vm.PropertyChanged -= OnPropertyChanged;
             vm = null;
         }
-
-        MonsterManager.instance.DeadMonster_Update(this);
     }
 
     private void SetMonsterInfo(MonsterType type)
@@ -140,11 +146,11 @@ public class MonsterView : MonoBehaviour
         var monster = DataManager.Instance.GetMonsterData((int)type);
         if (monster == null) return;
 
-        _initMonsterData = monster.MonsterDataClone();
+        _monsterData = monster.MonsterDataClone();
 
         //체력과 스테미너 초기 설정
-        vm.RequestMonsterHPChanged(monsterId, _initMonsterData.HP);
-        vm.RequestMonsterStaminaChanged(_initMonsterData.Stamina, monsterId);
+        vm.RequestMonsterHPChanged(monsterId, _monsterData.HP);
+        vm.RequestMonsterStaminaChanged(_monsterData.Stamina, monsterId);
 
         ChangedMonsterAnimationController();
         UpdateAttackMethod_Data(monster);
@@ -326,6 +332,8 @@ public class MonsterView : MonoBehaviour
         if (!isDead) return IBTNode.EBTNodeState.Fail;
         if (animator.GetBool("Dead")) return IBTNode.EBTNodeState.Success;
 
+        Collider.enabled = false;
+
         isHurt = false;
         agent.speed = 0;
         agent.ResetPath();
@@ -333,6 +341,8 @@ public class MonsterView : MonoBehaviour
         if(animator.layerCount > 1) animator.SetLayerWeight(1, 0);
 
         gameObject.layer = LayerMask.NameToLayer("Dead");
+        MonsterManager.instance.DeadMonster_Update(this);
+
         animator.SetBool("Dead", true);
         animator.SetTrigger("Die");
         return IBTNode.EBTNodeState.Success;
@@ -362,8 +372,19 @@ public class MonsterView : MonoBehaviour
     #endregion
 
     #region Hurt
-    public void Hurt(float Damage, Transform attacker)
+    public void Hurt(PlayerView attacker, float Damage)
     {
+        //방어 성공
+        if(UnityEngine.Random.Range(0f, 100f) <= _monsterData.DefencePer)
+        {
+            Debug.Log("몬스터 방어 성공");
+
+            animator.SetTrigger("Defense");
+            vm.RequestMonsterStaminaChanged(vm.Stamina - attacker.playerData.ATK, monsterId);
+            return;
+        }
+
+        //체력 감소
         vm.RequestMonsterHPChanged(monsterId, vm.HP - Damage);
         Debug.Log(vm.HP);
 
@@ -374,10 +395,35 @@ public class MonsterView : MonoBehaviour
         else
         {
             isHurt = true;
+            KnockbackDir = transform.position - attacker.transform.position;
             //넉백 구간
         }
     }
-    
+
+    private void ApplyKnockBack(Vector3 KnockbackDir)
+    {
+        rb.isKinematic = false;
+
+        KnockbackDir.y = 0;
+        KnockbackDir.Normalize();
+
+        float knockbackForce = 10f;
+        rb.AddForce(knockbackForce * KnockbackDir, ForceMode.Impulse);
+
+        animator.SetFloat("HurtDir_z", KnockbackDir.z);
+        animator.SetFloat("HurtDir_x", KnockbackDir.x);
+    }
+
+    public void Parried(PlayerView attacker)
+    {
+        float addParriedPower;
+
+        if (_type != MonsterType.Boss) addParriedPower = attacker.playerData.Strength * 3;
+        else addParriedPower = attacker.playerData.Strength * 10;
+
+        vm.RequestMonsterStaminaChanged(vm.Stamina - attacker.playerData.Strength, monsterId);
+    }
+
     IBTNode.EBTNodeState CheckMonsterHPOnUPdate()
     {
         if (!isHurt || isDead) return IBTNode.EBTNodeState.Fail;
@@ -395,6 +441,7 @@ public class MonsterView : MonoBehaviour
 
         if (IsAnimationRunning("Hurt"))
         {
+            ApplyKnockBack(KnockbackDir);
             return IBTNode.EBTNodeState.Running;
         }
 
@@ -407,11 +454,12 @@ public class MonsterView : MonoBehaviour
     #region Idle
     IBTNode.EBTNodeState WaitPatrolDelay()
     {
+        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
         if (vm.TraceTarget != null) return IBTNode.EBTNodeState.Fail;
         if (isAttacking) return IBTNode.EBTNodeState.Fail;
         if (isPatrol) return IBTNode.EBTNodeState.Success;
 
-        agent.speed = _initMonsterData.WalkSpeed;
+        agent.speed = _monsterData.WalkSpeed;
 
         if(patrolWaitTimer > 0)
         {
@@ -429,12 +477,13 @@ public class MonsterView : MonoBehaviour
 
     IBTNode.EBTNodeState RandomPatrolPosOnUpdate()
     {
+        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
         if (vm.TraceTarget != null) return IBTNode.EBTNodeState.Fail;
         if (isAttacking) return IBTNode.EBTNodeState.Fail;
 
         if (Vector3.Distance(transform.position, patrolPos) > 0.1f) return IBTNode.EBTNodeState.Success;
 
-        if(RandomPatrolEndPosition(transform.position, _initMonsterData.ViewRange) != Vector3.zero)
+        if(RandomPatrolEndPosition(transform.position, _monsterData.ViewRange) != Vector3.zero)
         {
             return IBTNode.EBTNodeState.Success;
         }
@@ -444,6 +493,7 @@ public class MonsterView : MonoBehaviour
 
     IBTNode.EBTNodeState CheckMoveDirToTransformForward()
     {
+        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
         if (vm.TraceTarget != null) return IBTNode.EBTNodeState.Fail;
         if (isAttacking) return IBTNode.EBTNodeState.Fail;
 
@@ -469,11 +519,12 @@ public class MonsterView : MonoBehaviour
 
     IBTNode.EBTNodeState PatrolMoveOnUpdate()
     {
+        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
         if (vm.TraceTarget != null) return IBTNode.EBTNodeState.Fail;
         if (isAttacking) return IBTNode.EBTNodeState.Fail;
 
         agent.stoppingDistance = 0.1f;
-        agent.speed = _initMonsterData.WalkSpeed;
+        agent.speed = _monsterData.WalkSpeed;
 
         MoveToTarget(patrolPos);
 
@@ -494,10 +545,11 @@ public class MonsterView : MonoBehaviour
     //Follow
     IBTNode.EBTNodeState CheckFolloewingRangeOnUpdate()
     {
+        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
         if (vm.TraceTarget == null) return IBTNode.EBTNodeState.Fail;
         if (isAttacking) return IBTNode.EBTNodeState.Fail;
 
-        agent.speed = _initMonsterData.RunSpeed;
+        agent.speed = _monsterData.RunSpeed;
         agent.stoppingDistance = AttackRange + 1.5f;
 
         if (distance >= AttackRange + 1.5f)
@@ -516,6 +568,7 @@ public class MonsterView : MonoBehaviour
     //Battle => Circling
     IBTNode.EBTNodeState WaitCirclingDelay()
     {
+        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
         if (vm.TraceTarget == null) return IBTNode.EBTNodeState.Fail;
         if (isAttacking) return IBTNode.EBTNodeState.Fail;
         if (distance > AttackRange + 1.5f) return IBTNode.EBTNodeState.Fail;
@@ -542,6 +595,7 @@ public class MonsterView : MonoBehaviour
 
     IBTNode.EBTNodeState Circling()
     {
+        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
         if (vm.TraceTarget == null) return IBTNode.EBTNodeState.Fail;
         if (isAttacking) return IBTNode.EBTNodeState.Fail;
         if (distance > AttackRange + 1.5f) return IBTNode.EBTNodeState.Fail;
@@ -562,6 +616,7 @@ public class MonsterView : MonoBehaviour
     #region Attack
     IBTNode.EBTNodeState DecideAttackIndex()
     {
+        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
         if (!isAttacking) return IBTNode.EBTNodeState.Fail;
         if (AttackIndex != -1) return IBTNode.EBTNodeState.Success;
 
@@ -570,12 +625,13 @@ public class MonsterView : MonoBehaviour
     }
     IBTNode.EBTNodeState CheckisAttackingOnUpdate()
     {
+        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
         if (vm.TraceTarget == null) return IBTNode.EBTNodeState.Fail;
         if (!isAttacking) return IBTNode.EBTNodeState.Fail;
         if (isAttackEnd) return IBTNode.EBTNodeState.Success;
         if (!isAttackAble && isAttacking) return IBTNode.EBTNodeState.Success;
 
-        agent.speed = _initMonsterData.RunSpeed;
+        agent.speed = _monsterData.RunSpeed;
         agent.stoppingDistance = AttackRange - 0.3f;
 
         if(distance <= AttackRange - 0.3f)
@@ -595,6 +651,7 @@ public class MonsterView : MonoBehaviour
 
     IBTNode.EBTNodeState CompleteAttackAnimation()
     {
+        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
         if (!isAttacking) return IBTNode.EBTNodeState.Fail;
         if (isAttackEnd) return IBTNode.EBTNodeState.Success;
 
@@ -609,6 +666,7 @@ public class MonsterView : MonoBehaviour
 
     IBTNode.EBTNodeState RetreatAfterAttack()
     {
+        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
         if (vm.TraceTarget == null) return IBTNode.EBTNodeState.Fail;
         if (distance >= AttackRange + 1.5f) 
         {
@@ -618,7 +676,7 @@ public class MonsterView : MonoBehaviour
             return IBTNode.EBTNodeState.Success; 
         }
 
-        agent.speed = _initMonsterData.WalkSpeed;
+        agent.speed = _monsterData.WalkSpeed;
         animator.SetFloat("MoveSpeed", -1);
         Vector3 targetDir = vm.TraceTarget.position - transform.position;
         targetDir.y = 0;

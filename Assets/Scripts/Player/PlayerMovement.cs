@@ -16,8 +16,9 @@ public class PlayerMovement : MonoBehaviour
 
     private PlayerView owner;
     private PlayerViewModel vm;
-    private Animator animator;
+    private PlayerLockOn playerSight;
 
+    private Animator animator;
     private CharacterController playerController;
 
     private float MoveAngle;
@@ -28,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         owner = GetComponent<PlayerView>();
+        playerSight = GetComponent<PlayerLockOn>();   
         playerController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
     }
@@ -115,7 +117,8 @@ public class PlayerMovement : MonoBehaviour
     private void MeshRotation()
     {
         if (!animator.GetBool("isMoveAble")) return;
-        if (vm.Movement.magnitude >= 0.1f)
+
+        if (!IsAnimationRunning($"Attack.Attack{animator.GetInteger("AttackIndex") + 1}") && vm.Movement.magnitude >= 0.1f)
         {
             Quaternion cameraDir = Quaternion.Euler(0, MoveAngle, 0);
             Quaternion targetRotate = Quaternion.Lerp(transform.rotation, cameraDir, 100f * Time.fixedDeltaTime);
@@ -145,12 +148,27 @@ public class PlayerMovement : MonoBehaviour
 
     private void DecideMoveSpeed()
     {
-        if (isRun) MoveSpeed = owner.platerData.RunSpeed;
-        else MoveSpeed = owner.platerData.WalkSpeed;
+        if (isRun) MoveSpeed = owner.playerData.RunSpeed;
+        else MoveSpeed = owner.playerData.WalkSpeed;
     }
 
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     { 
     
+    }
+
+    private bool IsAnimationRunning(string animationName)
+    {
+        if (animator == null) return false;
+
+        bool isRunning = false;
+        var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if (stateInfo.IsName(animationName))
+        {
+            float normalizedTime = stateInfo.normalizedTime;
+            isRunning = normalizedTime >= 0 && normalizedTime < 1.0f;
+        }
+
+        return isRunning;
     }
 }
