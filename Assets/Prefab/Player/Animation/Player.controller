@@ -11,7 +11,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 1976605009907729905}
-    m_Position: {x: 20, y: 300, z: 0}
+    m_Position: {x: 10, y: 300, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6719033159266404497}
     m_Position: {x: 10, y: 410, z: 0}
@@ -353,8 +353,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dea3a035c8ed0a345a1ac4b8cc6c0bef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveStartTime: 0
-  MoveEndTime: 0
   NextAttackAbleTime: 0.6
 --- !u!1102 &-5217267571889524532
 AnimatorState:
@@ -468,8 +466,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dea3a035c8ed0a345a1ac4b8cc6c0bef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveStartTime: 0
-  MoveEndTime: 0
   NextAttackAbleTime: 0.25
 --- !u!1101 &-3342855560596123101
 AnimatorStateTransition:
@@ -959,7 +955,7 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 0c46ad47138e2d844a06c7a159a1cd9a, type: 2}
     m_Threshold: 0.1875
-    m_Position: {x: -1, y: 1}
+    m_Position: {x: -0.7, y: 0.7}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: x
@@ -967,7 +963,7 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 5f4a3831f0c5c5b44ac6318ac57af641, type: 2}
     m_Threshold: 0.25
-    m_Position: {x: -3, y: 3}
+    m_Position: {x: -2, y: 2}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: x
@@ -975,7 +971,7 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 2430566d3c9901d4bb891b1e127b9a2c, type: 2}
     m_Threshold: 0.3125
-    m_Position: {x: 1, y: 1}
+    m_Position: {x: 0.7, y: 0.7}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: x
@@ -983,7 +979,7 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 6f9780b558f2088429efe8af628c4cfa, type: 2}
     m_Threshold: 0.375
-    m_Position: {x: 3, y: 3}
+    m_Position: {x: 2, y: 2}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: x
@@ -1007,7 +1003,7 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 61395fc6619340249b7a3fe952633a73, type: 2}
     m_Threshold: 0.5625
-    m_Position: {x: -1, y: -1}
+    m_Position: {x: -0.7, y: -0.7}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: x
@@ -1015,7 +1011,7 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: b8c0a25ce2e86cf48961438d7644822d, type: 2}
     m_Threshold: 0.625
-    m_Position: {x: -3, y: -3}
+    m_Position: {x: -2, y: -2}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: x
@@ -1023,7 +1019,7 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: a812f85f2b07c054b8b1dd086c42a6ce, type: 2}
     m_Threshold: 0.6875
-    m_Position: {x: 1, y: -1}
+    m_Position: {x: 0.7, y: -0.7}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: x
@@ -1031,7 +1027,7 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 130688df56bae79489e09a3fb8266507, type: 2}
     m_Threshold: 0.75
-    m_Position: {x: 3, y: -3}
+    m_Position: {x: 2, y: -2}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: x
@@ -1515,8 +1511,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dea3a035c8ed0a345a1ac4b8cc6c0bef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveStartTime: 0
-  MoveEndTime: 0
   NextAttackAbleTime: 0.25
 --- !u!1101 &7351513697820043860
 AnimatorStateTransition:
@@ -1552,8 +1546,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dea3a035c8ed0a345a1ac4b8cc6c0bef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveStartTime: 0
-  MoveEndTime: 0
   NextAttackAbleTime: 0.25
 --- !u!1101 &7510103192357782075
 AnimatorStateTransition:

@@ -88,6 +88,7 @@ public class MonsterView : MonoBehaviour
     public bool isCircling { get; private set; }
     private bool isHurt;
     private bool isDead;
+    private bool isHurtAnimationStart;
 
     private void Awake()
     {
@@ -402,16 +403,21 @@ public class MonsterView : MonoBehaviour
 
     private void ApplyKnockBack(Vector3 KnockbackDir)
     {
-        rb.isKinematic = false;
-
         KnockbackDir.y = 0;
         KnockbackDir.Normalize();
 
-        float knockbackForce = 10f;
-        rb.AddForce(knockbackForce * KnockbackDir, ForceMode.Impulse);
+        float knockbackForce = 2f;
+        agent.Move(knockbackForce * KnockbackDir * Time.deltaTime);
+    }
+
+    private void KnockBackAnimation(Vector3 KnockbackDir)
+    {
+        KnockbackDir.y = 0;
+        KnockbackDir.Normalize();
 
         animator.SetFloat("HurtDir_z", KnockbackDir.z);
         animator.SetFloat("HurtDir_x", KnockbackDir.x);
+        animator.SetTrigger("Hurt");
     }
 
     public void Parried(PlayerView attacker)
@@ -427,27 +433,46 @@ public class MonsterView : MonoBehaviour
     IBTNode.EBTNodeState CheckMonsterHPOnUPdate()
     {
         if (!isHurt || isDead) return IBTNode.EBTNodeState.Fail;
-        if (animator.GetBool("Hit")) return IBTNode.EBTNodeState.Success;
+        if (isHurtAnimationStart) return IBTNode.EBTNodeState.Success;
 
         animator.SetBool("Hit", true);
-        animator.SetTrigger("Hurt");
-        //rb.isKinematic = false;
-        return IBTNode.EBTNodeState.Success;
+        KnockBackAnimation(KnockbackDir);
+        if(IsHurtAnimationRunning()) { isHurtAnimationStart = true;  return IBTNode.EBTNodeState.Success; }
+        return IBTNode.EBTNodeState.Running;
     }
 
     IBTNode.EBTNodeState CompleteHurtAnimation()
     {
         if (!isHurt || isDead) return IBTNode.EBTNodeState.Fail;
 
-        if (IsAnimationRunning("Hurt"))
+        if (IsHurtAnimationRunning())
         {
             ApplyKnockBack(KnockbackDir);
+            Debug.Log("넉백중...");
             return IBTNode.EBTNodeState.Running;
         }
 
         isHurt = false;
+        isHurtAnimationStart = false;
         animator.SetBool("Hit", false);
         return IBTNode.EBTNodeState.Success;
+    }
+
+    private bool IsHurtAnimationRunning()
+    {
+        if (animator == null) return false;
+
+        bool isRunning = false;
+        var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        // "Hurt" 상태가 현재 상태인지 확인
+        if (stateInfo.IsTag("Hurt"))
+        {
+            float normalizedTime = stateInfo.normalizedTime;
+            isRunning = normalizedTime >= 0 && normalizedTime < 1.0f;
+        }
+
+        return isRunning;
     }
     #endregion
 

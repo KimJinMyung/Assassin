@@ -94,14 +94,11 @@ public class PlayerLockOn : MonoBehaviour
             if (_lockOnAbleObject.CompareTag("RopePoint")) return;
             if (isLockOnMode && _lockOnAbleObject == _viewModel.LockOnTarget)
             {
-                Debug.Log("lockOff");
                 _viewModel.RequestLockOnViewModel_Target(null, owner);
             }
             else
             {
                 _viewModel.RequestLockOnViewModel_Target(_lockOnAbleObject, owner);
-                Debug.Log($"{_lockOnAbleObject}");
-                Debug.Log($"asdasd : {owner.ViewModel.LockOnTarget}");
             }
         }
     }

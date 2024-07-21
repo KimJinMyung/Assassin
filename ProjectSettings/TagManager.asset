@@ -15,7 +15,7 @@ TagManager:
   - player
   - Monster
   - LockOnAble
-  - LockOn
+  - LockOnTarget
   - Dead
   - GrapplingPoint
   - MonsterWalkAble
