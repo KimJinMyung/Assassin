@@ -15,6 +15,10 @@ public class PlayerView : MonoBehaviour
     private CharacterController playerController;
     private Animator animator;
 
+    private Vector3 attackerPosition;
+    private float knockbackPower;
+
+    public bool isKnockback;
     private bool isDie;
     private bool isAssassinated;
 
@@ -71,7 +75,7 @@ public class PlayerView : MonoBehaviour
                 //stamina UI와 연관
                 break;
             case nameof(vm.LockOnTarget):
-                Debug.Log(vm.LockOnTarget);
+                animator.SetBool("LockOn", vm.LockOnTarget != null);
                 break;
         }
     }
@@ -80,12 +84,16 @@ public class PlayerView : MonoBehaviour
     {
         if (isDie || isAssassinated) return;
 
+        Debug.Log("공격 받음");
+
         //방어 성공
         if (IsDefenceSuccess(attacker.transform.position))
         {
             if (attacker.Type == MonsterType.Boss)
             {
-                StartCoroutine(PushBack(attacker.transform.position, 1));
+                //StartCoroutine(PushBack(attacker.transform.position, 1));
+                isKnockback = true;
+                attackerPosition = attacker.transform.position;
             }
 
             if (animator.GetBool("Parring"))
@@ -112,7 +120,7 @@ public class PlayerView : MonoBehaviour
         vm.RequestPlayerHPChanged(vm.HP - damage);
 
         //UnityEngine.Debug.Log(player_info.HP);
-        AttackDir(attacker.transform.position);
+        HurtAnimation(attacker);
         isDie = vm.HP <= 0f;
     }
 
@@ -129,43 +137,50 @@ public class PlayerView : MonoBehaviour
         else return false;
     }
 
-    IEnumerator PushBack(Vector3 attackerPosition, float AddPower)
+    private void Update()
     {
-        Vector3 dir = transform.position - attackerPosition;
-        dir.y = 0;
-        dir.Normalize();
-
-        float timer = 0f;
-
-        while (timer < 1f)
-        {
-            playerController.Move(dir * AddPower * Time.deltaTime);
-            timer += Time.deltaTime;
-            yield return null;
-        }
-
-        yield break;
+        if(isKnockback) NockBacking();
     }
 
-    private void AttackDir(Vector3 attakerPosition)
+    private void NockBacking()
     {
-        StartCoroutine(PushBack(attakerPosition, 5));
-
-        Vector3 knockbackDir = transform.position - attakerPosition;
-        knockbackDir.y = 0;
-        knockbackDir.Normalize();
-
-        animator.SetFloat("Hurt_z", knockbackDir.z);
-        animator.SetFloat("Hurt_x", knockbackDir.x);
+        animator.SetBool("isMoveAble", false);
+        Vector3 AttackDir = transform.position - attackerPosition;
+        KnockBack(AttackDir, knockbackPower);
     }
 
-    private bool IsAnimationRunning(string animationName)
+    private void KnockBack(Vector3 AttackDir, float addPower)
+    {
+        AttackDir.y = 0;
+        AttackDir.Normalize();
+
+        playerController.Move(AttackDir * addPower * Time.deltaTime);
+    }
+
+    private void HurtAnimation(MonsterView attaker)
+    {
+        Vector3 attakerPosition = attaker.transform.position;
+        if (attaker.Type == MonsterType.Boss) knockbackPower = 5;
+        else knockbackPower = 1;
+
+        Vector3 attackDir = transform.position - attakerPosition;
+        attackDir.y = 0;
+        attackDir.Normalize();
+
+        animator.SetFloat("Hurt_z", attackDir.z);
+        animator.SetFloat("Hurt_x", attackDir.x);
+        animator.SetTrigger("Hurt");
+    }
+
+    private bool IsHurtAnimationRunning()
     {
         if (animator == null) return false;
 
         bool isRunning = false;
         var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        if (stateInfo.IsName(animationName))
+
+        // "Hurt" 상태가 현재 상태인지 확인
+        if (stateInfo.IsTag("Hurt"))
         {
             float normalizedTime = stateInfo.normalizedTime;
             isRunning = normalizedTime >= 0 && normalizedTime < 1.0f;

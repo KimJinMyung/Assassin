@@ -81,6 +81,7 @@
     <Compile Include="Assets\Scripts\Monster\Animation\MonsterAttack.cs" />
     <Compile Include="Assets\Scripts\BT\IBTNode.cs" />
     <Compile Include="Assets\Scripts\ScriptsManager.cs" />
+    <Compile Include="Assets\Scripts\Monster\Animation\MonsterAttackBox.cs" />
     <Compile Include="Assets\Scripts\BT\ConditionalNode.cs" />
     <Compile Include="Assets\Scripts\BT\ActionNode.cs" />
     <Compile Include="Assets\Scripts\Monster\MonsterView.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Assets\Scripts\Player\ViewModel\PlayerViewModel.cs" />
     <Compile Include="Assets\Scripts\BT\SequenceNode.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
+    <Compile Include="Assets\playerKnockback.cs" />
     <Compile Include="Assets\Scripts\Player\Animation\PlayerAttack_NextAttackAble.cs" />
   </ItemGroup>
   <ItemGroup>
