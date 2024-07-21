@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEditor.Profiling.HierarchyFrameDataView;
 using static UnityEngine.UI.GridLayoutGroup;
 
 public class PlayerMovement : MonoBehaviour
@@ -15,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform _lookAt;
 
     private PlayerView owner;
-    private PlayerViewModel vm;
+    public PlayerViewModel vm { get; private set; }
     private PlayerLockOn playerSight;
 
     private Animator animator;
@@ -59,20 +60,31 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        CameraRotation_Move();
+        if (!animator.GetBool("LockOn"))
+        {
+            CameraRotation_Move();
+        }
+        else
+        {
+            CamearaRotation_Target(owner.ViewModel.LockOnTarget);
+        }
         DecideMoveSpeed();
         Movement();
     }
 
     private void FixedUpdate()
     {
-        MeshRotation();
+        Rotation();
     }
 
     private void InitCameraRotation()
     {
         x_Axis.Value = 0;
-        y_Axis.Value = 0.5f;
+        y_Axis.Value = 0;
+
+        Vector3 initEulerAngle = _lookAt.rotation.eulerAngles;
+        x_Axis.Value = initEulerAngle.y;
+        y_Axis.Value = initEulerAngle.x;
 
         mouseRotation = _lookAt.rotation;
     }
@@ -84,6 +96,18 @@ public class PlayerMovement : MonoBehaviour
 
         mouseRotation = Quaternion.Euler(y_Axis.Value, x_Axis.Value, 0f);
         _lookAt.rotation = Quaternion.Lerp(_lookAt.rotation, mouseRotation, 1f);
+    }
+
+    private void CamearaRotation_Target(Transform target)
+    {
+        if (target == null) return;
+
+        // target을 향한 회전 값을 계산
+        Quaternion targetRotation = Quaternion.LookRotation(target.position - _lookAt.position);
+
+        // 부드러운 회전을 위해 Slerp 사용
+        _lookAt.rotation = Quaternion.Slerp(_lookAt.rotation, targetRotation, Time.deltaTime * 10f);
+        InitCameraRotation();
     }
 
     public void OnMovement(InputAction.CallbackContext context)
@@ -114,10 +138,22 @@ public class PlayerMovement : MonoBehaviour
         PlayerMeshAnimation();
     }
 
-    private void MeshRotation()
+    private void Rotation()
     {
         if (!animator.GetBool("isMoveAble")) return;
 
+        if (animator.GetBool("LockOn"))
+        {
+           LookAtTargetOnYAxis(owner.ViewModel.LockOnTarget, transform);
+        }
+        else
+        {
+            MeshRotation();
+        }
+    }
+
+    private void MeshRotation()
+    {
         if (!IsAnimationRunning($"Attack.Attack{animator.GetInteger("AttackIndex") + 1}") && vm.Movement.magnitude >= 0.1f)
         {
             Quaternion cameraDir = Quaternion.Euler(0, MoveAngle, 0);
@@ -125,6 +161,15 @@ public class PlayerMovement : MonoBehaviour
             vm.RequestActorRotate(targetRotate.x, targetRotate.y, targetRotate.z);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotate, 10f * Time.fixedDeltaTime);
         }
+    }
+    private void LookAtTargetOnYAxis(Transform target, Transform playerMesh)
+    {
+        if (target == null) return;
+
+        Vector3 dirTarget = target.position - playerMesh.position;
+        dirTarget.y = 0;
+        Quaternion rotation = Quaternion.LookRotation(dirTarget);
+        playerMesh.rotation = Quaternion.Lerp(playerMesh.rotation, Quaternion.Euler(0, rotation.eulerAngles.y, 0), 10f * Time.fixedDeltaTime);
     }
 
     private void PlayerMeshAnimation()
@@ -153,8 +198,8 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-    { 
-    
+    {
+
     }
 
     private bool IsAnimationRunning(string animationName)

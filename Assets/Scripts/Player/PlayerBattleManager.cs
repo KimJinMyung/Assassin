@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerBattleManager : MonoBehaviour
 {
     private PlayerView owner;
+    private PlayerMovement ownerMovement;
     private Animator animator;
 
     private PlayerLockOn playerSight;
@@ -15,6 +16,7 @@ public class PlayerBattleManager : MonoBehaviour
     private void Awake()
     {
         owner = GetComponent<PlayerView>();
+        ownerMovement = GetComponent<PlayerMovement>();
         animator = GetComponent<Animator>();
         playerSight = GetComponent<PlayerLockOn>();
     }
@@ -35,7 +37,10 @@ public class PlayerBattleManager : MonoBehaviour
             else
             {
                 //LockOnTarget을 지정하지 않았다면 LockOnAbleTarget을 바라보며 공격
-                if (owner.ViewModel.LockOnTarget == null && playerSight.ViewModel.LockOnAbleTarget != null)
+                bool condition1 = owner.ViewModel.LockOnTarget == null && playerSight.ViewModel.LockOnAbleTarget != null;
+                bool condition2 = ownerMovement.vm.Movement.magnitude < 0.1f;
+
+                if (condition1 && condition2)
                 {
                     Vector3 dirTarget = playerSight.ViewModel.LockOnAbleTarget.position - transform.position;
                     dirTarget.y = 0;

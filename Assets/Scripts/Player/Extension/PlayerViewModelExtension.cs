@@ -64,7 +64,7 @@ public static class PlayerViewModelExtension
     }
     #endregion
     #region LockOnTarget
-    public static void ReigsterLockOnTargetChanged(this PlayerViewModel vm, bool isRegister)
+    public static void RegisterLockOnTargetChanged(this PlayerViewModel vm, bool isRegister)
     {
         LogicManager.instance.RegisterLockOnTargetChangedCallback(vm.OnResponseLockOnTargetChangedEvent, isRegister);
     }

@@ -32,6 +32,7 @@ public class PlayerView : MonoBehaviour
             vm.PropertyChanged += OnPropertyChanged;
             vm.RegisterPlayerHPChanged(true);
             vm.RegisterPlayerStaminaChanged(true);
+            vm.RegisterLockOnTargetChanged(true);
         }
 
         SetPlayerInfo();
@@ -41,6 +42,7 @@ public class PlayerView : MonoBehaviour
     {
         if(vm != null )
         {
+            vm.RegisterLockOnTargetChanged(false);
             vm.RegisterPlayerStaminaChanged(false);
             vm.RegisterPlayerHPChanged(false);
             vm.PropertyChanged -= OnPropertyChanged;
@@ -67,6 +69,9 @@ public class PlayerView : MonoBehaviour
                 break;
             case nameof(vm.Stamina):
                 //stamina UI¿Í ¿¬°ü
+                break;
+            case nameof(vm.LockOnTarget):
+                Debug.Log(vm.LockOnTarget);
                 break;
         }
     }
