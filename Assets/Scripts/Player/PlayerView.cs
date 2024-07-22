@@ -84,8 +84,6 @@ public class PlayerView : MonoBehaviour
     {
         if (isDie || isAssassinated) return;
 
-        Debug.Log("공격 받음");
-
         //방어 성공
         if (IsDefenceSuccess(attacker.transform.position))
         {
@@ -100,6 +98,7 @@ public class PlayerView : MonoBehaviour
             {
                 if (attacker.vm.CurrentAttackMethod.AttackType != "Long")
                 {
+                    Debug.Log("패링함");
                     attacker.Parried(this);
                     return;
                 }
@@ -116,6 +115,7 @@ public class PlayerView : MonoBehaviour
             }
         }
 
+        Debug.Log("공격 받음");
         //방어 실패
         vm.RequestPlayerHPChanged(vm.HP - damage);
 

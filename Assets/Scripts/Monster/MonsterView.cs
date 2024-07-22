@@ -86,6 +86,10 @@ public class MonsterView : MonoBehaviour
     private bool isAttacking;
     private bool isAttackEnd;
     public bool isCircling { get; private set; }
+    private bool isParried;
+    private bool isParryStart;
+    private bool isSubdued;
+    private float _subduedTimer;
     private bool isHurt;
     private bool isDead;
     private bool isHurtAnimationStart;
@@ -296,6 +300,16 @@ public class MonsterView : MonoBehaviour
         HurtNodeList.Add(new ActionNode(CompleteHurtAnimation));
         var HurtSeqNode = new SequenceNode(HurtNodeList);
 
+        var SubduedNodeList = new List<IBTNode>();
+        SubduedNodeList.Add(new ActionNode(Subdued));
+        SubduedNodeList.Add(new ActionNode(SubduedTimer));
+        var SubduedSeqNode = new SequenceNode(SubduedNodeList);
+
+        var ParryNodeList = new List<IBTNode>();
+        ParryNodeList.Add(new ActionNode(ParriedStart));
+        ParryNodeList.Add(new ActionNode(CompleteParriedAnimation));
+        var ParrySeqNode = new SequenceNode(ParryNodeList);
+
         var IdleNodeList = new List<IBTNode>();
         IdleNodeList.Add(new ActionNode(WaitPatrolDelay));
         IdleNodeList.Add(new ActionNode(RandomPatrolPosOnUpdate));
@@ -319,6 +333,8 @@ public class MonsterView : MonoBehaviour
         var rootNodeList = new List<IBTNode>();
         rootNodeList.Add(DieSeqNode);
         rootNodeList.Add(HurtSeqNode);
+        rootNodeList.Add(SubduedSeqNode);
+        rootNodeList.Add(ParrySeqNode);
         rootNodeList.Add(IdleSeqNode);
         rootNodeList.Add(FollowingSeqNode);
         rootNodeList.Add(AttackSeqNode);
@@ -375,6 +391,15 @@ public class MonsterView : MonoBehaviour
     #region Hurt
     public void Hurt(PlayerView attacker, float Damage)
     {
+        if (isSubdued)
+        {
+            vm.RequestMonsterHPChanged(monsterId, 0);
+            isDead = true;
+
+            //암살 동작 실행
+            return;
+        }
+
         //방어 성공
         if(UnityEngine.Random.Range(0f, 100f) <= _monsterData.DefencePer)
         {
@@ -418,17 +443,6 @@ public class MonsterView : MonoBehaviour
         animator.SetFloat("HurtDir_z", KnockbackDir.z);
         animator.SetFloat("HurtDir_x", KnockbackDir.x);
         animator.SetTrigger("Hurt");
-    }
-
-    public void Parried(PlayerView attacker)
-    {
-        float addParriedPower;
-
-        if (_type != MonsterType.Boss) addParriedPower = attacker.playerData.Strength * 3;
-        else addParriedPower = attacker.playerData.Strength * 10;
-
-        vm.RequestMonsterStaminaChanged(vm.Stamina - addParriedPower, monsterId);
-        Debug.Log($"Monster Stamina : {vm.Stamina}");
     }
 
     IBTNode.EBTNodeState CheckMonsterHPOnUPdate()
@@ -477,7 +491,85 @@ public class MonsterView : MonoBehaviour
     }
     #endregion
 
+    #region Subdued
     // Subdued Node 추가
+    IBTNode.EBTNodeState Subdued()
+    {
+        if (isHurt || isDead) return IBTNode.EBTNodeState.Fail;
+        if (!isSubdued) return IBTNode.EBTNodeState.Fail;
+        if (_subduedTimer > 0) return IBTNode.EBTNodeState.Success;
+
+        animator.SetBool("Incapacitated", true);
+        animator.SetTrigger("Incapacitate");
+
+        if (IsAnimationRunning("Subdued"))
+        {
+            _subduedTimer = 5f;
+            return IBTNode.EBTNodeState.Success;
+        }
+
+        return IBTNode.EBTNodeState.Running;
+    }
+
+    IBTNode.EBTNodeState SubduedTimer()
+    {
+        if (isHurt || isDead) return IBTNode.EBTNodeState.Fail;
+        if (!isSubdued) return IBTNode.EBTNodeState.Fail;
+
+        if(_subduedTimer > 0)
+        {
+            _subduedTimer -= Time.deltaTime;
+            return IBTNode.EBTNodeState.Running;
+        }
+
+        animator.SetBool("Incapacitated", false);
+        isSubdued = false;
+        return IBTNode.EBTNodeState.Success;
+    }
+    #endregion
+
+    #region Parry
+    IBTNode.EBTNodeState ParriedStart() 
+    {
+        if (!isParried) return IBTNode.EBTNodeState.Fail;
+        if (isParried) return IBTNode.EBTNodeState.Success;
+
+        animator.SetTrigger("Parried");
+        if (IsAnimationRunning("Parried"))
+        {
+            isParryStart = true;
+            return IBTNode.EBTNodeState.Success;
+        }
+        return IBTNode.EBTNodeState.Running;
+    }
+
+    IBTNode.EBTNodeState CompleteParriedAnimation()
+    {
+        if (!isParried) return IBTNode.EBTNodeState.Fail;
+
+        if (IsAnimationRunning("Parried"))
+        {
+            return IBTNode.EBTNodeState.Running;
+        }
+
+        isParryStart = false;
+        isParried = false;
+        isSubdued = vm.Stamina <= 0;
+        return IBTNode.EBTNodeState.Success;
+    }
+
+    public void Parried(PlayerView attacker)
+    {
+        float addParriedPower;
+
+        if (_type != MonsterType.Boss) addParriedPower = attacker.playerData.Strength * 3;
+        else addParriedPower = attacker.playerData.Strength * 10;
+
+        vm.RequestMonsterStaminaChanged(vm.Stamina - addParriedPower, monsterId);
+        Debug.Log($"Monster Stamina : {vm.Stamina}");
+        isParried = true;
+    }
+    #endregion
 
     #region Idle
     IBTNode.EBTNodeState WaitPatrolDelay()

@@ -17,6 +17,8 @@ public class AttackBox : MonoBehaviour
     private PlayerView owner_player;
     private MonsterView owner_monster;
 
+    private Animator animator;
+
     private void Awake()
     {
         owner_player = transform.GetComponentInParent<PlayerView>();
@@ -25,6 +27,7 @@ public class AttackBox : MonoBehaviour
         if (owner_player != null)
         {
             _attackLayer = LayerMask.GetMask("Monster", "LockOnAble", "LockOnTarget", "Incapacitated");
+            animator = owner_player.GetComponent<Animator>();
         }
         else if (owner_monster != null)
         {
@@ -64,12 +67,12 @@ public class AttackBox : MonoBehaviour
             {
                 if (owner_player != null)
                 {
+                    //Parry 애니메이션이 실행되고 있는지 확인
+
                     MonsterView target = collider.GetComponent<MonsterView>();
                     if (target != null)
                     {
                         target.Hurt(owner_player, owner_player.playerData.ATK);
-
-                        Debug.Log($"플레이어의 공격 : {target.name}이 공격을 받음");
                     }
                 }
                 else if (owner_monster != null)
