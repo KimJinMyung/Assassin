@@ -1190,7 +1190,7 @@ MonoBehaviour:
   AttackTarget:
     serializedVersion: 2
     m_Bits: 896
-  IsUpperPlayerToMonster: 0
+  assassinationDistance: 1.5
 --- !u!114 &3023080787147411181
 MonoBehaviour:
   m_ObjectHideFlags: 0

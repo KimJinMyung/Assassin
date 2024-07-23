@@ -49,7 +49,7 @@ public class MonsterView : MonoBehaviour
     private MonsterBTRunner _monsterBTRunner;
 
     private NavMeshAgent agent;
-    private Animator animator;
+    public Animator animator { get; private set; }
     private Rigidbody rb;
     private CapsuleCollider Collider;
 
@@ -91,7 +91,7 @@ public class MonsterView : MonoBehaviour
     private bool isParryStart;
     public bool isSubdued { get; private set; }
     private float _subduedTimer;
-    private bool isHurt;
+    public bool isHurt { get; private set; }
     private bool isDead;
     private bool isHurtAnimationStart;
 
@@ -258,8 +258,12 @@ public class MonsterView : MonoBehaviour
 
         animator.SetBool("Circling", isCircling);
 
+        isSubdued = true;
+
         if (vm.TraceTarget != null)
         {
+            if (animator.GetBool("Incapacitated")) return;
+
             distance = Vector3.Distance(transform.position, vm.TraceTarget.position);
             CombatMovementTimer += Time.deltaTime;
 
@@ -349,8 +353,24 @@ public class MonsterView : MonoBehaviour
 
     IBTNode.EBTNodeState CheckIsDeadOnUpdate()
     {
+        if (animator.GetBool("Dead"))
+        {
+            if(animator.GetBool("Incapacitated"))
+            {
+                isDead = true;
+                Collider.enabled = false;
+                agent.speed = 0;
+                agent.ResetPath();
+
+                if (animator.layerCount > 1) animator.SetLayerWeight(1, 0);
+
+                gameObject.layer = LayerMask.NameToLayer("Dead");
+                MonsterManager.instance.DeadMonster_Update(this);
+            }
+            return IBTNode.EBTNodeState.Success;
+        }
+
         if (!isDead) return IBTNode.EBTNodeState.Fail;
-        if (animator.GetBool("Dead")) return IBTNode.EBTNodeState.Success;
 
         Collider.enabled = false;
 
@@ -739,7 +759,7 @@ public class MonsterView : MonoBehaviour
     #region Attack
     IBTNode.EBTNodeState DecideAttackIndex()
     {
-        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
+        if (isDead || isHurt || isParried) return IBTNode.EBTNodeState.Fail;
         if (!isAttacking) return IBTNode.EBTNodeState.Fail;
         if (AttackIndex != -1) return IBTNode.EBTNodeState.Success;
 
@@ -748,7 +768,7 @@ public class MonsterView : MonoBehaviour
     }
     IBTNode.EBTNodeState CheckisAttackingOnUpdate()
     {
-        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
+        if (isDead || isHurt || isParried) return IBTNode.EBTNodeState.Fail;
         if (vm.TraceTarget == null) return IBTNode.EBTNodeState.Fail;
         if (!isAttacking) return IBTNode.EBTNodeState.Fail;
         if (isAttackEnd) return IBTNode.EBTNodeState.Success;
@@ -757,7 +777,7 @@ public class MonsterView : MonoBehaviour
         agent.speed = _monsterData.RunSpeed;
         agent.stoppingDistance = AttackRange - 0.3f;
 
-        if(distance <= AttackRange - 0.3f)
+        if(distance <= AttackRange)
         {
             isAttackAble = false;
             CombatMovementTimer = 0f;
@@ -774,7 +794,7 @@ public class MonsterView : MonoBehaviour
 
     IBTNode.EBTNodeState CompleteAttackAnimation()
     {
-        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
+        if (isDead || isHurt || isParried) return IBTNode.EBTNodeState.Fail;
         if (!isAttacking) return IBTNode.EBTNodeState.Fail;
         if (isAttackEnd) return IBTNode.EBTNodeState.Success;
 
@@ -789,7 +809,7 @@ public class MonsterView : MonoBehaviour
 
     IBTNode.EBTNodeState RetreatAfterAttack()
     {
-        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
+        if (isDead || isHurt || isParried) return IBTNode.EBTNodeState.Fail;
         if (vm.TraceTarget == null) return IBTNode.EBTNodeState.Fail;
         if (distance >= AttackRange + 1.5f) 
         {

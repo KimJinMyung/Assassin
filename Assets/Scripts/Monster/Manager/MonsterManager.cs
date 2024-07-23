@@ -111,7 +111,7 @@ public class MonsterManager : MonoBehaviour
             if (newMonster.Type == MonsterType.Boss) continue;
 
             //isAttackAble 이 아니면 continue
-            if (!newMonster.isAttackAble) continue;
+            if (!newMonster.isAttackAble || newMonster.isSubdued || newMonster.isHurt) continue;
 
             Transform target = newMonster.vm.TraceTarget;
             if (target != null)
