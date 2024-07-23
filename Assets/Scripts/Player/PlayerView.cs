@@ -98,7 +98,6 @@ public class PlayerView : MonoBehaviour
             {
                 if (attacker.vm.CurrentAttackMethod.AttackType != "Long")
                 {
-                    Debug.Log("패링함");
                     attacker.Parried(this);
                     return;
                 }
@@ -106,7 +105,7 @@ public class PlayerView : MonoBehaviour
                 return;
             }
 
-            if (animator.GetBool("Defense"))
+            if (animator.GetBool("Defense") && animator.GetBool("ParryAble"))
             {
                 //방어 성공
                 vm.RequestPlayerStaminaChanged(vm.Stamina - attacker.vm.Stamina);

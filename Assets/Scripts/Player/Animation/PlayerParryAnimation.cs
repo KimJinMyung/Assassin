@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class PlayerParryAnimation : StateMachineBehaviour
 {
+    private PlayerBattleManager owner;
     
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.SetBool("ParryAble", false);
+        owner = animator.GetComponent<PlayerBattleManager>();
+        owner.isParried = true;
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(stateInfo.normalizedTime >= 0f && stateInfo.normalizedTime <= 0.5f)
+        if(stateInfo.normalizedTime >= 0f && stateInfo.normalizedTime <= 0.3f)
         {
             animator.SetBool("Parring", true);
         }
@@ -25,5 +28,6 @@ public class PlayerParryAnimation : StateMachineBehaviour
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.SetBool("ParryAble", true);
+        owner.isParried = false;
     }
 }

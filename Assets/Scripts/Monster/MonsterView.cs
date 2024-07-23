@@ -86,7 +86,7 @@ public class MonsterView : MonoBehaviour
     private bool isAttacking;
     private bool isAttackEnd;
     public bool isCircling { get; private set; }
-    private bool isParried;
+    public bool isParried { get; private set; }
     private bool isParryStart;
     private bool isSubdued;
     private float _subduedTimer;
@@ -532,7 +532,7 @@ public class MonsterView : MonoBehaviour
     IBTNode.EBTNodeState ParriedStart() 
     {
         if (!isParried) return IBTNode.EBTNodeState.Fail;
-        if (isParried) return IBTNode.EBTNodeState.Success;
+        if (isParryStart) return IBTNode.EBTNodeState.Success;
 
         animator.SetTrigger("Parried");
         if (IsAnimationRunning("Parried"))

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +12,7 @@ public class PlayerBattleManager : MonoBehaviour
 
     private PlayerLockOn playerSight;
 
+    public bool isParried {  get; set; }
     private bool isDefence;
 
     private void Awake()
@@ -61,7 +63,6 @@ public class PlayerBattleManager : MonoBehaviour
     public void OnDefense(InputAction.CallbackContext context)
     {
         if (!animator.GetBool("AttackAble")) return;
-
         isDefence = context.ReadValue<float>() > 0.5f;
 
         if (isDefence && !animator.GetBool("Defense"))

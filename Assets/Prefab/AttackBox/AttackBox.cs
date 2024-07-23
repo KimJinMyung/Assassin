@@ -18,6 +18,7 @@ public class AttackBox : MonoBehaviour
     private MonsterView owner_monster;
 
     private Animator animator;
+    private PlayerBattleManager attackManager;
 
     private void Awake()
     {
@@ -28,6 +29,7 @@ public class AttackBox : MonoBehaviour
         {
             _attackLayer = LayerMask.GetMask("Monster", "LockOnAble", "LockOnTarget", "Incapacitated");
             animator = owner_player.GetComponent<Animator>();
+            attackManager = owner_player.GetComponent<PlayerBattleManager>();
         }
         else if (owner_monster != null)
         {
@@ -67,10 +69,8 @@ public class AttackBox : MonoBehaviour
             {
                 if (owner_player != null)
                 {
-                    //Parry 애니메이션이 실행되고 있는지 확인
-
                     MonsterView target = collider.GetComponent<MonsterView>();
-                    if (target != null)
+                    if (target != null && !target.isParried)
                     {
                         target.Hurt(owner_player, owner_player.playerData.ATK);
                     }
@@ -79,7 +79,7 @@ public class AttackBox : MonoBehaviour
                 {
                     PlayerView target = collider.GetComponent<PlayerView>();
                     if (target != null)
-                    {
+                    {                        
                         target.Hurt(owner_monster, owner_monster._monsterData.ATK);
                     }
                 }
@@ -88,5 +88,20 @@ public class AttackBox : MonoBehaviour
                 _attackedObject.Add(collider);
             }
         }
+    }
+
+    private bool IsAnimationRunning(string animationName)
+    {
+        if (animator == null) return false;
+
+        bool isRunning = false;
+        var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if (stateInfo.IsName(animationName))
+        {
+            float normalizedTime = stateInfo.normalizedTime;
+            isRunning = normalizedTime >= 0 && normalizedTime < 1.0f;
+        }
+
+        return isRunning;
     }
 }
