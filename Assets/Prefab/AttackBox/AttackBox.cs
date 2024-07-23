@@ -70,7 +70,7 @@ public class AttackBox : MonoBehaviour
                 if (owner_player != null)
                 {
                     MonsterView target = collider.GetComponent<MonsterView>();
-                    if (target != null && !target.isParried)
+                    if (target != null && !animator.GetBool("Defense"))
                     {
                         target.Hurt(owner_player, owner_player.playerData.ATK);
                     }
@@ -88,20 +88,5 @@ public class AttackBox : MonoBehaviour
                 _attackedObject.Add(collider);
             }
         }
-    }
-
-    private bool IsAnimationRunning(string animationName)
-    {
-        if (animator == null) return false;
-
-        bool isRunning = false;
-        var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        if (stateInfo.IsName(animationName))
-        {
-            float normalizedTime = stateInfo.normalizedTime;
-            isRunning = normalizedTime >= 0 && normalizedTime < 1.0f;
-        }
-
-        return isRunning;
     }
 }

@@ -51,9 +51,10 @@ public class MonsterView : MonoBehaviour
     private NavMeshAgent agent;
     private Animator animator;
     private Rigidbody rb;
-    private Collider Collider;
+    private CapsuleCollider Collider;
 
     public int monsterId { get; private set; }
+    public float MonsterHeight { get; private set; }
 
     #region Patrol
     [SerializeField] private LayerMask GroundLayer;
@@ -88,7 +89,7 @@ public class MonsterView : MonoBehaviour
     public bool isCircling { get; private set; }
     public bool isParried { get; private set; }
     private bool isParryStart;
-    private bool isSubdued;
+    public bool isSubdued { get; private set; }
     private float _subduedTimer;
     private bool isHurt;
     private bool isDead;
@@ -99,12 +100,14 @@ public class MonsterView : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>(); 
-        Collider = GetComponent<Collider>();
+        Collider = GetComponent<CapsuleCollider>();
     }
 
     private void OnEnable()
     {
         monsterId = gameObject.GetInstanceID();
+        MonsterHeight = Collider.height;
+
         isDead = false;
         patrolWaitTime = UnityEngine.Random.Range(1.5f, 3f);
         patrolWaitTimer = patrolWaitTime;

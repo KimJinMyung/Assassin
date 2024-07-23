@@ -1187,6 +1187,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12fbf4358c01c5f4ca8f87258b384892, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AttackTarget:
+    serializedVersion: 2
+    m_Bits: 896
+  IsUpperPlayerToMonster: 0
 --- !u!114 &3023080787147411181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1248,6 +1252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e21029544fda3246b4717f7244c15ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isKnockback: 0
 --- !u!143 &6031642464399208969
 CharacterController:
   m_ObjectHideFlags: 0

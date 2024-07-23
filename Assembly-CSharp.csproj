@@ -73,6 +73,7 @@
     <Compile Include="Assets\Scripts\Data\Player\PlayerData.cs" />
     <Compile Include="Assets\Scripts\Data\Player\PlayerDataMappingExtension.cs" />
     <Compile Include="Assets\Scripts\Player\LockOn\LockOnModelExtension.cs" />
+    <Compile Include="Assets\playerAssassinated.cs" />
     <Compile Include="Assets\Scripts\Player\Animation\PlayerParryAnimation.cs" />
     <Compile Include="Assets\Scripts\LogicManager\LogicManager.cs" />
     <Compile Include="Assets\Scripts\Monster\Manager\MonsterManager.cs" />
