@@ -84,7 +84,7 @@ public class MonsterView : MonoBehaviour
 
     private bool isPatrol;
     public bool isAttackAble { get; private set; }
-    private bool isAttacking;
+    public bool isAttacking { get; private set; }
     private bool isAttackEnd;
     public bool isCircling { get; private set; }
     public bool isParried { get; private set; }
@@ -92,7 +92,7 @@ public class MonsterView : MonoBehaviour
     public bool isSubdued { get; private set; }
     private float _subduedTimer;
     public bool isHurt { get; private set; }
-    private bool isDead;
+    public bool isDead {  get; private set; }
     private bool isHurtAnimationStart;
 
     private void Awake()
@@ -258,6 +258,7 @@ public class MonsterView : MonoBehaviour
 
         animator.SetBool("Circling", isCircling);
 
+        //µð¹ö±ë ¿ë
         isSubdued = true;
 
         if (vm.TraceTarget != null)
@@ -293,6 +294,19 @@ public class MonsterView : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(-rotatedPos);
             animator.SetFloat("CirclingDir", circlingDir);
         }
+    }
+
+    public void MonsterDead()
+    {
+        isDead = true;
+        Collider.enabled = false;
+        agent.speed = 0;
+        agent.ResetPath();
+
+        if (animator.layerCount > 1) animator.SetLayerWeight(1, 0);
+
+        gameObject.layer = LayerMask.NameToLayer("Dead");
+        MonsterManager.instance.DeadMonster_Update(this);
     }
 
     IBTNode SetMonsterBT()
@@ -350,7 +364,7 @@ public class MonsterView : MonoBehaviour
     }
 
     #region Die
-
+    
     IBTNode.EBTNodeState CheckIsDeadOnUpdate()
     {
         if (animator.GetBool("Dead"))
