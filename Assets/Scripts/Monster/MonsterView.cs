@@ -134,7 +134,7 @@ public class MonsterView : MonoBehaviour
         MonsterManager.instance.SpawnMonster(this);
 
         //µð¹ö±ë ¿ë
-        vm.TraceTarget = GameObject.FindWithTag("Player").transform;
+        //vm.TraceTarget = GameObject.FindWithTag("Player").transform;
     }
 
     private void OnDisable()
@@ -254,7 +254,7 @@ public class MonsterView : MonoBehaviour
     {
         UpdateAttackMethod();
 
-        _monsterBTRunner.Execute();
+        //_monsterBTRunner.Execute();
 
         animator.SetBool("Circling", isCircling);
 

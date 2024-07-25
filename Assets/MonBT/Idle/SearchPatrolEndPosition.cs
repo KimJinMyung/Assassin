@@ -1,37 +1,28 @@
+using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[TaskCategory("Monster_Patrol")]
-public class RandomPatrolPositionOnUpdate : Action
+[TaskCategory("Idle")]
+public class SearchPatrolEndPosition : Action
 {
-    private MonsterView monsterView;
-    private Animator _animator;
+    private MonsterView view;
 
-    private Vector3 patrolPos;
+    [SerializeField] SharedVector3 patrolPos;
+    [SerializeField] LayerMask GroundLayer;
 
-    private LayerMask GroundLayer;
-
-    public override void OnAwake()
+    public override void OnStart()
     {
-        base.OnAwake();
-        monsterView = Owner.GetComponent<MonsterView>();
-        _animator = monsterView.GetComponent<Animator>();
-
-        GroundLayer = LayerMask.GetMask("Default", "MonsterWalkAble");
+        view = Owner.GetComponent<MonsterView>();
     }
 
     public override TaskStatus OnUpdate()
     {
-        if (monsterView.isDead || monsterView.isHurt) return TaskStatus.Failure;
-        if (monsterView.vm.TraceTarget != null) return TaskStatus.Failure;
-        if (monsterView.isAttacking) return TaskStatus.Failure;
+        patrolPos.Value = RandomPatrolEndPosition(Owner.transform.position, Random.Range(0f, view._monsterData.ViewRange));
 
-        if (Vector3.Distance(transform.position, patrolPos) > 0.1f) return TaskStatus.Success;
-
-        if (RandomPatrolEndPosition(transform.position, monsterView._monsterData.ViewRange) != Vector3.zero)
+        if (patrolPos.Value != Vector3.zero)
         {
             return TaskStatus.Success;
         }
@@ -42,6 +33,7 @@ public class RandomPatrolPositionOnUpdate : Action
     private Vector3 RandomPatrolEndPosition(Vector3 originPosition, float distance)
     {
         Vector3 randomPoint = originPosition + UnityEngine.Random.insideUnitSphere * distance;
+        Vector3 patrolPos = Vector3.zero;
 
         if (Physics.Raycast(randomPoint + Vector3.up * (distance + 1f), Vector3.down, out RaycastHit hitInfo, distance + 5f, GroundLayer))
         {

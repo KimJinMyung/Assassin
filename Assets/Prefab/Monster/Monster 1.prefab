@@ -3499,8 +3499,7 @@ GameObject:
   - component: {fileID: 6239209127238505808}
   - component: {fileID: 4282896214033846913}
   - component: {fileID: 7247578934739699531}
-  - component: {fileID: -3560814562179236976}
-  - component: {fileID: 1448442299962683658}
+  - component: {fileID: -7542444392677325143}
   m_Layer: 7
   m_Name: Monster 1
   m_TagString: Untagged
@@ -3650,7 +3649,7 @@ CapsuleCollider:
   m_Height: 1.9
   m_Direction: 1
   m_Center: {x: 0, y: 0.95, z: 0}
---- !u!114 &-3560814562179236976
+--- !u!114 &-7542444392677325143
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3669,7 +3668,7 @@ MonoBehaviour:
   logTaskChanges: 0
   group: 0
   resetValuesOnRestart: 0
-  externalBehavior: {fileID: 0}
+  externalBehavior: {fileID: 11400000, guid: bd284d4a92b547246a787245fc59ff9f, type: 2}
   mBehaviorSource:
     behaviorName: MonsterBT
     behaviorDescription: 
@@ -3678,7 +3677,7 @@ MonoBehaviour:
       parentIndex: 
       startIndex: 
       variableStartIndex: 
-      JSONSerialization: 
+      JSONSerialization: '{"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"PatrolDelayTimes","IsShared":true,"SinglemValue":0},{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"PatrolPoint","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"MoveSpeed","IsShared":true,"SinglemValue":0},{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"isPatrol","IsShared":true,"BooleanmValue":false}]}'
       fieldSerializationData:
         typeName: []
         fieldNameHash: 
@@ -3687,22 +3686,9 @@ MonoBehaviour:
         unityObjects: []
         byteData: 
         byteDataArray: 
-      Version: 
+      Version: 1.7.8
   gizmoViewMode: 2
   showBehaviorDesignerGizmo: 1
---- !u!114 &1448442299962683658
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8927993104135698521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1ef67f32179bf74ab67549e85226ced, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tree: {fileID: -3560814562179236976}
 --- !u!1 &8963927133777674826
 GameObject:
   m_ObjectHideFlags: 0
