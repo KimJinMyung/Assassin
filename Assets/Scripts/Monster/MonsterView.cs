@@ -869,7 +869,7 @@ public class MonsterView : MonoBehaviour
         return isRunning;
     }
 
-    private void MoveToTarget(Vector3 targetPos)
+    public void MoveToTarget(Vector3 targetPos)
     {
         agent.SetDestination(targetPos);
     }
