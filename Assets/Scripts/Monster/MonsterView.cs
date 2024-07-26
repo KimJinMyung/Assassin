@@ -1,3 +1,4 @@
+using BehaviorDesigner.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,7 +6,6 @@ using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public enum MonsterType
 {
@@ -47,6 +47,7 @@ public class MonsterView : MonoBehaviour
     private List<Monster_Attack> monsterAttackMethodList = new List<Monster_Attack>();
 
     private MonsterBTRunner _monsterBTRunner;
+    public BehaviorTree _behaviorTree { get; private set; }
 
     private NavMeshAgent agent;
     public Animator animator { get; private set; }
@@ -56,36 +57,16 @@ public class MonsterView : MonoBehaviour
     public int monsterId { get; private set; }
     public float MonsterHeight { get; private set; }
 
-    #region Patrol
-    [SerializeField] private LayerMask GroundLayer;
-    private float patrolWaitTimer;
-    private float patrolWaitTime;
-    private Vector3 patrolPos;
-    private float moveSpeed;
-    #endregion
-    #region Battle
-    private float distance;
-    private float AttackRange;
-    #endregion
-    #region Circling
-    private float circleDelayTimer;
-    private float circlingDir;
-    private float circlingTImer;
-    #endregion
     #region attack
     public float CombatMovementTimer { get; private set; }
-    private string AttackName;
-    private int AttackIndex;
-    private int AttackMethodCount;
+    public int AttackMethodCount { get; private set; }
     #endregion
     #region Hurt
-    private Vector3 KnockbackDir;
+    public Vector3 KnockbackDir { get; private set; }
     #endregion
 
     private bool isPatrol;
-    public bool isAttackAble { get; private set; }
-    public bool isAttacking { get; private set; }
-    private bool isAttackEnd;
+
     public bool isCircling { get; private set; }
     public bool isParried { get; private set; }
     private bool isParryStart;
@@ -109,11 +90,6 @@ public class MonsterView : MonoBehaviour
         MonsterHeight = Collider.height;
 
         isDead = false;
-        patrolWaitTime = UnityEngine.Random.Range(1.5f, 3f);
-        patrolWaitTimer = patrolWaitTime;
-        circleDelayTimer = UnityEngine.Random.Range(2f, 5f);
-        circlingTImer = UnityEngine.Random.Range(3f, 6f);
-        AttackIndex = -1;
         KnockbackDir = Vector3.zero;
 
         gameObject.layer = LayerMask.NameToLayer("Monster");
@@ -126,10 +102,12 @@ public class MonsterView : MonoBehaviour
             vm.RegisterMonsterHPChanged(true, monsterId);
             vm.RegisterMonsterStaminaChanged(true, monsterId);
             vm.RegisterAttackMethodChanged(monsterId, true);
+            vm.RegisterTraceTargetChanged(monsterId, true);
         }
 
         SetMonsterInfo(_type);
         _monsterBTRunner = new MonsterBTRunner(SetMonsterBT());
+        _behaviorTree = GetComponent<BehaviorTree>();
 
         MonsterManager.instance.SpawnMonster(this);
 
@@ -141,6 +119,7 @@ public class MonsterView : MonoBehaviour
     {
         if(vm != null)
         {
+            vm.RegisterTraceTargetChanged(monsterId, false);
             vm.RegisterAttackMethodChanged(monsterId, false);
             vm.RegisterMonsterStaminaChanged(false, monsterId);
             vm.RegisterMonsterHPChanged(false, monsterId);
@@ -230,8 +209,6 @@ public class MonsterView : MonoBehaviour
         {           
             case nameof(vm.CurrentAttackMethod):
                 ChangedWeaponsMesh();                
-                AttackRange = vm.CurrentAttackMethod.AttackRange;
-                AttackName = vm.CurrentAttackMethod.DataName;
                 GetAttackMethodCount();
                 break;
             case nameof(vm.TraceTarget):
@@ -256,19 +233,14 @@ public class MonsterView : MonoBehaviour
 
         //_monsterBTRunner.Execute();
 
-        animator.SetBool("Circling", isCircling);
-
         //디버깅 용
-        isSubdued = true;
+        //isSubdued = true;
 
         if (vm.TraceTarget != null)
         {
             if (animator.GetBool("Incapacitated")) return;
 
-            distance = Vector3.Distance(transform.position, vm.TraceTarget.position);
             CombatMovementTimer += Time.deltaTime;
-
-            if(!isAttackEnd) MoveToTarget(vm.TraceTarget.position);
 
             MonsterBattleRotation();
         }
@@ -283,22 +255,8 @@ public class MonsterView : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 3f * Time.deltaTime);
     }
 
-    private void FixedUpdate()
-    {
-        if (isCircling)
-        {
-            var VecToTarget = transform.position - vm.TraceTarget.position;
-            var rotatedPos = Quaternion.Euler(0, circlingDir * 20f * Time.fixedDeltaTime, 0) * VecToTarget;
-
-            agent.Move(rotatedPos - VecToTarget);
-            transform.rotation = Quaternion.LookRotation(-rotatedPos);
-            animator.SetFloat("CirclingDir", circlingDir);
-        }
-    }
-
     public void MonsterDead()
     {
-        isDead = true;
         Collider.enabled = false;
         agent.speed = 0;
         agent.ResetPath();
@@ -316,11 +274,6 @@ public class MonsterView : MonoBehaviour
         DieNodeList.Add(new ActionNode(CompleteDieAnimation));
         var DieSeqNode = new SequenceNode(DieNodeList);
 
-        var HurtNodeList = new List<IBTNode>();
-        HurtNodeList.Add(new ActionNode(CheckMonsterHPOnUPdate));
-        HurtNodeList.Add(new ActionNode(CompleteHurtAnimation));
-        var HurtSeqNode = new SequenceNode(HurtNodeList);
-
         var SubduedNodeList = new List<IBTNode>();
         SubduedNodeList.Add(new ActionNode(Subdued));
         SubduedNodeList.Add(new ActionNode(SubduedTimer));
@@ -331,34 +284,10 @@ public class MonsterView : MonoBehaviour
         ParryNodeList.Add(new ActionNode(CompleteParriedAnimation));
         var ParrySeqNode = new SequenceNode(ParryNodeList);
 
-        var IdleNodeList = new List<IBTNode>();
-        IdleNodeList.Add(new ActionNode(WaitPatrolDelay));
-        IdleNodeList.Add(new ActionNode(RandomPatrolPosOnUpdate));
-        IdleNodeList.Add(new ActionNode(CheckMoveDirToTransformForward));
-        IdleNodeList.Add(new ActionNode(PatrolMoveOnUpdate));
-        var IdleSeqNode = new SequenceNode(IdleNodeList);
-
-        var FollowingNodeList = new List<IBTNode>();
-        FollowingNodeList.Add(new ActionNode(CheckFolloewingRangeOnUpdate));
-        FollowingNodeList.Add(new ActionNode(WaitCirclingDelay));
-        FollowingNodeList.Add(new ActionNode(Circling));
-        var FollowingSeqNode = new SequenceNode(FollowingNodeList);
-
-        var AttackNodeList = new List<IBTNode>();
-        AttackNodeList.Add(new ActionNode(DecideAttackIndex));
-        AttackNodeList.Add(new ActionNode(CheckisAttackingOnUpdate));
-        AttackNodeList.Add(new ActionNode(CompleteAttackAnimation));
-        AttackNodeList.Add(new ActionNode(RetreatAfterAttack));
-        var AttackSeqNode = new SequenceNode(AttackNodeList);
-
         var rootNodeList = new List<IBTNode>();
         rootNodeList.Add(DieSeqNode);
-        rootNodeList.Add(HurtSeqNode);
         rootNodeList.Add(SubduedSeqNode);
         rootNodeList.Add(ParrySeqNode);
-        rootNodeList.Add(IdleSeqNode);
-        rootNodeList.Add(FollowingSeqNode);
-        rootNodeList.Add(AttackSeqNode);
         var rootSelectNode = new SelectorNode(rootNodeList);
         return rootSelectNode;
     }
@@ -431,7 +360,7 @@ public class MonsterView : MonoBehaviour
         if (isSubdued)
         {
             vm.RequestMonsterHPChanged(monsterId, 0);
-            isDead = true;
+            _behaviorTree.SetVariableValue("isDead", true);
 
             //암살 동작 실행
             return;
@@ -453,79 +382,16 @@ public class MonsterView : MonoBehaviour
 
         if(vm.HP <= 0)
         {
-            isDead = true;
+            _behaviorTree.SetVariableValue("isDead", true);
         }
         else
         {
-            isHurt = true;
+            _behaviorTree.SetVariableValue("isHurt", true);
             KnockbackDir = transform.position - attacker.transform.position;
             //넉백 구간
         }
     }
-
-    private void ApplyKnockBack(Vector3 KnockbackDir)
-    {
-        KnockbackDir.y = 0;
-        KnockbackDir.Normalize();
-
-        float knockbackForce = 2f;
-        agent.Move(knockbackForce * KnockbackDir * Time.deltaTime);
-    }
-
-    private void KnockBackAnimation(Vector3 KnockbackDir)
-    {
-        KnockbackDir.y = 0;
-        KnockbackDir.Normalize();
-
-        animator.SetFloat("HurtDir_z", KnockbackDir.z);
-        animator.SetFloat("HurtDir_x", KnockbackDir.x);
-        animator.SetTrigger("Hurt");
-    }
-
-    IBTNode.EBTNodeState CheckMonsterHPOnUPdate()
-    {
-        if (!isHurt || isDead) return IBTNode.EBTNodeState.Fail;
-        if (isHurtAnimationStart) return IBTNode.EBTNodeState.Success;
-
-        animator.SetBool("Hit", true);
-        KnockBackAnimation(KnockbackDir);
-        if(IsHurtAnimationRunning()) { isHurtAnimationStart = true;  return IBTNode.EBTNodeState.Success; }
-        return IBTNode.EBTNodeState.Running;
-    }
-
-    IBTNode.EBTNodeState CompleteHurtAnimation()
-    {
-        if (!isHurt || isDead) return IBTNode.EBTNodeState.Fail;
-
-        if (IsHurtAnimationRunning())
-        {
-            ApplyKnockBack(KnockbackDir);
-            Debug.Log("넉백중...");
-            return IBTNode.EBTNodeState.Running;
-        }
-
-        isHurt = false;
-        isHurtAnimationStart = false;
-        animator.SetBool("Hit", false);
-        return IBTNode.EBTNodeState.Success;
-    }
-
-    private bool IsHurtAnimationRunning()
-    {
-        if (animator == null) return false;
-
-        bool isRunning = false;
-        var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-
-        // "Hurt" 상태가 현재 상태인지 확인
-        if (stateInfo.IsTag("Hurt"))
-        {
-            float normalizedTime = stateInfo.normalizedTime;
-            isRunning = normalizedTime >= 0 && normalizedTime < 1.0f;
-        }
-
-        return isRunning;
-    }
+    
     #endregion
 
     #region Subdued
@@ -608,253 +474,13 @@ public class MonsterView : MonoBehaviour
     }
     #endregion
 
-    #region Idle
-    IBTNode.EBTNodeState WaitPatrolDelay()
-    {
-        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
-        if (vm.TraceTarget != null) return IBTNode.EBTNodeState.Fail;
-        if (isAttacking) return IBTNode.EBTNodeState.Fail;
-        if (isPatrol) return IBTNode.EBTNodeState.Success;
-
-        agent.speed = _monsterData.WalkSpeed;
-
-        if(patrolWaitTimer > 0)
-        {
-            patrolWaitTimer -= Time.deltaTime;
-            return IBTNode.EBTNodeState.Running;
-        }
-        else
-        {
-            isPatrol = true;
-            patrolWaitTime = UnityEngine.Random.Range(1.5f, 3f);
-            patrolWaitTimer = patrolWaitTime;
-            return IBTNode.EBTNodeState.Success;
-        }
-    }
-
-    IBTNode.EBTNodeState RandomPatrolPosOnUpdate()
-    {
-        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
-        if (vm.TraceTarget != null) return IBTNode.EBTNodeState.Fail;
-        if (isAttacking) return IBTNode.EBTNodeState.Fail;
-
-        if (Vector3.Distance(transform.position, patrolPos) > 0.1f) return IBTNode.EBTNodeState.Success;
-
-        if(RandomPatrolEndPosition(transform.position, _monsterData.ViewRange) != Vector3.zero)
-        {
-            return IBTNode.EBTNodeState.Success;
-        }
-
-        return IBTNode.EBTNodeState.Running;
-    }
-
-    IBTNode.EBTNodeState CheckMoveDirToTransformForward()
-    {
-        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
-        if (vm.TraceTarget != null) return IBTNode.EBTNodeState.Fail;
-        if (isAttacking) return IBTNode.EBTNodeState.Fail;
-
-        Vector3 dir = (patrolPos - transform.position);
-        dir.y = 0f;
-        dir.Normalize();
-
-        float angle = Vector3.Angle(transform.forward, dir);
-
-        float rotationDirection = Vector3.SignedAngle(transform.forward, dir, Vector3.up) > 0 ? 1f : -1f;
-
-        if (angle > 20f)
-        {            
-            animator.SetBool("Rotate", true);
-            animator.SetFloat("Rotation", rotationDirection);
-            return IBTNode.EBTNodeState.Running;
-        }
-
-        animator.SetBool("Rotate", false);
-        animator.SetFloat("Rotation", 0);
-        return IBTNode.EBTNodeState.Success;
-    }
-
-    IBTNode.EBTNodeState PatrolMoveOnUpdate()
-    {
-        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
-        if (vm.TraceTarget != null) return IBTNode.EBTNodeState.Fail;
-        if (isAttacking) return IBTNode.EBTNodeState.Fail;
-
-        agent.stoppingDistance = 0.1f;
-        agent.speed = _monsterData.WalkSpeed;
-
-        MoveToTarget(patrolPos);
-
-        moveSpeed = Vector3.Distance(transform.position, patrolPos) > 0.1f ? 1 : 0;
-
-        animator.SetFloat("MoveSpeed", moveSpeed);
-
-        if (agent.remainingDistance > 0.1f) return IBTNode.EBTNodeState.Running;
-
-        isPatrol = false;
-        return IBTNode.EBTNodeState.Success;
-    }
-
-    #endregion
-
-    #region Battle
-
-    //Follow
-    IBTNode.EBTNodeState CheckFolloewingRangeOnUpdate()
-    {
-        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
-        if (vm.TraceTarget == null) return IBTNode.EBTNodeState.Fail;
-        if (isAttacking) return IBTNode.EBTNodeState.Fail;
-
-        agent.speed = _monsterData.RunSpeed;
-        agent.stoppingDistance = AttackRange + 1.5f;
-
-        if (distance >= AttackRange + 1.5f)
-        {
-            isCircling = false;
-            isAttackAble = false;
-            animator.SetFloat("MoveSpeed", 1);
-            return IBTNode.EBTNodeState.Running;
-        }
-
-        isAttackAble = true;
-        animator.SetFloat("MoveSpeed", 0);
-        return IBTNode.EBTNodeState.Success;
-    }
-
-    //Battle => Circling
-    IBTNode.EBTNodeState WaitCirclingDelay()
-    {
-        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
-        if (vm.TraceTarget == null) return IBTNode.EBTNodeState.Fail;
-        if (isAttacking) return IBTNode.EBTNodeState.Fail;
-        if (distance > AttackRange + 1.5f) return IBTNode.EBTNodeState.Fail;
-        if (isCircling) return IBTNode.EBTNodeState.Success;
-
-        if(circleDelayTimer > 0)
-        {
-            circleDelayTimer -= Time.deltaTime;
-            return IBTNode.EBTNodeState.Running;
-        }
-
-        circleDelayTimer = UnityEngine.Random.Range(2f, 5f);
-
-        if (UnityEngine.Random.Range(0,2) == 0)
-        {
-            circlingDir = UnityEngine.Random.Range(0, 2) == 0 ? 1 : -1;
-            isCircling = true;
-            isAttackAble = false;
-            return IBTNode.EBTNodeState.Success;
-        }
-
-        return IBTNode.EBTNodeState.Running;
-    }
-
-    IBTNode.EBTNodeState Circling()
-    {
-        if (isDead || isHurt) return IBTNode.EBTNodeState.Fail;
-        if (vm.TraceTarget == null) return IBTNode.EBTNodeState.Fail;
-        if (isAttacking) return IBTNode.EBTNodeState.Fail;
-        if (distance > AttackRange + 1.5f) return IBTNode.EBTNodeState.Fail;
-        if (!isCircling) return IBTNode.EBTNodeState.Fail;
-
-        if (circlingTImer > 0)
-        {
-            circlingTImer -= Time.deltaTime;
-            return IBTNode.EBTNodeState.Running;
-        }
-
-        isCircling = false;
-        circlingTImer = UnityEngine.Random.Range(3f, 6f);
-        return IBTNode.EBTNodeState.Success;
-    }
-    #endregion
-
-    #region Attack
-    IBTNode.EBTNodeState DecideAttackIndex()
-    {
-        if (isDead || isHurt || isParried) return IBTNode.EBTNodeState.Fail;
-        if (!isAttacking) return IBTNode.EBTNodeState.Fail;
-        if (AttackIndex != -1) return IBTNode.EBTNodeState.Success;
-
-        AttackIndex = UnityEngine.Random.Range(0, AttackMethodCount);
-        return IBTNode.EBTNodeState.Success;
-    }
-    IBTNode.EBTNodeState CheckisAttackingOnUpdate()
-    {
-        if (isDead || isHurt || isParried) return IBTNode.EBTNodeState.Fail;
-        if (vm.TraceTarget == null) return IBTNode.EBTNodeState.Fail;
-        if (!isAttacking) return IBTNode.EBTNodeState.Fail;
-        if (isAttackEnd) return IBTNode.EBTNodeState.Success;
-        if (!isAttackAble && isAttacking) return IBTNode.EBTNodeState.Success;
-
-        agent.speed = _monsterData.RunSpeed;
-        agent.stoppingDistance = AttackRange - 0.3f;
-
-        if(distance <= AttackRange)
-        {
-            isAttackAble = false;
-            CombatMovementTimer = 0f;
-            animator.SetFloat("MoveSpeed", 0);
-            animator.SetTrigger($"{AttackName}");
-            if(IsAnimationRunning($"{AttackName}.attack{AttackIndex}")) return IBTNode.EBTNodeState.Success;
-            return IBTNode.EBTNodeState.Running;
-        }
-
-        animator.SetFloat("MoveSpeed", 1);
-        agent.SetDestination(vm.TraceTarget.position);
-        return IBTNode.EBTNodeState.Running;
-    }
-
-    IBTNode.EBTNodeState CompleteAttackAnimation()
-    {
-        if (isDead || isHurt || isParried) return IBTNode.EBTNodeState.Fail;
-        if (!isAttacking) return IBTNode.EBTNodeState.Fail;
-        if (isAttackEnd) return IBTNode.EBTNodeState.Success;
-
-        if (IsAnimationRunning($"{AttackName}.attack{AttackIndex}"))
-        {
-            return IBTNode.EBTNodeState.Running;
-        }
-
-        isAttackEnd = true;
-        return IBTNode.EBTNodeState.Success;
-    }
-
-    IBTNode.EBTNodeState RetreatAfterAttack()
-    {
-        if (isDead || isHurt || isParried) return IBTNode.EBTNodeState.Fail;
-        if (vm.TraceTarget == null) return IBTNode.EBTNodeState.Fail;
-        if (distance >= AttackRange + 1.5f) 
-        {
-            isAttackEnd = false;
-            isAttacking = false;
-            AttackIndex = -1;
-            return IBTNode.EBTNodeState.Success; 
-        }
-
-        agent.speed = _monsterData.WalkSpeed;
-        animator.SetFloat("MoveSpeed", -1);
-        Vector3 targetDir = vm.TraceTarget.position - transform.position;
-        targetDir.y = 0;
-
-        if (vm.CurrentAttackMethod.AttackType == "Short")
-        {
-            agent.Move(-targetDir.normalized * (AttackRange + 1.5f) * Time.deltaTime);
-        }
-
-        //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(targetDir), 500 * Time.deltaTime);
-        return IBTNode.EBTNodeState.Running;
-    }
-    #endregion
-
     public void Attack()
     {
-        if(!isAttackAble) return;
-        if (!isAttacking) isAttacking = true;
+        if(!(bool)_behaviorTree.GetVariable("isAttackAble").GetValue()) return;
+        if (!(bool)_behaviorTree.GetVariable("isAttacking").GetValue()) _behaviorTree.SetVariableValue("isAttacking", true);
     }
 
-    private bool IsAnimationRunning(string animationName)
+    public bool IsAnimationRunning(string animationName)
     {
         if (animator == null) return false;
 
@@ -863,7 +489,24 @@ public class MonsterView : MonoBehaviour
         if (stateInfo.IsName(animationName))
         {
             float normalizedTime = stateInfo.normalizedTime;
-            isRunning = normalizedTime >= 0 && normalizedTime < 1.0f;
+            isRunning = normalizedTime > 0 && normalizedTime < 1.0f;
+        }
+
+        return isRunning;
+    }
+
+    public  bool IsHurtAnimationRunning()
+    {
+        if (animator == null) return false;
+
+        bool isRunning = false;
+        var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        // "Hurt" 상태가 현재 상태인지 확인
+        if (stateInfo.IsTag("Hurt"))
+        {
+            float normalizedTime = stateInfo.normalizedTime;
+            isRunning = normalizedTime > 0 && normalizedTime < 1.0f;
         }
 
         return isRunning;
@@ -872,25 +515,6 @@ public class MonsterView : MonoBehaviour
     public void MoveToTarget(Vector3 targetPos)
     {
         agent.SetDestination(targetPos);
-    }
-
-    private Vector3 RandomPatrolEndPosition(Vector3 originPosition, float distance)
-    {
-        Vector3 randomPoint = originPosition + UnityEngine.Random.insideUnitSphere * distance;
-
-        if (Physics.Raycast(randomPoint + Vector3.up * (distance + 1f), Vector3.down, out RaycastHit hitInfo, distance + 5f, GroundLayer))
-        {
-            randomPoint.y = hitInfo.point.y;
-
-            int walkableAreaMask = 1 << NavMesh.GetAreaFromName("Walkable");
-            if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, 1.0f, walkableAreaMask))
-            {
-                patrolPos = hit.position;
-                return patrolPos;
-            }
-        }
-
-        return Vector3.zero;
     }
 
 }

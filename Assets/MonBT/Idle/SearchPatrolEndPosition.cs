@@ -13,7 +13,7 @@ public class SearchPatrolEndPosition : Action
     [SerializeField] SharedVector3 patrolPos;
     [SerializeField] LayerMask GroundLayer;
 
-    public override void OnStart()
+    public override void OnAwake()
     {
         view = Owner.GetComponent<MonsterView>();
     }

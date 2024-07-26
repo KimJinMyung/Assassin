@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{054D9129-5B67-CD6A-568D-AA77DA650217}</ProjectGuid>
+    <ProjectGuid>{FCAF9891-BE80-D41A-5026-AE49274615AF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -158,8 +158,10 @@
     <Compile Include="Assets\Scripts\UI\LockOn_UI.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\GetRemainingDistance.cs" />
     <Compile Include="Assets\MonBT\Idle\Idle_Conditional.cs" />
+    <Compile Include="Assets\MonBT\Battle\Circling.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector3\Dot.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animator\SetTrigger.cs" />
+    <Compile Include="Assets\MonBT\Battle\Battle_Conditional.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector3\Multiply.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\CapsuleCollider\SetRadius.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Input\GetAxis.cs" />
@@ -213,6 +215,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\CharacterController\SetRadius.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector3\GetForwardVector.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Variables\SharedGameObject.cs" />
+    <Compile Include="Assets\MonBT\Attack\CompleteAttackAnimation.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animator\GetBoolParameter.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\SetSharedGameObject.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Object Drawers\IntSliderAttribute.cs" />
@@ -278,6 +281,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\CompareSharedColor.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\SetTime.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector3\Operator.cs" />
+    <Compile Include="Assets\MonBT\Hurt\Hurt_Conditional.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\SetMass.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Transform\SetUpVector.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\WakeUp.cs" />
@@ -302,7 +306,6 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\SetIsKinematic.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector3\Angle.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Variables\SharedGameObjectList.cs" />
-    <Compile Include="Assets\MonBT\Trace\CheckTraceTaretRangeOnUpdate.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\CapsuleCollider\GetHeight.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\SetSharedGameObjectList.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\AddForce.cs" />
@@ -331,10 +334,11 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\GetTime.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animation\SetAnimatePhysics.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Transform\GetParent.cs" />
+    <Compile Include="Assets\MonBT\Attack\DecideAttackIndex.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animator\GetIntegerParameter.cs" />
+    <Compile Include="Assets\Scripts\Player\Animation\playerKnockback.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\IsPaused.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\SetIsKinematic.cs" />
-    <Compile Include="Assets\Scripts\Player\Animation\playerKnockback.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\CharacterController\HasColliderHit.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Quaternion\Identity.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\IsAlive.cs" />
@@ -362,6 +366,7 @@
     <Compile Include="Assets\Scripts\Monster\MonsterBTRunner.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\SetVelocity.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\PlayerPrefs\GetFloat.cs" />
+    <Compile Include="Assets\MonBT\Battle\ChangeCirclingDelayTime.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\GetAngularVelocity.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\String\BuildString.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\EntryTask.cs" />
@@ -480,11 +485,13 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Math\FloatClamp.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Physics\Raycast.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Variables\SharedQuaternion.cs" />
+    <Compile Include="Assets\MonBT\Battle\CheckTraceTaretRangeOnUpdate.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Composites\ParallelComplete.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Light\SetRange.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\IsKinematic.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Transform\SetEulerAngles.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Transform\SetRotation.cs" />
+    <Compile Include="Assets\MonBT\Hurt\CheckMonsterHPOnUPdate.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector2\SetValue.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Transform\Translate.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\GetPlaybackSpeed.cs" />
@@ -499,6 +506,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\AddForceAtPosition.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Light\GetShadowStrength.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\GetVelocity.cs" />
+    <Compile Include="Assets\MonBT\Attack\CheckisAttackAbleDisOnUpdate.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\CircleCollider2D\SetRadius.cs" />
     <Compile Include="Assets\Scripts\Data\Monster\MonsterData.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Behaviour\GetEnabled.cs" />
@@ -533,6 +541,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector2\GetVector3.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animator\SetLayerWeight.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Transform\GetEulerAngles.cs" />
+    <Compile Include="Assets\MonBT\Attack\RetreatAfterAttack.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\AudioSource\SetVelocityUpdateMode.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\AudioSource\IsPlaying.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Math\FloatAbs.cs" />
@@ -550,6 +559,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animator\StopPlayback.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Conditionals\Reflection\ComparePropertyValue.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animator\GetGravityWeight.cs" />
+    <Compile Include="Assets\MonBT\Attack\Attack_Conditional.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\CharacterController\SetCenter.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\AudioSource\SetLoop.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\AudioSource\GetPriority.cs" />
@@ -557,6 +567,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\AudioSource\SetPitch.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Conditionals\Physics\HasExitedCollision.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animator\StopRecording.cs" />
+    <Compile Include="Assets\MonBT\Hurt\CompleteHurtAnimation.cs" />
     <Compile Include="Assets\Scripts\Player\Animation\playerAssassinated.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\Resume.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Conditionals\Physics\HasExitedTrigger.cs" />
@@ -575,6 +586,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Actions\Reflection\GetPropertyValue.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\CompareSharedRect.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector3\SetXYZ.cs" />
+    <Compile Include="Assets\Scripts\Monster\DetectZone\MonsterDetectZone.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\CapsuleCollider\GetDirection.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Transform\Rotate.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\CompareSharedInt.cs" />
@@ -607,6 +619,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\SetIsStopped.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Composites\RandomSequence.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Time\SetTimeScale.cs" />
+    <Compile Include="Assets\MonBT\Die\Dead_Conditional.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\GetMass.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Actions\Wait.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Quaternion\Lerp.cs" />
@@ -987,6 +1000,18 @@
     </Reference>
     <Reference Include="BehaviorDesigner.Runtime">
       <HintPath>Assets\Behavior Designer\Runtime\BehaviorDesigner.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Android.Types">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.35f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Android.Gradle">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.35f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Gradle.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Android.GradleProject">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.35f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.GradleProject.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="netstandard">

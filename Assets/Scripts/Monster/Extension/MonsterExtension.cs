@@ -78,4 +78,18 @@ public static class MonsterExtension
         }
     }
     #endregion
+    #region TraceTarget
+    public static void RegisterTraceTargetChanged(this MonsterViewModel vm, int actorId, bool isRegister)
+    {
+        LogicManager.instance.RegisterTraceTargetChangedCallback(vm.OnResponseTraceTargetChangedEvent, actorId, isRegister);
+    }
+    public static void RequestTraceTargetChanged(this MonsterViewModel vm, int actorId, Transform traceTarget)
+    {
+        LogicManager.instance.OnTraceTarget(actorId, traceTarget);
+    }
+    public static void OnResponseTraceTargetChangedEvent(this MonsterViewModel vm, Transform traceTarget)
+    {
+        vm.TraceTarget = traceTarget;
+    }
+    #endregion
 }

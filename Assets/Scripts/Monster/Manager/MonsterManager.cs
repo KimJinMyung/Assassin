@@ -70,7 +70,7 @@ public class MonsterManager : MonoBehaviour
                 _attackingTimer = UnityEngine.Random.Range(2f, 4f);
                 //몬스터 공격 수행
                 if (monsterAttackMethodsList.ContainsKey(attackMonster.monsterId))
-                {
+                {                   
                     monsterAttackMethodsList[attackMonster.monsterId]?.Invoke();
                 }
             }
@@ -91,7 +91,8 @@ public class MonsterManager : MonoBehaviour
                 hasTarget = true;
 
                 //현재 공격 중인지 확인
-                if (!monster.isAttackAble) return false;
+                var isAttackAbleVeriable = monster._behaviorTree.GetVariable("isAttackAble");
+                if (!(bool)isAttackAbleVeriable.GetValue()) return false;
             }
 
         }
@@ -111,7 +112,8 @@ public class MonsterManager : MonoBehaviour
             if (newMonster.Type == MonsterType.Boss) continue;
 
             //isAttackAble 이 아니면 continue
-            if (!newMonster.isAttackAble || newMonster.isSubdued || newMonster.isHurt) continue;
+            var monsterBT = newMonster._behaviorTree;
+            if (!(bool)monsterBT.GetVariable("isAttackAble").GetValue() || newMonster.animator.GetBool("Incapacitated") || (bool)monsterBT.GetVariable("isHurt").GetValue()) continue;
 
             Transform target = newMonster.vm.TraceTarget;
             if (target != null)

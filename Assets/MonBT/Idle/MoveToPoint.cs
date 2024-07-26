@@ -16,7 +16,7 @@ public class MoveToPoint : Action
     [SerializeField] SharedFloat moveSpeed;
     [SerializeField] SharedBool isPatrol;
 
-    public override void OnStart()
+    public override void OnAwake()
     {
         monsterView = Owner.GetComponent<MonsterView>();
         animator = Owner.GetComponent<Animator>();

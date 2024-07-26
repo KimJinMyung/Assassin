@@ -4,8 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem.iOS;
 
-[TaskCategory("Trace")]
+[TaskCategory("Battle")]
 public class CheckTraceTaretRangeOnUpdate : Action
 {
     private MonsterView monsterView;
@@ -13,12 +14,12 @@ public class CheckTraceTaretRangeOnUpdate : Action
     private NavMeshAgent agent;
 
     [SerializeField] SharedFloat AttackRange;
-    [SerializeField] SharedBool isCircling;
     [SerializeField] SharedBool isAttackAble;
 
     private float distance;
+    private int hashMovespeed = Animator.StringToHash("MoveSpeed");
 
-    public override void OnStart()
+    public override void OnAwake()
     {
         monsterView = Owner.GetComponent<MonsterView>();
         animator = Owner.GetComponent<Animator>();
@@ -35,14 +36,13 @@ public class CheckTraceTaretRangeOnUpdate : Action
 
         if (distance >= AttackRange.Value + 1.5f)
         {
-            isCircling = false;
-            isAttackAble = false;
-            animator.SetFloat("MoveSpeed", 1);
+            isAttackAble.Value = false;
+            animator.SetFloat(hashMovespeed, 1);
             return TaskStatus.Running;
         }
 
-        isAttackAble = true;
-        animator.SetFloat("MoveSpeed", 0);
+        isAttackAble.Value = true;
+        animator.SetFloat(hashMovespeed, 0);
         return TaskStatus.Success;
     }
 }

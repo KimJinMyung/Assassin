@@ -8,6 +8,7 @@ using UnityEngine;
 public class ChangedPatrolDelayTime : Action
 {
     [SerializeField] SharedFloat PatrolTime;
+
     public override void OnStart()
     {
         PatrolTime.Value = Random.Range(1.5f, 3f);

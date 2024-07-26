@@ -216,4 +216,31 @@ public class LogicManager : MonoBehaviour
         if (_monsterAttackMethodList.ContainsKey(actorId)) _monsterAttackMethodList[actorId]?.Invoke(attackList, owner);
     }
     #endregion
+    #region MonsterTraceTarget
+    private Dictionary<int, Action<Transform>> _traceTargetChangedCallback = new Dictionary<int, Action<Transform>>();
+    public void RegisterTraceTargetChangedCallback(Action<Transform> TraceTargetChangedCallback, int actorId, bool isRegister)
+    {
+        if (isRegister)
+        {
+            if (isRegister)
+            {
+                if (_traceTargetChangedCallback.ContainsKey(actorId)) _traceTargetChangedCallback[actorId] = TraceTargetChangedCallback;
+                else _traceTargetChangedCallback.Add(actorId, TraceTargetChangedCallback);
+            }
+            else
+            {
+                if (_traceTargetChangedCallback.ContainsKey(actorId))
+                {
+                    _traceTargetChangedCallback[actorId] -= TraceTargetChangedCallback;
+                    if (_traceTargetChangedCallback[actorId] == null) _traceTargetChangedCallback.Remove(actorId);
+                }
+            }
+        }
+    }
+
+    public void OnTraceTarget(int actorId, Transform target)
+    {
+        if (_traceTargetChangedCallback.ContainsKey(actorId)) _traceTargetChangedCallback[actorId]?.Invoke(target);
+    }
+    #endregion
 }

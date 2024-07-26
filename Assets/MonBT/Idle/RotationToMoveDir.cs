@@ -11,7 +11,7 @@ public class RotationToMoveDir : Action
 
     [SerializeField] SharedVector3 patrolPos;
 
-    public override void OnStart()
+    public override void OnAwake()
     {
         animator = Owner.GetComponent<Animator>();
     }

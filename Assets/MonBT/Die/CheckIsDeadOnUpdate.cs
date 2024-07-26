@@ -1,3 +1,4 @@
+using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,19 +11,21 @@ public class CheckIsDeadOnUpdate : Action
     private MonsterView monsterView;
     private Animator _animator;
 
+    [SerializeField] SharedBool isDead;
+
     int hashDead = Animator.StringToHash("Dead");
     int hashDie = Animator.StringToHash("Die");
     int hashIncapacitated = Animator.StringToHash("Incapacitated");
 
     public override void OnAwake()
     {
-        base.OnAwake();
         monsterView = Owner.GetComponent<MonsterView>();
         _animator = monsterView.GetComponent<Animator>();
     }
 
     public override TaskStatus OnUpdate()
     {
+        if (!isDead.Value) return TaskStatus.Failure;
         if (_animator.GetBool(hashDead))
         {
             if (_animator.GetBool(hashIncapacitated))
@@ -31,11 +34,15 @@ public class CheckIsDeadOnUpdate : Action
             }
             return TaskStatus.Success;
         }
-        if (!monsterView.isDead) return TaskStatus.Failure;
 
         monsterView.MonsterDead();
         _animator.SetBool(hashDead, true);
         _animator.SetTrigger(hashDie);
-        return TaskStatus.Success;
+
+        if(monsterView.IsAnimationRunning("Die"))
+        {
+            return TaskStatus.Success;
+        }
+        return TaskStatus.Running;
     }
 }

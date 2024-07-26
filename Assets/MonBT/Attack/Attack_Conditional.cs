@@ -4,14 +4,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[TaskCategory("Idle")]
-public class Idle_Conditional : Conditional
+[TaskCategory("Attack")]
+public class Attack_Conditional : Conditional
 {
-    [SerializeField] SharedBool isHurt;
-    [SerializeField] SharedBool isDead;
-    [SerializeField] SharedBool isAttacking;
+    private MonsterView monsterView;    
 
-    MonsterView monsterView;
+    [SerializeField] SharedBool isDead;
+    [SerializeField] SharedBool isHurt;
+    [SerializeField] SharedBool isParried;
+    [SerializeField] SharedBool isAttacking;
 
     public override void OnAwake()
     {
@@ -20,7 +21,7 @@ public class Idle_Conditional : Conditional
 
     public override TaskStatus OnUpdate()
     {
-        if(monsterView.vm.TraceTarget !=null || isHurt.Value || isDead.Value || isAttacking.Value) return TaskStatus.Failure;
+        if(isDead.Value || isHurt.Value || !isAttacking.Value || monsterView.vm.TraceTarget == null) return TaskStatus.Failure;
         else return TaskStatus.Success;
     }
 }
