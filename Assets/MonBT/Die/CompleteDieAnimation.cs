@@ -12,6 +12,8 @@ public class CompleteDieAnimation : Action
 
     [SerializeField] private SharedBool isDead;
 
+    int hashIncapacitated = Animator.StringToHash("Incapacitated");
+
     public override void OnAwake()
     {
         monsterView = Owner.GetComponent<MonsterView>();
@@ -21,6 +23,7 @@ public class CompleteDieAnimation : Action
     public override TaskStatus OnUpdate()
     {
         if (!isDead.Value) return TaskStatus.Failure;
+        if(_animator.GetBool(hashIncapacitated)) return TaskStatus.Success;
 
         if (monsterView.IsAnimationRunning("Die"))
         {

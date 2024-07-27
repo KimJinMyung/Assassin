@@ -13,6 +13,8 @@ public class CompleteAttackAnimation : Conditional
     [SerializeField] SharedString AttackName;
     [SerializeField] SharedBool isAttackEnd;
 
+    private bool isMotionOn;
+
     public override void OnAwake()
     {
         monsterView = Owner.GetComponent<MonsterView>();
@@ -22,9 +24,23 @@ public class CompleteAttackAnimation : Conditional
     {
         if(isAttackEnd.Value) return TaskStatus.Success;
 
-        if (monsterView.IsAnimationRunning($"{AttackName.Value}.attack{AttackIndex.Value}")) return TaskStatus.Running;
+        if (monsterView.IsAnimationRunning($"{AttackName.Value}.attack{AttackIndex.Value}"))
+        {
+            isMotionOn =true;
+            return TaskStatus.Running;
+        }
 
-        isAttackEnd.Value = true;
-        return TaskStatus.Success;
+        if (isMotionOn)
+        {
+            isAttackEnd.Value = true;
+            return TaskStatus.Success;
+        }
+
+        return TaskStatus.Running;
+    }
+
+    public override void OnEnd()
+    {
+        isMotionOn = false;
     }
 }

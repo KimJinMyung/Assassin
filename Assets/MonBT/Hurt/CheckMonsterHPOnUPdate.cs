@@ -1,33 +1,37 @@
+using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [TaskCategory("Hurt")]
 public class CheckMonsterHPOnUPdate : Action
 {
     private MonsterView monsterView ;
     private Animator animator;
+    private NavMeshAgent agent;
 
-    int hashHurt = Animator.StringToHash("Hit");
+    [SerializeField] SharedBool isHurt;
+
+    int hashHurt = Animator.StringToHash("Hurt");
+    int hashHurtDirz = Animator.StringToHash("HurtDir_z");
+    int hashHurtDirx = Animator.StringToHash("HurtDir_x");
 
     public override void OnAwake()
     {
         monsterView = Owner.GetComponent<MonsterView>();
         animator = Owner.GetComponent<Animator>();
+        agent = Owner.GetComponent<NavMeshAgent>();
     }
 
     public override TaskStatus OnUpdate()
     {
-        animator.SetBool(hashHurt, true);
+        if(!isHurt.Value) return TaskStatus.Failure;
+
+        agent.ResetPath();
         KnockBackAnimation(monsterView.KnockbackDir);
         return TaskStatus.Success;
-        //if(monsterView.IsHurtAnimationRunning())
-        //{
-        //    return TaskStatus.Success;
-        //}
-
-        //return TaskStatus.Running;
     }
 
     private void KnockBackAnimation(Vector3 KnockbackDir)
@@ -35,8 +39,8 @@ public class CheckMonsterHPOnUPdate : Action
         KnockbackDir.y = 0;
         KnockbackDir.Normalize();
 
-        animator.SetFloat("HurtDir_z", KnockbackDir.z);
-        animator.SetFloat("HurtDir_x", KnockbackDir.x);
-        animator.SetTrigger("Hurt");
+        animator.SetFloat(hashHurtDirz, KnockbackDir.z);
+        animator.SetFloat(hashHurtDirx, KnockbackDir.x);
+        animator.SetTrigger(hashHurt);
     }
 }

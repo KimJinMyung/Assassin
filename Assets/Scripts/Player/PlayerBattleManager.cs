@@ -103,7 +103,7 @@ public class PlayerBattleManager : MonoBehaviour
                 {
                     isForward = Vector3.Dot(target.transform.forward, transform.forward) < 0.5f;    // true¸é Àü¹æ
 
-                    if (isForward && target.isSubdued)
+                    if (isForward && (bool)target._behaviorTree.GetVariable("isSubded").GetValue())
                     {
                         Vector3 targetPosition = target.transform.position + target.transform.forward * assassinationDistanceForward;
                         MovePlayerToPosition(targetPosition);

@@ -32,7 +32,7 @@ public class SearchPatrolEndPosition : Action
 
     private Vector3 RandomPatrolEndPosition(Vector3 originPosition, float distance)
     {
-        Vector3 randomPoint = originPosition + UnityEngine.Random.insideUnitSphere * distance;
+        Vector3 randomPoint = originPosition + Random.insideUnitSphere * distance;
         Vector3 patrolPos = Vector3.zero;
 
         if (Physics.Raycast(randomPoint + Vector3.up * (distance + 1f), Vector3.down, out RaycastHit hitInfo, distance + 5f, GroundLayer))

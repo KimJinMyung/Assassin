@@ -24,6 +24,7 @@ public class Battle_Conditional : Conditional
 
     public override void OnStart()
     {
+        if(monsterView.vm.TraceTarget != null)
         distance = Vector3.Distance(transform.position, monsterView.vm.TraceTarget.position);
     }
 

@@ -46,7 +46,6 @@ public class MonsterView : MonoBehaviour
     public MonsterData _monsterData { get; private set; }
     private List<Monster_Attack> monsterAttackMethodList = new List<Monster_Attack>();
 
-    private MonsterBTRunner _monsterBTRunner;
     public BehaviorTree _behaviorTree { get; private set; }
 
     private NavMeshAgent agent;
@@ -65,14 +64,6 @@ public class MonsterView : MonoBehaviour
     public Vector3 KnockbackDir { get; private set; }
     #endregion
 
-    private bool isPatrol;
-
-    public bool isCircling { get; private set; }
-    public bool isParried { get; private set; }
-    private bool isParryStart;
-    public bool isSubdued { get; private set; }
-    private float _subduedTimer;
-    public bool isHurt { get; private set; }
     public bool isDead {  get; private set; }
     private bool isHurtAnimationStart;
 
@@ -89,10 +80,11 @@ public class MonsterView : MonoBehaviour
         monsterId = gameObject.GetInstanceID();
         MonsterHeight = Collider.height;
 
-        isDead = false;
         KnockbackDir = Vector3.zero;
 
         gameObject.layer = LayerMask.NameToLayer("Monster");
+        if (animator.layerCount > 1) animator.SetLayerWeight(1, 1);
+
         Collider.enabled = true;
 
         if (vm == null)
@@ -106,8 +98,8 @@ public class MonsterView : MonoBehaviour
         }
 
         SetMonsterInfo(_type);
-        _monsterBTRunner = new MonsterBTRunner(SetMonsterBT());
         _behaviorTree = GetComponent<BehaviorTree>();
+        _behaviorTree.SetVariableValue("isDead", false);
 
         MonsterManager.instance.SpawnMonster(this);
 
@@ -267,200 +259,6 @@ public class MonsterView : MonoBehaviour
         MonsterManager.instance.DeadMonster_Update(this);
     }
 
-    IBTNode SetMonsterBT()
-    {
-        var DieNodeList = new List<IBTNode>();
-        DieNodeList.Add(new ActionNode(CheckIsDeadOnUpdate));
-        DieNodeList.Add(new ActionNode(CompleteDieAnimation));
-        var DieSeqNode = new SequenceNode(DieNodeList);
-
-        var SubduedNodeList = new List<IBTNode>();
-        SubduedNodeList.Add(new ActionNode(Subdued));
-        SubduedNodeList.Add(new ActionNode(SubduedTimer));
-        var SubduedSeqNode = new SequenceNode(SubduedNodeList);
-
-        var ParryNodeList = new List<IBTNode>();
-        ParryNodeList.Add(new ActionNode(ParriedStart));
-        ParryNodeList.Add(new ActionNode(CompleteParriedAnimation));
-        var ParrySeqNode = new SequenceNode(ParryNodeList);
-
-        var rootNodeList = new List<IBTNode>();
-        rootNodeList.Add(DieSeqNode);
-        rootNodeList.Add(SubduedSeqNode);
-        rootNodeList.Add(ParrySeqNode);
-        var rootSelectNode = new SelectorNode(rootNodeList);
-        return rootSelectNode;
-    }
-
-    #region Die
-    
-    IBTNode.EBTNodeState CheckIsDeadOnUpdate()
-    {
-        if (animator.GetBool("Dead"))
-        {
-            if(animator.GetBool("Incapacitated"))
-            {
-                isDead = true;
-                Collider.enabled = false;
-                agent.speed = 0;
-                agent.ResetPath();
-
-                if (animator.layerCount > 1) animator.SetLayerWeight(1, 0);
-
-                gameObject.layer = LayerMask.NameToLayer("Dead");
-                MonsterManager.instance.DeadMonster_Update(this);
-            }
-            return IBTNode.EBTNodeState.Success;
-        }
-
-        if (!isDead) return IBTNode.EBTNodeState.Fail;
-
-        Collider.enabled = false;
-
-        isHurt = false;
-        agent.speed = 0;
-        agent.ResetPath();
-
-        if(animator.layerCount > 1) animator.SetLayerWeight(1, 0);
-
-        gameObject.layer = LayerMask.NameToLayer("Dead");
-        MonsterManager.instance.DeadMonster_Update(this);
-
-        animator.SetBool("Dead", true);
-        animator.SetTrigger("Die");
-        return IBTNode.EBTNodeState.Success;
-    }
-
-    IBTNode.EBTNodeState CompleteDieAnimation()
-    {
-        if (!isDead) return IBTNode.EBTNodeState.Fail;
-
-        if (IsAnimationRunning("Die"))
-        {
-            return IBTNode.EBTNodeState.Running;
-        }
-
-        //모습을 제거
-        StartCoroutine(DeadMonsterActive());
-
-        return IBTNode.EBTNodeState.Success;
-    }
-
-    IEnumerator DeadMonsterActive()
-    {
-        yield return new WaitForSeconds(3f);
-        gameObject.SetActive(false);
-    }
-
-    #endregion
-
-    #region Hurt
-    public void Hurt(PlayerView attacker, float Damage)
-    {
-        if (isSubdued)
-        {
-            vm.RequestMonsterHPChanged(monsterId, 0);
-            _behaviorTree.SetVariableValue("isDead", true);
-
-            //암살 동작 실행
-            return;
-        }
-
-        //방어 성공
-        if(UnityEngine.Random.Range(0f, 100f) <= _monsterData.DefencePer)
-        {
-            Debug.Log("몬스터 방어 성공");
-
-            animator.SetTrigger("Defense");
-            vm.RequestMonsterStaminaChanged(vm.Stamina - attacker.playerData.ATK, monsterId);
-            return;
-        }
-
-        //체력 감소
-        vm.RequestMonsterHPChanged(monsterId, vm.HP - Damage);
-        Debug.Log(vm.HP);
-
-        if(vm.HP <= 0)
-        {
-            _behaviorTree.SetVariableValue("isDead", true);
-        }
-        else
-        {
-            _behaviorTree.SetVariableValue("isHurt", true);
-            KnockbackDir = transform.position - attacker.transform.position;
-            //넉백 구간
-        }
-    }
-    
-    #endregion
-
-    #region Subdued
-    // Subdued Node 추가
-    IBTNode.EBTNodeState Subdued()
-    {
-        if (isHurt || isDead) return IBTNode.EBTNodeState.Fail;
-        if (!isSubdued) return IBTNode.EBTNodeState.Fail;
-        if (_subduedTimer > 0) return IBTNode.EBTNodeState.Success;
-
-        animator.SetBool("Incapacitated", true);
-        animator.SetTrigger("Incapacitate");
-
-        if (IsAnimationRunning("Subdued"))
-        {
-            _subduedTimer = 5f;
-            return IBTNode.EBTNodeState.Success;
-        }
-
-        return IBTNode.EBTNodeState.Running;
-    }
-
-    IBTNode.EBTNodeState SubduedTimer()
-    {
-        if (isHurt || isDead) return IBTNode.EBTNodeState.Fail;
-        if (!isSubdued) return IBTNode.EBTNodeState.Fail;
-
-        if(_subduedTimer > 0)
-        {
-            _subduedTimer -= Time.deltaTime;
-            return IBTNode.EBTNodeState.Running;
-        }
-
-        animator.SetBool("Incapacitated", false);
-        isSubdued = false;
-        return IBTNode.EBTNodeState.Success;
-    }
-    #endregion
-
-    #region Parry
-    IBTNode.EBTNodeState ParriedStart() 
-    {
-        if (!isParried) return IBTNode.EBTNodeState.Fail;
-        if (isParryStart) return IBTNode.EBTNodeState.Success;
-
-        animator.SetTrigger("Parried");
-        if (IsAnimationRunning("Parried"))
-        {
-            isParryStart = true;
-            return IBTNode.EBTNodeState.Success;
-        }
-        return IBTNode.EBTNodeState.Running;
-    }
-
-    IBTNode.EBTNodeState CompleteParriedAnimation()
-    {
-        if (!isParried) return IBTNode.EBTNodeState.Fail;
-
-        if (IsAnimationRunning("Parried"))
-        {
-            return IBTNode.EBTNodeState.Running;
-        }
-
-        isParryStart = false;
-        isParried = false;
-        isSubdued = vm.Stamina <= 0;
-        return IBTNode.EBTNodeState.Success;
-    }
-
     public void Parried(PlayerView attacker)
     {
         float addParriedPower;
@@ -470,9 +268,40 @@ public class MonsterView : MonoBehaviour
 
         vm.RequestMonsterStaminaChanged(vm.Stamina - addParriedPower, monsterId);
         Debug.Log($"Monster Stamina : {vm.Stamina}");
-        isParried = true;
+        _behaviorTree.SetVariableValue("isParried", true);
     }
-    #endregion
+
+    public void Hurt(PlayerView attacker, float Damage)
+    {
+        if ((bool)_behaviorTree.GetVariable("isSubded").GetValue())
+        {
+            vm.RequestMonsterHPChanged(monsterId, 0);
+            _behaviorTree.SetVariableValue("isDead", true);
+            return;
+        }
+
+        if (UnityEngine.Random.Range(0f, 100f) <= _monsterData.DefencePer)
+        {
+            Debug.Log("Monster Defense");
+
+            animator.SetTrigger("Defense");
+            vm.RequestMonsterStaminaChanged(vm.Stamina - attacker.playerData.ATK, monsterId);
+            return;
+        }
+
+        vm.RequestMonsterHPChanged(monsterId, vm.HP - Damage);
+        Debug.Log(vm.HP);
+
+        if (vm.HP <= 0)
+        {
+            _behaviorTree.SetVariableValue("isDead", true);
+        }
+        else
+        {
+            _behaviorTree.SetVariableValue("isHurt", true);
+            KnockbackDir = transform.position - attacker.transform.position;
+        }
+    }
 
     public void Attack()
     {
@@ -506,7 +335,7 @@ public class MonsterView : MonoBehaviour
         if (stateInfo.IsTag("Hurt"))
         {
             float normalizedTime = stateInfo.normalizedTime;
-            isRunning = normalizedTime > 0 && normalizedTime < 1.0f;
+            isRunning = normalizedTime >= 0 && normalizedTime < 1.0f;
         }
 
         return isRunning;

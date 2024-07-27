@@ -12,15 +12,26 @@ public class Idle_Conditional : Conditional
     [SerializeField] SharedBool isAttacking;
 
     MonsterView monsterView;
+    Animator animator;
+
+    int hashMoveSpeed = Animator.StringToHash("MoveSpeed");
+    int hashRotate = Animator.StringToHash("Rotate");
 
     public override void OnAwake()
     {
         monsterView = Owner.GetComponent<MonsterView>();
+        animator = Owner.GetComponent<Animator>();
     }
 
     public override TaskStatus OnUpdate()
     {
         if(monsterView.vm.TraceTarget !=null || isHurt.Value || isDead.Value || isAttacking.Value) return TaskStatus.Failure;
         else return TaskStatus.Success;
+    }
+
+    public override void OnEnd()
+    {
+        animator.SetBool(hashRotate, false);
+        animator.SetFloat(hashMoveSpeed, 0);
     }
 }

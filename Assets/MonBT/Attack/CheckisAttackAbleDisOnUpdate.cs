@@ -44,8 +44,7 @@ public class CheckisAttackAbleDisOnUpdate : Action
             isAttackAble.Value = false;
             animator.SetFloat(hashMoveSpeed, 0f);
             animator.SetTrigger($"{AttackName.Value}");
-            if (monsterView.IsAnimationRunning($"{AttackName.Value}.attack{AttackIndex.Value}")) return TaskStatus.Success;
-            return TaskStatus.Running;
+            return TaskStatus.Success;
         }
 
         animator.SetFloat (hashMoveSpeed, 1f);
