@@ -28,6 +28,7 @@ public class CheckTraceTaretRangeOnUpdate : Action
 
     public override TaskStatus OnUpdate()
     {
+        if(monsterView.vm.TraceTarget == null) return TaskStatus.Failure;
         distance = Vector3.Distance(Owner.transform.position, monsterView.vm.TraceTarget.position);
         AttackRange.Value = monsterView.vm.CurrentAttackMethod.AttackRange;
 

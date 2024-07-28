@@ -1,27 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BehaviorDesigner.Runtime;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 
 public class MonsterAssassinated : StateMachineBehaviour
 {
-    MonsterView owner;
+    private MonsterView owner;
+
+    private int hashDead = Animator.StringToHash("Dead");
+
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         owner = animator.GetComponent<MonsterView>();
-        animator.SetBool("Dead", true);
-
         Vector3 dir;
 
         if (animator.GetFloat("Forward") == 1)
         {
+            //후방
             dir = owner.transform.position - owner.vm.TraceTarget.position;
         }
         else
         {
+            //전방
             dir = owner.vm.TraceTarget.position - owner.transform.position;
         }
 
         dir.y = 0;
         owner.transform.rotation = Quaternion.LookRotation(dir.normalized);
+        animator.SetBool(hashDead, true);
     }
 }

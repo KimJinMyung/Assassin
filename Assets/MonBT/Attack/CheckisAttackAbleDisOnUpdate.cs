@@ -11,6 +11,7 @@ public class CheckisAttackAbleDisOnUpdate : Action
     private MonsterView monsterView;
     private NavMeshAgent agent;
     private Animator animator;
+    private AttackBox attackBox;
 
     [SerializeField] SharedFloat AttackRange;
     [SerializeField] SharedString AttackName;
@@ -38,12 +39,14 @@ public class CheckisAttackAbleDisOnUpdate : Action
 
     public override TaskStatus OnUpdate()
     {
+        if (monsterView.vm.TraceTarget == null) return TaskStatus.Failure;
         float distance = Vector3.Distance(transform.position, monsterView.vm.TraceTarget.position);
         if (AttackRange.Value + 0.3f >= distance)
         {
             isAttackAble.Value = false;
             animator.SetFloat(hashMoveSpeed, 0f);
             animator.SetTrigger($"{AttackName.Value}");
+
             return TaskStatus.Success;
         }
 

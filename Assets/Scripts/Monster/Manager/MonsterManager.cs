@@ -120,7 +120,7 @@ public class MonsterManager : MonoBehaviour
             {
                 Vector3 targetDir = (target.position - newMonster.transform.position).normalized;
                 float Angle = Vector3.Angle(newMonster.transform.forward, targetDir);
-                if (Angle < 10f) monsterList.Add(newMonster);
+                if (Angle <= 45f) monsterList.Add(newMonster);
             }
         }
 

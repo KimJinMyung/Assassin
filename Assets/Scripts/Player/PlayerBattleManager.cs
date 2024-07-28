@@ -5,6 +5,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.HID;
 
 public class PlayerBattleManager : MonoBehaviour
 {
@@ -49,32 +50,11 @@ public class PlayerBattleManager : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        if (owner == null)
-            return;
+        Gizmos.color = Color.green;
 
-        // BoxCast의 위치와 크기, 방향을 정의합니다.
-        Vector3 boxCenter = transform.position + Vector3.up;
-        Vector3 boxHalfExtents = new Vector3(0.3f, 0.5f, 1f);
-        Vector3 castDirection = owner.transform.forward;
-        Quaternion rotation = transform.rotation;
-        float castDistance = 1f;
-
-        // BoxCast를 시각화합니다.
-        Gizmos.color = Color.red;
-
-        // BoxCast의 변환 매트릭스를 설정합니다.
-        Matrix4x4 boxMatrix = Matrix4x4.TRS(boxCenter + castDirection * castDistance * 0.5f, rotation, Vector3.one);
-        Gizmos.matrix = boxMatrix;
-        Gizmos.DrawWireCube(Vector3.zero, boxHalfExtents * 2);
-
-        // RaycastHit을 시각화합니다.
-        RaycastHit hit;
-        if (Physics.BoxCast(boxCenter, boxHalfExtents, castDirection, out hit, rotation, castDistance, AttackTarget))
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(hit.point, 0.1f); // 충돌 지점을 표시합니다.
-            Debug.Log(hit.transform.name);
-        }
+        Transform hit = GetAssassinatedTarget();
+        if (hit != null)
+        Gizmos.DrawWireSphere(hit.position, 2f); // 충돌 지점을 표시합니다.
     }
 
     public void OnAttack(InputAction.CallbackContext context)
@@ -94,12 +74,11 @@ public class PlayerBattleManager : MonoBehaviour
                 }
                 return;
             }
-            else if (Physics.BoxCast(transform.position + Vector3.up, new Vector3(0.3f, 0.5f, 1f), owner.transform.forward, out RaycastHit hit, transform.rotation, 1f, AttackTarget))
+            Transform hit = GetAssassinatedTarget();
+            if(hit != null)
             {
-                Debug.Log(hit.transform.name + "dddddd");
-
-                MonsterView target = hit.transform.GetComponent<MonsterView>();
-                if(target != null)
+                MonsterView target = hit.GetComponent<MonsterView>();
+                if (target != null)
                 {
                     isForward = Vector3.Dot(target.transform.forward, transform.forward) < 0.5f;    // true면 전방
 
@@ -115,8 +94,9 @@ public class PlayerBattleManager : MonoBehaviour
 
                         //몬스터 암살당하는 모션 전방
                         target.animator.SetFloat("Forward", 0);
-                        target.animator.SetBool("Incapacitated", true);
+                        target.vm.RequestTraceTargetChanged(target.monsterId, owner.transform);
                         target.animator.SetTrigger("Assassinated");
+                        target._behaviorTree.SetVariableValue("isAssassinated", true);
                         return;
                     }
                     else if (!isForward)
@@ -131,13 +111,15 @@ public class PlayerBattleManager : MonoBehaviour
 
                         //몬스터 암살당하는 모션 후방
                         target.animator.SetFloat("Forward", 1);
-                        target.animator.SetBool("Incapacitated", true);
+                        target.vm.RequestTraceTargetChanged(target.monsterId, owner.transform);
                         target.animator.SetTrigger("Assassinated");
+                        target._behaviorTree.SetVariableValue("isAssassinated", true);
                         return;
                     }
                 }
-            }            
+            }
             
+
             if (ViewMonster != null)
             {
                 float distanceY = transform.position.y - ViewMonster.transform.position.y;
@@ -176,6 +158,33 @@ public class PlayerBattleManager : MonoBehaviour
             //공격
             animator.SetTrigger("Attack");
         }
+    }
+
+    private Transform GetAssassinatedTarget()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position + Vector3.up, 2f, AttackTarget);
+
+        Transform closestObject = null;
+        float closestDistance = Mathf.Infinity;
+
+        foreach(var hit in hitColliders) 
+        {
+            Vector3 directionToCollider = (hit.transform.position - transform.position).normalized;
+            float angle = Vector3.Angle(transform.forward, directionToCollider);
+
+            // 각도가 제한 내에 있는지 확인
+            if (angle <= 45)
+            {
+                float distance = Vector3.Distance(transform.position, hit.transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestObject = hit.transform;
+                }
+            }
+        }
+
+        return closestObject;
     }
 
     public void OnDefense(InputAction.CallbackContext context)

@@ -29,7 +29,6 @@ public class MonsterDetectZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             player = other.transform;
-            Debug.Log(player.name);
         }
     }
 
@@ -52,12 +51,6 @@ public class MonsterDetectZone : MonoBehaviour
         }
     }
 
-    //private void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.red;
-    //    Gizmos.DrawWireSphere(owner.transform.position, collider.radius);
-    //}
-
     private void Update()
     {
         if (collider.transform.position != Eyes.position)
@@ -71,9 +64,6 @@ public class MonsterDetectZone : MonoBehaviour
     private void FixedUpdate()
     {
         Detecting();
-
-        if(owner.vm.TraceTarget != null)
-        Debug.Log(owner.vm.TraceTarget.name);
     }
 
     private void Detecting()

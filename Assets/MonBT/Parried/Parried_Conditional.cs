@@ -8,11 +8,22 @@ using UnityEngine;
 public class Parried_Conditional : Conditional
 {
 
+    private AttackBox _attackBox;
+
     [SerializeField] SharedBool isParried;
+    [SerializeField] SharedBool isAssassinated;
+
+
+    public override void OnAwake()
+    {
+        _attackBox = Owner.GetComponentInChildren<AttackBox>();
+    }
 
     public override TaskStatus OnUpdate()
     {
-        if(!isParried.Value) return TaskStatus.Failure;
+        if(!isParried.Value || isAssassinated.Value) return TaskStatus.Failure;
+
+        _attackBox.enabled = false;
         return TaskStatus.Success;
     }
 }

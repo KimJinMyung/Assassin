@@ -4,24 +4,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[TaskCategory("Hurt")]
-public class Hurt_Conditional : Conditional
+[TaskCategory("Assassinated")]
+public class Assassinated_Conditional : Conditional
 {
-    private AttackBox _attackBox;
+    private AttackBox attackBox;
 
-    [SerializeField] SharedBool isHurt;
     [SerializeField] SharedBool isDead;
     [SerializeField] SharedBool isAssassinated;
 
     public override void OnAwake()
     {
-        _attackBox = Owner.GetComponentInChildren<AttackBox>();
+        attackBox = Owner.GetComponentInChildren<AttackBox>();
     }
 
     public override TaskStatus OnUpdate()
     {
-        if(!isHurt.Value || isDead.Value || isAssassinated.Value) return TaskStatus.Failure;
-        _attackBox.enabled = false;
+        if (isDead.Value || !isAssassinated.Value) return TaskStatus.Failure;
+        attackBox.enabled = false;
         return TaskStatus.Success;
     }
 }

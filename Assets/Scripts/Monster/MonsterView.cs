@@ -100,6 +100,7 @@ public class MonsterView : MonoBehaviour
         SetMonsterInfo(_type);
         _behaviorTree = GetComponent<BehaviorTree>();
         _behaviorTree.SetVariableValue("isDead", false);
+        _behaviorTree.SetVariableValue("isAssassinated", false);
 
         MonsterManager.instance.SpawnMonster(this);
 
@@ -340,10 +341,4 @@ public class MonsterView : MonoBehaviour
 
         return isRunning;
     }
-
-    public void MoveToTarget(Vector3 targetPos)
-    {
-        agent.SetDestination(targetPos);
-    }
-
 }

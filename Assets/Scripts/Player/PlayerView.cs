@@ -98,6 +98,7 @@ public class PlayerView : MonoBehaviour
             {
                 if (attacker.vm.CurrentAttackMethod.AttackType != "Long")
                 {
+                    Debug.Log("패링중...");
                     attacker.Parried(this);
                     return;
                 }
@@ -105,7 +106,7 @@ public class PlayerView : MonoBehaviour
                 return;
             }
 
-            if (animator.GetBool("Defense") && animator.GetBool("ParryAble"))
+            if (animator.GetBool("Defense") && !IsAnimationRunning("Parry"))
             {
                 //방어 성공
                 vm.RequestPlayerStaminaChanged(vm.Stamina - attacker.vm.Stamina);
@@ -183,6 +184,21 @@ public class PlayerView : MonoBehaviour
         {
             float normalizedTime = stateInfo.normalizedTime;
             isRunning = normalizedTime >= 0 && normalizedTime < 1.0f;
+        }
+
+        return isRunning;
+    }
+
+    private bool IsAnimationRunning(string animationName)
+    {
+        if (animator == null) return false;
+
+        bool isRunning = false;
+        var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if (stateInfo.IsName(animationName))
+        {
+            float normalizedTime = stateInfo.normalizedTime;
+            isRunning = normalizedTime > 0 && normalizedTime < 1.0f;
         }
 
         return isRunning;

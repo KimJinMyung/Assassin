@@ -10,6 +10,8 @@ public class Idle_Conditional : Conditional
     [SerializeField] SharedBool isHurt;
     [SerializeField] SharedBool isDead;
     [SerializeField] SharedBool isAttacking;
+    [SerializeField] SharedBool isAssassinated;
+
 
     MonsterView monsterView;
     Animator animator;
@@ -25,7 +27,7 @@ public class Idle_Conditional : Conditional
 
     public override TaskStatus OnUpdate()
     {
-        if(monsterView.vm.TraceTarget !=null || isHurt.Value || isDead.Value || isAttacking.Value) return TaskStatus.Failure;
+        if(monsterView.vm.TraceTarget !=null || isHurt.Value || isDead.Value || isAttacking.Value || isAssassinated.Value) return TaskStatus.Failure;
         else return TaskStatus.Success;
     }
 

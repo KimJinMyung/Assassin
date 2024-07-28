@@ -13,6 +13,8 @@ public class Battle_Conditional : Conditional
     [SerializeField] SharedBool isAttacking;
     [SerializeField] SharedBool isHurt;
     [SerializeField] SharedBool isDead;
+    [SerializeField] SharedBool isAssassinated;
+
 
     private float distance;
     [SerializeField] SharedFloat AttackRange;
@@ -30,7 +32,7 @@ public class Battle_Conditional : Conditional
 
     public override TaskStatus OnUpdate()
     {
-        if (isHurt.Value || isDead.Value || isAttacking.Value) return TaskStatus.Failure;
+        if (isHurt.Value || isDead.Value || isAttacking.Value || isAssassinated.Value) return TaskStatus.Failure;
         if(monsterView.vm.TraceTarget == null) return TaskStatus.Failure;
         if (distance > AttackRange.Value + 1.5f) return TaskStatus.Failure;
 
