@@ -82,10 +82,7 @@ public class PlayerLockOn : MonoBehaviour
         }
 
         _lockOnAbleObject = DetectingTarget();
-       
-        Debug.Log($"1: {_lockOnAbleObject}");
         _viewModel.RequestLockOnAbleTarget(_lockOnAbleObject);
-        Debug.Log($" 2: {_viewModel.LockOnAbleTarget}");
     }
 
     public void OnLockOnMode(InputAction.CallbackContext context)
