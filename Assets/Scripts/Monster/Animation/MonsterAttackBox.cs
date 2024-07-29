@@ -22,4 +22,9 @@ public class MonsterAttackBox : StateMachineBehaviour
         }
         else attackBox.enabled = false;
     }
+
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        attackBox.enabled = false;
+    }
 }

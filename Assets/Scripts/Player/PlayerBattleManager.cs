@@ -24,6 +24,10 @@ public class PlayerBattleManager : MonoBehaviour
     private MonsterView ViewMonster;
     private CharacterController playerController;
 
+    private int hashIncapacitated = Animator.StringToHash("Incapacitated");
+    private int hashUpper = Animator.StringToHash("Upper");
+    private int Assassinated = Animator.StringToHash("Assassinated");
+
     public bool isUpper { get; private set; }
     public bool isForward { get; private set; }
 
@@ -90,13 +94,13 @@ public class PlayerBattleManager : MonoBehaviour
 
                         animator.SetFloat("isForward", 0);
                         animator.SetBool("Assassinated", true);
-                        animator.SetTrigger("Assassinate");
 
                         //몬스터 암살당하는 모션 전방
                         target.animator.SetFloat("Forward", 0);
                         target.vm.RequestTraceTargetChanged(target.monsterId, owner.transform);
-                        target.animator.SetTrigger("Assassinated");
-                        target._behaviorTree.SetVariableValue("isAssassinated", true);
+
+                        owner.ViewModel.RequestAssassinatedType(target);
+                        animator.SetTrigger("Assassinate");
                         return;
                     }
                     else if (!isForward)
@@ -107,13 +111,13 @@ public class PlayerBattleManager : MonoBehaviour
 
                         animator.SetFloat("isForward", 1);
                         animator.SetBool("Assassinated", true);
-                        animator.SetTrigger("Assassinate");
 
                         //몬스터 암살당하는 모션 후방
                         target.animator.SetFloat("Forward", 1);
                         target.vm.RequestTraceTargetChanged(target.monsterId, owner.transform);
-                        target.animator.SetTrigger("Assassinated");
-                        target._behaviorTree.SetVariableValue("isAssassinated", true);
+
+                        owner.ViewModel.RequestAssassinatedType(target);
+                        animator.SetTrigger("Assassinate");
                         return;
                     }
                 }

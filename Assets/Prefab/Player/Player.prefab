@@ -1190,7 +1190,8 @@ MonoBehaviour:
   AttackTarget:
     serializedVersion: 2
     m_Bits: 896
-  assassinationDistance: 1.5
+  assassinationDistanceForward: 2
+  assassinationDistanceBack: 0.1
 --- !u!114 &3023080787147411181
 MonoBehaviour:
   m_ObjectHideFlags: 0

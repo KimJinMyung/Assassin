@@ -12,10 +12,16 @@ public class CheckIsDeadOnUpdate : Action
     private Animator _animator;
 
     [SerializeField] SharedBool isDead;
+    [SerializeField] SharedBool isDIsable;
+    [SerializeField] SharedBool isAssassinated;
 
-    int hashDead = Animator.StringToHash("Dead");
-    int hashDie = Animator.StringToHash("Die");
-    int hashIncapacitated = Animator.StringToHash("Incapacitated");
+    private int hashDead = Animator.StringToHash("Dead");
+    private int hashDie = Animator.StringToHash("Die");
+    private int hashIncapacitated = Animator.StringToHash("Incapacitated");
+    private int hashUpper = Animator.StringToHash("Upper");
+    private int Assassinated = Animator.StringToHash("Assassinated");
+
+    private bool isAction;
 
     public override void OnAwake()
     {
@@ -26,23 +32,37 @@ public class CheckIsDeadOnUpdate : Action
     public override TaskStatus OnUpdate()
     {
         if (!isDead.Value) return TaskStatus.Failure;
-        if (_animator.GetBool(hashDead))
+        if(isDIsable.Value) return TaskStatus.Success;
+
+        //동작 실행
+        if (!isAction)
         {
-            if (_animator.GetBool(hashIncapacitated))
+            monsterView.MonsterDead();
+
+            if (isAssassinated.Value)
             {
-                monsterView.MonsterDead();
+                _animator.SetBool(hashIncapacitated, true);
+                _animator.SetTrigger(Assassinated);               
             }
-            return TaskStatus.Success;
+            else
+            {
+                _animator.SetBool(hashDead, true);
+                _animator.SetTrigger(hashDie);                
+            }
+            isAction = true;
+            isDIsable.Value = true;
         }
 
-        monsterView.MonsterDead();
-        _animator.SetBool(hashDead, true);
-        _animator.SetTrigger(hashDie);
+        //해당 동작들이 실행되고 있는지 확인
+        if (!_animator.GetBool(hashUpper) && monsterView.IsAnimationRunning("Assassinated")) return TaskStatus.Success;
+        else if (_animator.GetBool(hashUpper) && monsterView.IsAnimationRunning("AssassinatedUpper")) return TaskStatus.Success;
+        else if (monsterView.IsAnimationRunning("Die")) return TaskStatus.Success;
 
-        if(monsterView.IsAnimationRunning("Die"))
-        {
-            return TaskStatus.Success;
-        }
         return TaskStatus.Running;
+    }
+
+    public override void OnEnd()
+    {
+        isAction = false;
     }
 }

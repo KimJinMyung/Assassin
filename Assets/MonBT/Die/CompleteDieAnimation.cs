@@ -13,6 +13,7 @@ public class CompleteDieAnimation : Action
     [SerializeField] private SharedBool isDead;
 
     int hashIncapacitated = Animator.StringToHash("Incapacitated");
+    private int hashUpper = Animator.StringToHash("Upper");
 
     public override void OnAwake()
     {
@@ -23,11 +24,18 @@ public class CompleteDieAnimation : Action
     public override TaskStatus OnUpdate()
     {
         if (!isDead.Value) return TaskStatus.Failure;
-        if(_animator.GetBool(hashIncapacitated)) return TaskStatus.Success;
 
-        if (monsterView.IsAnimationRunning("Die"))
+        if (_animator.GetBool(hashIncapacitated))
         {
-            return TaskStatus.Running;
+            if (_animator.GetBool(hashUpper) && monsterView.IsAnimationRunning("AssassinatedUpper")) return TaskStatus.Running;
+            else if (!_animator.GetBool(hashUpper) && monsterView.IsAnimationRunning("Assassinated")) return TaskStatus.Running;
+        }
+        else
+        {
+            if (monsterView.IsAnimationRunning("Die"))
+            {
+                return TaskStatus.Running;
+            }
         }
 
         return TaskStatus.Success;

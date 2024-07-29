@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Windows;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public static class PlayerViewModelExtension
 {
@@ -77,6 +78,25 @@ public static class PlayerViewModelExtension
     public static void OnResponseLockOnTargetChangedEvent(this PlayerViewModel vm, Transform tartget)
     {
         vm.LockOnTarget = tartget;
+    }
+    #endregion
+    #region Assassinated
+    public static void ReigsterAssassinatedTypeChanged(this PlayerViewModel vm, bool isRegister)
+    {
+        LogicManager.instance.RegisterAssassinatedChangedCallback(vm.OnResponseAssassinatedTypeChangedEvent, isRegister);
+    }
+
+    public static void RequestAssassinatedType(this PlayerViewModel vm, MonsterView monster)
+    {
+        LogicManager.instance.OnAssassinated(monster);
+    }
+
+    public static void OnResponseAssassinatedTypeChangedEvent(this PlayerViewModel vm, MonsterView monster)
+    {
+        monster.animator.SetTrigger("Assassinated");
+        monster._behaviorTree.SetVariableValue("isAssassinated", true);
+        monster._behaviorTree.SetVariableValue("isDead", true);
+        vm.AssassinatedMonsters = monster;
     }
     #endregion
 }

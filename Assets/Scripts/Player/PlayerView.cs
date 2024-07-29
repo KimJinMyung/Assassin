@@ -37,6 +37,7 @@ public class PlayerView : MonoBehaviour
             vm.RegisterPlayerHPChanged(true);
             vm.RegisterPlayerStaminaChanged(true);
             vm.RegisterLockOnTargetChanged(true);
+            vm.ReigsterAssassinatedTypeChanged(true);
         }
 
         SetPlayerInfo();
@@ -46,6 +47,7 @@ public class PlayerView : MonoBehaviour
     {
         if(vm != null )
         {
+            vm.ReigsterAssassinatedTypeChanged(false);
             vm.RegisterLockOnTargetChanged(false);
             vm.RegisterPlayerStaminaChanged(false);
             vm.RegisterPlayerHPChanged(false);

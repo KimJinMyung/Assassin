@@ -13,6 +13,10 @@ public class MonsterAssassinated : StateMachineBehaviour
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         owner = animator.GetComponent<MonsterView>();
+
+        if(animator.layerCount > 1)
+        animator.SetLayerWeight(1, 0);
+
         Vector3 dir;
 
         if (animator.GetFloat("Forward") == 1)

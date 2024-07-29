@@ -83,7 +83,6 @@ public class MonsterView : MonoBehaviour
         KnockbackDir = Vector3.zero;
 
         gameObject.layer = LayerMask.NameToLayer("Monster");
-        if (animator.layerCount > 1) animator.SetLayerWeight(1, 1);
 
         Collider.enabled = true;
 
@@ -101,6 +100,9 @@ public class MonsterView : MonoBehaviour
         _behaviorTree = GetComponent<BehaviorTree>();
         _behaviorTree.SetVariableValue("isDead", false);
         _behaviorTree.SetVariableValue("isAssassinated", false);
+        _behaviorTree.SetVariableValue("isDisable", false);
+
+        if (animator.layerCount > 1) animator.SetLayerWeight(1, 1);
 
         MonsterManager.instance.SpawnMonster(this);
 

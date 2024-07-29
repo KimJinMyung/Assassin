@@ -102,6 +102,21 @@ public class LogicManager : MonoBehaviour
         _lockOnModelPlayer_TargetChangeCallback.Invoke(target);
     }
     #endregion
+    #region AssassinateMonster
+    private Action<MonsterView> _assassinatedTargetChangedCallback;
+
+    public void RegisterAssassinatedChangedCallback(Action<MonsterView> assassinatedTypeChangedCallback, bool isRegister)
+    {
+        if (isRegister) _assassinatedTargetChangedCallback += assassinatedTypeChangedCallback;
+        else _assassinatedTargetChangedCallback -= assassinatedTypeChangedCallback;
+    }
+
+    public void OnAssassinated(MonsterView monster)
+    {
+        if (_assassinatedTargetChangedCallback == null) return;
+        _assassinatedTargetChangedCallback.Invoke(monster);
+    }
+    #endregion
 
     #region LockOnTargetList
     private Action<List<Transform>> _lockOnTargetListChangedCallback;

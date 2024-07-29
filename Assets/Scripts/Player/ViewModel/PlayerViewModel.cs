@@ -62,6 +62,19 @@ public class PlayerViewModel
             OnPropertyChanged(nameof(LockOnTarget));
         }
     }
+
+    private MonsterView _assassinatedMonsters;
+    public MonsterView AssassinatedMonsters
+    {
+        get { return _assassinatedMonsters; }
+        set
+        {
+            if (_assassinatedMonsters == value) return;
+
+            _assassinatedMonsters = value;
+            OnPropertyChanged(nameof(AssassinatedMonsters));
+        }
+    }
     #region propertyEvent
     public event PropertyChangedEventHandler PropertyChanged;
 

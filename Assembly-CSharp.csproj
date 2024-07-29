@@ -97,7 +97,6 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Conditionals\Physics\HasExitedTrigger2D.cs" />
     <Compile Include="Assets\MonBT\Subdued\MonsterSubduedStart.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Decorators\TaskGuard.cs" />
-    <Compile Include="Assets\MonBT\Assassinated\CompleteAssassinatedAnimation.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Math\RandomBool.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Actions\Log.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\CapsuleCollider\GetCenter.cs" />
@@ -220,7 +219,6 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector3\GetForwardVector.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Variables\SharedGameObject.cs" />
     <Compile Include="Assets\MonBT\Attack\CompleteAttackAnimation.cs" />
-    <Compile Include="Assets\MonBT\Assassinated\AssassinatedAnimationStart.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animator\GetBoolParameter.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\SetSharedGameObject.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Object Drawers\IntSliderAttribute.cs" />
@@ -626,7 +624,6 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\SetIsStopped.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Composites\RandomSequence.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Time\SetTimeScale.cs" />
-    <Compile Include="Assets\MonBT\Assassinated\Assassinated_Conditional.cs" />
     <Compile Include="Assets\MonBT\Die\Dead_Conditional.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\GetMass.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Actions\Wait.cs" />
