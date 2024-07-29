@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MonsterAttackBox : StateMachineBehaviour
 {
+    MonsterView monsterVIew;
     AttackBox attackBox;
 
     [SerializeField] private float AttackBoxOnTime;
@@ -11,7 +12,8 @@ public class MonsterAttackBox : StateMachineBehaviour
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        attackBox = animator.GetComponentInChildren<AttackBox>();
+        monsterVIew = animator.GetComponent<MonsterView>();
+        attackBox = monsterVIew.attackBox;
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

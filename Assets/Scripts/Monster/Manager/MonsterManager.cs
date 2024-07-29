@@ -48,6 +48,11 @@ public class MonsterManager : MonoBehaviour
         }
     }
 
+    public bool CheckMonsterList(MonsterView monster)
+    {
+        return _monsterLists.ContainsKey(monster.monsterId);
+    }
+
     private void OnEnable()
     {
         _attackingTimer = UnityEngine.Random.Range(2f, 4f);

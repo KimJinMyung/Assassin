@@ -57,6 +57,7 @@ public class MonsterView : MonoBehaviour
     public float MonsterHeight { get; private set; }
 
     #region attack
+    public AttackBox attackBox { get; private set; }
     public float CombatMovementTimer { get; private set; }
     public int AttackMethodCount { get; private set; }
     #endregion
@@ -181,7 +182,8 @@ public class MonsterView : MonoBehaviour
             if (AttackMethodName == CurrentWeaponsType)
             {
                 weapon.weaponMesh.SetActive(true);
-                currentWeaponMesh = weapon.weaponMesh;
+                attackBox = weapon.weaponMesh.GetComponentInChildren<AttackBox>();
+                currentWeaponMesh = weapon.weaponMesh;                
                 continue;
             }
 
@@ -233,10 +235,9 @@ public class MonsterView : MonoBehaviour
 
         if (vm.TraceTarget != null)
         {
-            if (animator.GetBool("Incapacitated")) return;
-
             CombatMovementTimer += Time.deltaTime;
 
+            if ((bool)_behaviorTree.GetVariable("isAssassinated").GetValue() || (bool)_behaviorTree.GetVariable("isDead").GetValue() || (bool)_behaviorTree.GetVariable("isHurt").GetValue()) return;
             MonsterBattleRotation();
         }
     }

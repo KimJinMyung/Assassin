@@ -93,7 +93,6 @@ public static class PlayerViewModelExtension
 
     public static void OnResponseAssassinatedTypeChangedEvent(this PlayerViewModel vm, MonsterView monster)
     {
-        monster.animator.SetTrigger("Assassinated");
         monster._behaviorTree.SetVariableValue("isAssassinated", true);
         monster._behaviorTree.SetVariableValue("isDead", true);
         vm.AssassinatedMonsters = monster;

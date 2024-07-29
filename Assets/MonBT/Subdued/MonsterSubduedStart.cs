@@ -29,6 +29,7 @@ public class MonsterSubduedStart : Action
         isAttacking.Value = false;
         animator.SetBool(hashIncapacitated, true);
         animator.SetTrigger(hashIncapacitate);
+        if (animator.layerCount > 1) animator.SetLayerWeight(1, 0);
         return TaskStatus.Success;
     }
 }

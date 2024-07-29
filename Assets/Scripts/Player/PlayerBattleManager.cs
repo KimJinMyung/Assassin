@@ -45,7 +45,11 @@ public class PlayerBattleManager : MonoBehaviour
 
     private void Update()
     {
-        if (playerSight.ViewModel.LockOnAbleTarget == null) return;
+        if (playerSight.ViewModel.LockOnAbleTarget == null)
+        {
+            ViewMonster = null;
+            return;
+        }
         ViewMonster = playerSight.ViewModel.LockOnAbleTarget.GetComponent<MonsterView>();
 
         if (ViewMonster == null) return;

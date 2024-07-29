@@ -82,7 +82,10 @@ public class PlayerLockOn : MonoBehaviour
         }
 
         _lockOnAbleObject = DetectingTarget();
+       
+        Debug.Log($"1: {_lockOnAbleObject}");
         _viewModel.RequestLockOnAbleTarget(_lockOnAbleObject);
+        Debug.Log($" 2: {_viewModel.LockOnAbleTarget}");
     }
 
     public void OnLockOnMode(InputAction.CallbackContext context)
@@ -143,13 +146,17 @@ public class PlayerLockOn : MonoBehaviour
                     {
                         if (hit.collider.CompareTag("RopePoint") && !IsGrapplingAblePoint(hit.point)) continue;
 
-                        tempLockOnAbleList.Add(collider.transform);
-
-                        if (angleToTarget < closestAngle)
+                        MonsterView hitMonster = hit.transform.GetComponent<MonsterView>();
+                        if (MonsterManager.instance.CheckMonsterList(hitMonster))
                         {
-                            closestAngle = angleToTarget;
-                            closestTarget = hit.transform;
-                        }
+                            tempLockOnAbleList.Add(collider.transform);
+
+                            if (angleToTarget < closestAngle)
+                            {
+                                closestAngle = angleToTarget;
+                                closestTarget = hit.transform;
+                            }
+                        }                        
                     }
                 }
 

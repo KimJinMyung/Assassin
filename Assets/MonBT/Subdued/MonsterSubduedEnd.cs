@@ -23,6 +23,7 @@ public class MonsterSubduedEnd : Action
     {
         animator.SetBool(hashIncapacitated, false);
         isSubded.Value = false;
+        if (animator.layerCount > 1) animator.SetLayerWeight(1, 1);
         return TaskStatus.Success;
     }
 
