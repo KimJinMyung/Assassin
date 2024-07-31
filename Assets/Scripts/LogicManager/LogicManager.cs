@@ -31,6 +31,21 @@ public class LogicManager : MonoBehaviour
         _playerHPChangedCallback.Invoke(playerHP);
     }
     #endregion
+    #region PlayerMaxHP
+    private Action<float> _playerMaxHPChangedCallback;
+
+    public void RegisterPlayerMaxHPChangedCallback(Action<float> playerHPChangedCallback, bool isRegister)
+    {
+        if (isRegister) _playerMaxHPChangedCallback += playerHPChangedCallback;
+        else _playerMaxHPChangedCallback -= playerHPChangedCallback;
+    }
+
+    public void OnPlayerMaxHPChanged(float maxHP)
+    {
+        if (_playerMaxHPChangedCallback == null) return;
+        _playerMaxHPChangedCallback.Invoke(maxHP);
+    }
+    #endregion
     #region PlayerStamina
     private Action<float> _playerStaminaChangedCallback;
 
@@ -44,6 +59,21 @@ public class LogicManager : MonoBehaviour
     {
         if (_playerStaminaChangedCallback == null) return;
         _playerStaminaChangedCallback.Invoke(playerHP);
+    }
+    #endregion
+    #region PlayerMaxStamina
+    private Action<float> _playerMaxStaminaChangedCallback;
+
+    public void RegisterPlayerMaxStaminaChangedCallback(Action<float> playerStaminaChangedCallback, bool isRegister)
+    {
+        if (isRegister) _playerMaxStaminaChangedCallback += playerStaminaChangedCallback;
+        else _playerMaxStaminaChangedCallback -= playerStaminaChangedCallback;
+    }
+
+    public void OnPlayerMaxStaminaChanged(float playerHP)
+    {
+        if (_playerMaxStaminaChangedCallback == null) return;
+        _playerMaxStaminaChangedCallback.Invoke(playerHP);
     }
     #endregion
     #region Move

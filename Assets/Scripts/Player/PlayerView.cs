@@ -35,7 +35,9 @@ public class PlayerView : MonoBehaviour
             vm = new PlayerViewModel();
             vm.PropertyChanged += OnPropertyChanged;
             vm.RegisterPlayerHPChanged(true);
+            vm.RegisterPlayerMaxHPChanged(true);
             vm.RegisterPlayerStaminaChanged(true);
+            vm.RegisterPlayerMaxStaminaChanged(true);
             vm.RegisterLockOnTargetChanged(true);
             vm.ReigsterAssassinatedTypeChanged(true);
         }
@@ -49,7 +51,9 @@ public class PlayerView : MonoBehaviour
         {
             vm.ReigsterAssassinatedTypeChanged(false);
             vm.RegisterLockOnTargetChanged(false);
+            vm.RegisterPlayerMaxStaminaChanged(false);
             vm.RegisterPlayerStaminaChanged(false);
+            vm.RegisterPlayerMaxHPChanged(false);
             vm.RegisterPlayerHPChanged(false);
             vm.PropertyChanged -= OnPropertyChanged;
             vm = null;
@@ -64,6 +68,8 @@ public class PlayerView : MonoBehaviour
         playerData = player.Clone();
         vm.RequestPlayerHPChanged(player.Clone().HP);
         vm.RequestPlayerStaminaChanged(player.Clone().Stamina);
+        vm.RequestPlayerMaxHPChanged(player.Clone().MaxHP);
+        vm.RequestPlayerMaxStaminaChanged(player.Clone().MaxStamina);
     }
 
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -75,6 +81,10 @@ public class PlayerView : MonoBehaviour
                 break;
             case nameof(vm.Stamina):
                 //stamina UI¿Í ¿¬°ü
+                break;
+            case nameof(vm.MaxHP):
+                break;
+            case nameof(vm.MaxStamina):
                 break;
             case nameof(vm.LockOnTarget):
                 animator.SetBool("LockOn", vm.LockOnTarget != null);

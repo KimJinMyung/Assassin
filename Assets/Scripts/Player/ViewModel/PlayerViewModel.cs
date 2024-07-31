@@ -16,6 +16,19 @@ public class PlayerViewModel
         }
     }
 
+    private float _maxHp;
+    public float MaxHP
+    {
+        get { return _maxHp; }
+        set
+        {
+            if (_maxHp == value) return;
+
+            _maxHp = value;
+            OnPropertyChanged(nameof(MaxHP));
+        }
+    }
+
     private float _stamina;
     public float Stamina
     {
@@ -25,6 +38,30 @@ public class PlayerViewModel
             if(_stamina == value) return;
             _stamina = value;
             OnPropertyChanged(nameof(Stamina));
+        }
+    }
+
+    private float _maxStamina;
+    public float MaxStamina
+    {
+        get { return _maxStamina; }
+        set
+        {
+            if (_maxStamina == value) return;
+            _maxStamina = value;
+            OnPropertyChanged(nameof(MaxStamina));
+        }
+    }
+
+    private float lifeCount;
+    public float LifeCount
+    {
+        get { return lifeCount; }
+        set
+        {
+            if (lifeCount == value) return;
+            lifeCount = value;
+            OnPropertyChanged(nameof(LifeCount));
         }
     }
 

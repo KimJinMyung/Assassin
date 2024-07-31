@@ -23,12 +23,21 @@ public class MonsterManager : MonoBehaviour
 
     private float _attackingTimer;
 
+    [SerializeField] MonsterUI _mainHud;
+
     #region MonsterList
     public void SpawnMonster(MonsterView monster)
     {
         if (_monsterLists.ContainsKey(monster.monsterId)) return;
 
         _monsterLists.Add(monster.monsterId, monster);
+
+        if (monster.Type != MonsterType.Boss)
+        {
+            CreateMonsterHUD(monster);
+        }
+        else CreateBossMonsterHUD(monster);
+
         RegisterMonsgterAttackMethod(monster.monsterId, monster.Attack, true);
     }
 
@@ -46,6 +55,29 @@ public class MonsterManager : MonoBehaviour
             _monsterLists.Remove(monster.monsterId);
             RegisterMonsgterAttackMethod(monster.monsterId, monster.Attack, false);
         }
+    }
+
+    public void ShowBossMonsterHUD_OnOff(bool onoff)
+    {
+        if (_mainHud == null) return;
+
+        _mainHud.BossMonsterHud_OnOff(onoff);
+    }
+
+    private void CreateBossMonsterHUD(MonsterView boss)
+    {
+        if (_mainHud == null) return;
+
+        _mainHud.BindBossMonster(boss);
+        ShowBossMonsterHUD_OnOff(true);
+    }
+
+    private void CreateMonsterHUD(MonsterView mob)
+    {
+        if (_mainHud == null)
+            return;
+
+        _mainHud.CreateMonsterHUD(mob);
     }
 
     public bool CheckMonsterList(MonsterView monster)
