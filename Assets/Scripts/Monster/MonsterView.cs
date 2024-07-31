@@ -258,7 +258,7 @@ public class MonsterView : MonoBehaviour
         {
             CombatMovementTimer += Time.deltaTime;
 
-            if ((bool)_behaviorTree.GetVariable("isAssassinated").GetValue() || (bool)_behaviorTree.GetVariable("isDead").GetValue() || (bool)_behaviorTree.GetVariable("isHurt").GetValue()) return;
+            if ((bool)_behaviorTree.GetVariable("isAssassinated").GetValue() || (bool)_behaviorTree.GetVariable("isDead").GetValue() || (bool)_behaviorTree.GetVariable("isHurt").GetValue() || (bool)_behaviorTree.GetVariable("isSubded").GetValue()) return;
             MonsterBattleRotation();
         }
     }

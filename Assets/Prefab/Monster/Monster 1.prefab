@@ -2338,7 +2338,7 @@ GameObject:
   - component: {fileID: 7937378333346444904}
   - component: {fileID: 241020052425908538}
   - component: {fileID: 5387394628137235556}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: DetectZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3642,9 +3642,9 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 2ba66718d3169ae42a05d8facf302228, type: 3}
   m_Controller: {fileID: 9100000, guid: ab3d9adb36110fc46a129928d0524e51, type: 2}
-  m_CullingMode: 1
+  m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 

@@ -15,8 +15,8 @@ public class PlayerBattleManager : MonoBehaviour
 
     private PlayerLockOn playerSight;
 
+    private AttackBox attackBox;
     [SerializeField] private LayerMask AttackTarget;
-
     [SerializeField] private float assassinationDistanceForward;
     [SerializeField] private float assassinationDistanceBack;
 
@@ -41,6 +41,13 @@ public class PlayerBattleManager : MonoBehaviour
         playerController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         playerSight = GetComponent<PlayerLockOn>();
+
+        attackBox = GetComponentInChildren<AttackBox>();
+    }
+
+    private void Start()
+    {
+        attackBox.enabled = false;
     }
 
     private void Update()

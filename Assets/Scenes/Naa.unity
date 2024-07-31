@@ -25,8 +25,8 @@ RenderSettings:
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 0
-  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SubtractiveShadowColor: {r: 0.56577426, g: 0.65022045, b: 0.86415094, a: 1}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 285ae2c078769c84db797f56a9b86c38, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -97,7 +97,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 74dad217f0190c348978979ccdaf395c, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -111,9 +111,9 @@ NavMeshSettings:
     agentClimb: 0.4
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
-    minRegionArea: 2
-    manualCellSize: 0
-    cellSize: 0.16666667
+    minRegionArea: 0
+    manualCellSize: 1
+    cellSize: 0.063
     manualTileSize: 0
     tileSize: 256
     buildHeightMesh: 0
@@ -249,7 +249,7 @@ Transform:
   m_GameObject: {fileID: 750263303}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.036, z: 21.884}
+  m_LocalPosition: {x: 0.115, y: 0.564, z: 21.948}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -389,8 +389,8 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 0.61603934, g: 0.52509075, b: 0.690566, a: 1}
+  m_Intensity: 1.62
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -400,7 +400,7 @@ Light:
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
-    m_Bias: 0.05
+    m_Bias: 0
     m_NormalBias: 0.4
     m_NearPlane: 0.2
     m_CullingMatrixOverride:
@@ -429,10 +429,10 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 3
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -596,7 +596,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3557863632511592808, guid: 8f7261307cb1de54f81d889a15a2bc31, type: 3}
       propertyPath: GameObject.Array.size
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3557863632511592808, guid: 8f7261307cb1de54f81d889a15a2bc31, type: 3}
       propertyPath: GameObject.Array.data[0]
@@ -613,9 +613,13 @@ PrefabInstance:
     - target: {fileID: 3557863632511592808, guid: 8f7261307cb1de54f81d889a15a2bc31, type: 3}
       propertyPath: GameObject.Array.data[3]
       value: 
-      objectReference: {fileID: 3001912017504768488, guid: dc729c644737c414b87f4fab521a8556, type: 3}
+      objectReference: {fileID: 8365324612281900875, guid: 40bcc779fa044044e969673a6b035319, type: 3}
     - target: {fileID: 3557863632511592808, guid: 8f7261307cb1de54f81d889a15a2bc31, type: 3}
       propertyPath: GameObject.Array.data[4]
+      value: 
+      objectReference: {fileID: 3001912017504768488, guid: dc729c644737c414b87f4fab521a8556, type: 3}
+    - target: {fileID: 3557863632511592808, guid: 8f7261307cb1de54f81d889a15a2bc31, type: 3}
+      propertyPath: GameObject.Array.data[5]
       value: 
       objectReference: {fileID: 8927993104135698521, guid: c386f1dcb3d2a72469e1d4d1cf37f8de, type: 3}
     - target: {fileID: 7705642838103084720, guid: 8f7261307cb1de54f81d889a15a2bc31, type: 3}

@@ -108,7 +108,7 @@ public class LockOn_UI : MonoBehaviour
         }
         else if (target.layer == LayerMask.NameToLayer("LockOnAble"))
         {
-            _lockOnIcon.color = Color.blue;
+            _lockOnIcon.color = Color.white;
         }
         else if (target.layer == LayerMask.NameToLayer("Incapacitated"))
         {
@@ -116,8 +116,8 @@ public class LockOn_UI : MonoBehaviour
         }
         else if (target.layer == LayerMask.NameToLayer("RopePoint"))
         {
-            _lockOnIcon.color = Color.yellow;
+            _lockOnIcon.color = Color.magenta;
         }
-        else _lockOnIcon.color = Color.white;
+        //else _lockOnIcon.color = Color.white;
     }
 }

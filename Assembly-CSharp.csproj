@@ -294,7 +294,6 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Transform\LookAt.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Transform\SetRightVector.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animator\SetLookAtPosition.cs" />
-    <Compile Include="Assets\PlayerDefense.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Variables\SharedBool.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector2\Normalize.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\BoxCollider\SetSize.cs" />
@@ -499,6 +498,7 @@
     <Compile Include="Assets\MonBT\NormalMonster\Attack\CheckisAttackAbleDisOnUpdate.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector2\SetValue.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Transform\Translate.cs" />
+    <Compile Include="Assets\Scripts\Player\Animation\PlayerDefense.cs" />
     <Compile Include="Assets\MonBT\NormalMonster\Die\CompleteDieAnimation.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\GetPlaybackSpeed.cs" />
     <Compile Include="Assets\MonBT\NormalMonster\Battle\Circling.cs" />
@@ -547,6 +547,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector2\GetVector3.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animator\SetLayerWeight.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Transform\GetEulerAngles.cs" />
+    <Compile Include="Assets\Scripts\Monster\Animation\MonsterHurt.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\AudioSource\SetVelocityUpdateMode.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\AudioSource\IsPlaying.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Math\FloatAbs.cs" />
@@ -640,7 +641,6 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Light\SetShadowBias.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\GetAngularVelocity.cs" />
     <Compile Include="Assets\Scripts\Player\Animation\PlayerAttack_NextAttackAble.cs" />
-    <Compile Include="Assets\MonsterHurt.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\ResetPath.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Decorators\Cooldown.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\IsPlaying.cs" />
