@@ -41,13 +41,6 @@ public class MainHUD : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        Debug.Log(ui_Viewmodel.HP);
-        Debug.Log(ui_Viewmodel.MaxHP);
-        Debug.Log((float)ui_Viewmodel.HP / ui_Viewmodel.MaxHP);
-    }
-
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)

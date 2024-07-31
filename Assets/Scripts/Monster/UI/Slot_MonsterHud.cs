@@ -41,8 +41,9 @@ public class Slot_MonsterHud : MonoBehaviour
         monster_data = _monster._monsterData;
 
         MonsterStamina.SetMaxStamina(monster_data.MaxStamina);
-        MonsterStamina.SetCurrentStamina(monster_data.Stamina);
+        MonsterStamina.SetCurrentStamina(_monster.vm.Stamina);
     }
+    
 
     public void OnOffHud(bool onAlbe)
     {
@@ -92,7 +93,7 @@ public class Slot_MonsterHud : MonoBehaviour
         
 
         Image_MonsterHP.fillAmount = (_monster.vm.HP / _monster._monsterData.MaxHP);
-        MonsterStamina.SetCurrentStamina(monster_data.Stamina);
+        MonsterStamina.SetCurrentStamina(_monster.vm.Stamina);
         // _monster.gameObject;
         // Slo 위치 갱신
     }

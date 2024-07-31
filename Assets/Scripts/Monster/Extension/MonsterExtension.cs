@@ -11,25 +11,28 @@ public static class MonsterExtension
     public static void RegisterMonsterHPChanged(this MonsterViewModel vm, bool isRegister, int monsterId)
     {
         LogicManager.instance.RegisterMonsterHPChangedCallback(monsterId, vm.OnResponseMonsterHPChangedEvent, isRegister);
+        MonsterManager.instance.RegisterMonsterHPChangedCallback(monsterId, vm.OnResponseMonsterHPChangedEvent, isRegister);
     }
     public static void RequestMonsterHPChanged(this MonsterViewModel vm, int monsterId, float hp)
     {
         LogicManager.instance.OnMonsterHPChanged(monsterId, hp);
+        MonsterManager.instance.SetMonsterHP(monsterId, hp);
     }
     public static void OnResponseMonsterHPChangedEvent(this MonsterViewModel vm, float HP)
     {
         vm.HP = HP;
-
     }
     #endregion
     #region Stamina
     public static void RegisterMonsterStaminaChanged(this MonsterViewModel vm, bool isRegister, int monsterId)
     {
         LogicManager.instance.RegisterMonsterStaminaChangedCallback(monsterId, vm.OnResponseMonsterStaminaChangedEvent, isRegister);
+        MonsterManager.instance.RegisterMonsterStaminaChangedCallback(monsterId, vm.OnResponseMonsterStaminaChangedEvent, isRegister);
     }
     public static void RequestMonsterStaminaChanged(this MonsterViewModel vm, float stamina, int monsterId)
     {
         LogicManager.instance.OnMonsterStaminaChanged(monsterId, stamina);
+        MonsterManager.instance.SetMonsterStamina(monsterId, stamina);
     }
     public static void OnResponseMonsterStaminaChangedEvent(this MonsterViewModel vm, float stamina)
     {

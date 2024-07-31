@@ -28,6 +28,18 @@ public class MonsterViewModel
         }
     }
 
+    private float _lifeCount;
+    public float LifeCount
+    {
+        get { return _lifeCount; }
+        set
+        {
+            if (_lifeCount == value) return;
+            _lifeCount = value;
+            OnPropertyChanged(nameof(LifeCount));
+        }
+    }
+
     private Transform _traceTarget;
     public Transform TraceTarget
     {

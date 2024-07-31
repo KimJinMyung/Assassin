@@ -237,7 +237,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: dec01b66ed101f34cabd09e0e46910ac, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5e5cd9ef8094e1e47aacab2a41469447, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -431,7 +431,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2520114012824023259, guid: f9e12c3e20062a04cb55d6d0864ea4c0, type: 3}
       propertyPath: m_Name
-      value: Player_Stamina_Bar
+      value: Monster_Stamina_Bar
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

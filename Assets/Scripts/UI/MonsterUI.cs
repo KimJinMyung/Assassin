@@ -27,6 +27,7 @@ public class MonsterUI : MonoBehaviour
         Stamina_Background = BossMonster_Stamina.GetComponent<Image>();
         Stamina_Left = BossMonster_Stamina.StaminaBarLeft;
         Stamina_Right = BossMonster_Stamina.StaminaBarRight;
+        MonsterManager.instance.SetHUD(this);
     }
 
     private void OnEnable()
@@ -39,6 +40,8 @@ public class MonsterUI : MonoBehaviour
         _monsterHUDSlotList.ForEach(e => DestroyImmediate(e.gameObject));
         _monsterHUDSlotList.Clear();
     }
+
+    
 
     public void CreateMonsterHUD(MonsterView monster)
     {
@@ -95,7 +98,6 @@ public class MonsterUI : MonoBehaviour
 
         BossMonster_HPBar.fillAmount = (Boss_data.HP / Boss_data.MaxHP);
         BossMonster_Stamina.SetCurrentStamina(Boss_data.Stamina);
-
     }
 
     private void ViewBossHud(bool onOff)

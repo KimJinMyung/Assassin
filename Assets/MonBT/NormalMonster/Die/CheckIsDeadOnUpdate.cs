@@ -37,6 +37,7 @@ public class CheckIsDeadOnUpdate : Action
         //동작 실행
         if (!isAction)
         {
+            monsterView.vm.RequestMonsterHPChanged(monsterView.monsterId, 0);
             monsterView.MonsterDead();
 
             if (isAssassinated.Value)
