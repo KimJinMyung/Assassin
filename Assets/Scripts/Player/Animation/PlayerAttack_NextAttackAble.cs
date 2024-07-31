@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerAttack_NextAttackAble : StateMachineBehaviour
 {
     private AttackBox attackBox;
+    private Collider coliider;
 
     [SerializeField] 
     private float NextAttackAbleTime = 0.25f;
@@ -12,7 +13,10 @@ public class PlayerAttack_NextAttackAble : StateMachineBehaviour
         animator.SetBool("isMoveAble", true);
 
         if(attackBox == null)
-        attackBox = animator.GetComponentInChildren<AttackBox>();
+        {
+            attackBox = animator.GetComponentInChildren<AttackBox>();
+        }       
+        
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

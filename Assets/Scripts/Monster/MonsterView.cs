@@ -135,9 +135,23 @@ public class MonsterView : MonoBehaviour
         vm.RequestMonsterHPChanged(monsterId, _monsterData.HP);
         vm.RequestMonsterStaminaChanged(_monsterData.Stamina, monsterId);
 
+        ChangedCharacterMesh(type);
         ChangedMonsterAnimationController();
         UpdateAttackMethod_Data(monster);
 
+    }
+
+    private void ChangedCharacterMesh(MonsterType type)
+    {
+        foreach(var child in monsterMeshes)
+        {
+            if(child._monsterType == type)
+            {
+                child.mesh.SetActive(true);
+                continue;
+            }
+            child.mesh.SetActive(false);
+        }        
     }
 
     private void ChangedMonsterAnimationController()
@@ -183,6 +197,7 @@ public class MonsterView : MonoBehaviour
             {
                 weapon.weaponMesh.SetActive(true);
                 attackBox = weapon.weaponMesh.GetComponentInChildren<AttackBox>();
+                attackBox.enabled = false;
                 currentWeaponMesh = weapon.weaponMesh;                
                 continue;
             }
@@ -220,6 +235,12 @@ public class MonsterView : MonoBehaviour
         {
             case nameof(WeaponsType.SpearAttack):
                 AttackMethodCount = 1;
+                break;
+            case nameof(WeaponsType.DaggerAttack):
+                AttackMethodCount = 3;
+                break;
+            case nameof(WeaponsType.ShurikenAttack):
+                AttackMethodCount = 2;
                 break;
         }
     }
@@ -267,7 +288,7 @@ public class MonsterView : MonoBehaviour
     {
         float addParriedPower;
 
-        if (_type != MonsterType.Boss) addParriedPower = attacker.playerData.Strength * 3;
+        if (_type != MonsterType.Boss) addParriedPower = attacker.playerData.Strength * 5;
         else addParriedPower = attacker.playerData.Strength * 10;
 
         vm.RequestMonsterStaminaChanged(vm.Stamina - addParriedPower, monsterId);
@@ -294,7 +315,6 @@ public class MonsterView : MonoBehaviour
         }
 
         vm.RequestMonsterHPChanged(monsterId, vm.HP - Damage);
-        Debug.Log(vm.HP);
 
         if (vm.HP <= 0)
         {

@@ -35,6 +35,7 @@ public class MonsterParriedAnimation : Action
             isAction = true;
             animator.SetTrigger(hashParried);      
         }
+
         if (monsterView.IsAnimationRunning("Parried")) return TaskStatus.Success;
         return TaskStatus.Running;
     }

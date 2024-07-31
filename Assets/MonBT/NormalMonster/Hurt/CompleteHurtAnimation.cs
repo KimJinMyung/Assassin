@@ -14,7 +14,7 @@ public class CompleteHurtAnimation : Action
 
     private Vector3 dir;
 
-    int hashHurt = Animator.StringToHash("Hit");
+    int hashHurt = Animator.StringToHash("Hurt");
 
     [SerializeField] SharedBool isHurt;
 
@@ -39,7 +39,7 @@ public class CompleteHurtAnimation : Action
         }
 
         isHurt.Value = false;
-        animator.SetBool(hashHurt, false);
+        animator.SetTrigger(hashHurt);
         return TaskStatus.Success;
     }
 

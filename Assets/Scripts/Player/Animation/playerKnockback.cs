@@ -10,6 +10,8 @@ public class playerKnockback : StateMachineBehaviour
     {
         owner = animator.GetComponent<PlayerView>(); 
         owner.isKnockback = true;
+
+        animator.SetBool("AttackAble", false);
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -19,5 +21,10 @@ public class playerKnockback : StateMachineBehaviour
             owner.isKnockback = false;
             animator.SetBool("isMoveAble", true);
         }
+    }
+
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        animator.SetBool("AttackAble", true);
     }
 }

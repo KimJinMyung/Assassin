@@ -37,6 +37,13 @@ public class RetreatAfterAttack : Action
 
     public override TaskStatus OnUpdate()
     {
+        if (monsterView.vm.CurrentAttackMethod.AttackType == "Long")
+        {
+            isAttackEnd.Value = false;
+            isAttacking.Value = false;
+            return TaskStatus.Success;
+        }
+
         float distance = Vector3.Distance(Owner.transform.position, monsterView.vm.TraceTarget.position);
         if(distance >= AttackRange + 1.5f)
         {
@@ -48,10 +55,7 @@ public class RetreatAfterAttack : Action
         Vector3 targetDir = monsterView.vm.TraceTarget.position - Owner.transform.position;
         targetDir.y = 0;
 
-        if(monsterView.vm.CurrentAttackMethod.AttackType == "Short")
-        {
-            agent.Move(-targetDir.normalized * (AttackRange + 1.5f) * Time.deltaTime);
-        }
+        agent.Move(-targetDir.normalized * (AttackRange + 1.5f) * Time.deltaTime);
 
         Owner.transform.rotation = Quaternion.RotateTowards(Owner.transform.rotation, Quaternion.LookRotation(targetDir), 500 * Time.deltaTime);
         return TaskStatus.Running;

@@ -39,8 +39,8 @@ public class CheckMonsterHPOnUPdate : Action
         KnockbackDir.y = 0;
         KnockbackDir.Normalize();
 
-        animator.SetFloat(hashHurtDirz, KnockbackDir.z);
-        animator.SetFloat(hashHurtDirx, KnockbackDir.x);
+        animator.SetFloat(hashHurtDirz, KnockbackDir.x);
+        animator.SetFloat(hashHurtDirx, KnockbackDir.z);
         animator.SetTrigger(hashHurt);
     }
 }

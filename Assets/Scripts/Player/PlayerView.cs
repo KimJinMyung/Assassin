@@ -108,11 +108,14 @@ public class PlayerView : MonoBehaviour
                 return;
             }
 
-            if (animator.GetBool("Defense") && !IsAnimationRunning("Parry"))
+            if (animator.GetBool("Defense") && animator.GetBool("ParryAble"))
             {
                 //방어 성공
                 vm.RequestPlayerStaminaChanged(vm.Stamina - attacker.vm.Stamina);
                 isAssassinated = vm.Stamina <= 0f;
+                animator.SetTrigger("Hurt");
+
+                Debug.Log($"Player Stamina : {vm.Stamina}");
                 return;
             }
         }
@@ -142,6 +145,7 @@ public class PlayerView : MonoBehaviour
     private void Update()
     {
         if(isKnockback) NockBacking();
+
     }
 
     private void NockBacking()
@@ -171,6 +175,7 @@ public class PlayerView : MonoBehaviour
 
         animator.SetFloat("Hurt_z", attackDir.z);
         animator.SetFloat("Hurt_x", attackDir.x);
+        animator.SetBool("Defense", false);
         animator.SetTrigger("Hurt");
     }
 

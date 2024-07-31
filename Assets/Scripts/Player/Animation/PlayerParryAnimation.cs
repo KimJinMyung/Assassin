@@ -8,6 +8,7 @@ public class PlayerParryAnimation : StateMachineBehaviour
     
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        animator.SetBool("isMoveAble", false);
         animator.SetBool("ParryAble", false);
         owner = animator.GetComponent<PlayerBattleManager>();
         owner.isParried = true;
@@ -27,6 +28,7 @@ public class PlayerParryAnimation : StateMachineBehaviour
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        animator.SetBool("isMoveAble", true);
         animator.SetBool("ParryAble", true);
         owner.isParried = false;
     }

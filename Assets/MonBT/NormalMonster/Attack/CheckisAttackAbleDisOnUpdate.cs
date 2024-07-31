@@ -11,7 +11,6 @@ public class CheckisAttackAbleDisOnUpdate : Action
     private MonsterView monsterView;
     private NavMeshAgent agent;
     private Animator animator;
-    private AttackBox attackBox;
 
     [SerializeField] SharedFloat AttackRange;
     [SerializeField] SharedString AttackName;

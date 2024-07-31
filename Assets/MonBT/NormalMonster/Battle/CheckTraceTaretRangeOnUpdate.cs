@@ -15,6 +15,7 @@ public class CheckTraceTaretRangeOnUpdate : Action
 
     [SerializeField] SharedFloat AttackRange;
     [SerializeField] SharedBool isAttackAble;
+    [SerializeField] SharedBool isAttacking;
 
     private float distance;
     private int hashMovespeed = Animator.StringToHash("MoveSpeed");
@@ -29,6 +30,7 @@ public class CheckTraceTaretRangeOnUpdate : Action
     public override TaskStatus OnUpdate()
     {
         if(monsterView.vm.TraceTarget == null) return TaskStatus.Failure;
+        if (isAttacking.Value) return TaskStatus.Failure;
         distance = Vector3.Distance(Owner.transform.position, monsterView.vm.TraceTarget.position);
         AttackRange.Value = monsterView.vm.CurrentAttackMethod.AttackRange;
 

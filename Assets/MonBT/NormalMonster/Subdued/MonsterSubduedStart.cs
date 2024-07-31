@@ -10,6 +10,7 @@ public class MonsterSubduedStart : Action
     private Animator animator;
 
     [SerializeField] SharedBool isSubed;
+    [SerializeField] SharedBool isDead;
     [SerializeField] SharedBool isAttackAble;
     [SerializeField] SharedBool isAttacking;
 
@@ -23,7 +24,7 @@ public class MonsterSubduedStart : Action
 
     public override TaskStatus OnUpdate()
     {
-        if(!isSubed.Value) return TaskStatus.Failure;
+        if(!isSubed.Value || isDead.Value) return TaskStatus.Failure;
 
         isAttackAble.Value = false;
         isAttacking.Value = false;

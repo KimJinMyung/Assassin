@@ -7,6 +7,7 @@ using UnityEngine;
 [TaskCategory("Subdued")]
 public class MonsterSubduedEnd : Action
 {
+    private MonsterView monsterView;
     private Animator animator;
 
     [SerializeField] SharedBool isSubded;
@@ -16,11 +17,14 @@ public class MonsterSubduedEnd : Action
 
     public override void OnAwake()
     {
+        monsterView = Owner.GetComponent<MonsterView>();
         animator = Owner.GetComponent<Animator>();
     }
 
     public override TaskStatus OnUpdate()
     {
+        monsterView.vm.RequestMonsterStaminaChanged(monsterView._monsterData.MaxStamina, monsterView.monsterId);
+
         animator.SetBool(hashIncapacitated, false);
         isSubded.Value = false;
         if (animator.layerCount > 1) animator.SetLayerWeight(1, 1);
