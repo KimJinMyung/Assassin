@@ -88,7 +88,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Jump1 1
+  m_Name: attack10
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -429,7 +429,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Combo01
+  m_Name: attack00
   m_Speed: 1.5
   m_CycleOffset: 0
   m_Transitions:
@@ -649,7 +649,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Attack_Dash02
+  m_Name: attack00
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -948,7 +948,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: JumpAttack1
+  m_Name: attack00
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1620,7 +1620,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: JumpAttack2
+  m_Name: attack01
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1927,7 +1927,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Combo03
+  m_Name: attack02
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -2402,7 +2402,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Combo02
+  m_Name: attack01
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -2463,7 +2463,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Jump2
+  m_Name: attack11
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:

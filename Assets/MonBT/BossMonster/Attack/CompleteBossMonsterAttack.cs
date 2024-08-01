@@ -50,17 +50,20 @@ public class CompleteBossMonsterAttack : Conditional
 
     public override TaskStatus OnUpdate()
     {
-        if (monsterView.IsAnimationRunning($"{attackName}.{attackType}.attack{currentAttackIndex}"))
-        {
-            isMotionOn = true;
-            return TaskStatus.Running;
-        }
-
         if (isMotionOn)
         {
             return TaskStatus.Success;
         }
+        else
+        {
+            if (monsterView.IsAnimationRunning($"{attackName}.{attackType}.attack{currentAttackIndex}"))
+            {
+                isMotionOn = true;
+                return TaskStatus.Running;
+            }
 
-        return TaskStatus.Running;
+            return TaskStatus.Failure;
+        }
+        
     }
 }
