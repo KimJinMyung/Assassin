@@ -245,6 +245,9 @@ public class MonsterView : MonoBehaviour
             case nameof(WeaponsType.ShurikenAttack):
                 AttackMethodCount = 2;
                 break;
+            case nameof(WeaponsType.GreateSwordAttack):
+                AttackMethodCount = 3;
+                break;
         }
     }
 
@@ -265,9 +268,8 @@ public class MonsterView : MonoBehaviour
             MonsterBattleRotation();
         }
 
-        Debug.Log(_monsterData.MaxStamina);
-        Debug.Log(vm.Stamina);
     }
+    
 
     private void MonsterBattleRotation()
     {

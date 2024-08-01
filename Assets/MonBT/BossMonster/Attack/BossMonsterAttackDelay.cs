@@ -5,20 +5,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [TaskCategory("BossAttack")]
-public class BossAttack_Conditional : Conditional
+public class BossMonsterAttackDelay : Action
 {
-    [SerializeField] SharedBool isAttackAble;
+    [SerializeField] SharedFloat AttackTimer;
     [SerializeField] SharedBool isAttacking;
+
+    public override void OnStart()
+    {
+        AttackTimer.Value = Random.Range(2f, 3.5f);
+    }
 
     public override TaskStatus OnUpdate()
     {
-        if(isAttackAble.Value || isAttacking.Value)
-        {
-            return TaskStatus.Running;
-        }
-        else
-        {
-            return TaskStatus.Failure;
-        }
+        isAttacking.Value = false;
+        return TaskStatus.Success;
     }
 }
