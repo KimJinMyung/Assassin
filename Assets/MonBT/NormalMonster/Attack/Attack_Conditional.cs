@@ -24,6 +24,6 @@ public class Attack_Conditional : Conditional
     public override TaskStatus OnUpdate()
     {
         if(isDead.Value || isHurt.Value || isParried.Value || !isAttacking.Value || monsterView.vm.TraceTarget == null || isAssassinated.Value) return TaskStatus.Failure;
-        else return TaskStatus.Success;
+        else return TaskStatus.Running;
     }
 }

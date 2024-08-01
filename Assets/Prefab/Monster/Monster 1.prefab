@@ -3672,6 +3672,9 @@ MonoBehaviour:
   - _monsterType: 1
     mesh: {fileID: 3945191583566021346}
     animation_controller: {fileID: 9100000, guid: ab3d9adb36110fc46a129928d0524e51, type: 2}
+  - _monsterType: 2
+    mesh: {fileID: 5603406857052164726}
+    animation_controller: {fileID: 9100000, guid: ab3d9adb36110fc46a129928d0524e51, type: 2}
   monsterWeapons:
   - WeaponsType: 1
     weaponMesh: {fileID: 7209411996648041310}

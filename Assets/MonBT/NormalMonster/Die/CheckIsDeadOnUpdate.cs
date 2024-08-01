@@ -3,7 +3,6 @@ using BehaviorDesigner.Runtime.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 [TaskCategory("Monster_Die")]
 public class CheckIsDeadOnUpdate : Action
@@ -37,7 +36,6 @@ public class CheckIsDeadOnUpdate : Action
         //동작 실행
         if (!isAction)
         {
-            monsterView.vm.RequestMonsterHPChanged(monsterView.monsterId, 0);
             monsterView.MonsterDead();
 
             if (isAssassinated.Value)

@@ -24,6 +24,6 @@ public class Subdued_Conditional : Conditional
     {
         if(!isSubded.Value || isHurt.Value || isDead.Value || isAssassinated.Value) return TaskStatus.Failure;
         _attackBox.enabled = false;
-        return TaskStatus.Success;
+        return TaskStatus.Running;
     }
 }

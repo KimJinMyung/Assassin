@@ -237,6 +237,31 @@ public class LogicManager : MonoBehaviour
         if (_monsterStamina.ContainsKey(monsterId)) _monsterStamina[monsterId]?.Invoke(HP);
     }
     #endregion
+    #region MonsterLifeCount
+    private Dictionary<int, Action<float>> _monsterLifeCount = new Dictionary<int, Action<float>>();
+
+    public void RegisterMonsterLifeCountChangedCallback(int monsterId, Action<float> monsterLifeCount, bool isRegister)
+    {
+        if (isRegister)
+        {
+            if (!_monsterLifeCount.ContainsKey(monsterId)) _monsterLifeCount.Add(monsterId, monsterLifeCount);
+            else _monsterLifeCount[monsterId] = monsterLifeCount;
+        }
+        else
+        {
+            if (_monsterLifeCount.ContainsKey(monsterId))
+            {
+                _monsterLifeCount[monsterId] -= monsterLifeCount;
+                if (_monsterLifeCount[monsterId] == null) _monsterLifeCount.Remove(monsterId);
+            }
+
+        }
+    }
+    public void OnMonsterLifeCountChanged(int monsterId, float LifeCount)
+    {
+        if (_monsterLifeCount.ContainsKey(monsterId)) _monsterLifeCount[monsterId]?.Invoke(LifeCount);
+    }
+    #endregion
     #region MonsterAttackMethod
     private Dictionary<int, Action<List<Monster_Attack>, MonsterView>> _monsterAttackMethodList = new Dictionary<int, Action<List<Monster_Attack>, MonsterView>>();
 

@@ -18,7 +18,7 @@ public class Dead_Conditional : Conditional
 
     public override TaskStatus OnUpdate()
     {
-        if(isDead.Value) return TaskStatus.Success;
+        if(isDead.Value) return TaskStatus.Running;
         else return TaskStatus.Failure;
     }
 }

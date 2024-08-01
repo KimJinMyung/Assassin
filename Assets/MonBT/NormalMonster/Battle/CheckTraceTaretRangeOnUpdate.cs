@@ -14,7 +14,6 @@ public class CheckTraceTaretRangeOnUpdate : Action
     private NavMeshAgent agent;
 
     [SerializeField] SharedFloat AttackRange;
-    [SerializeField] SharedBool isAttackAble;
     [SerializeField] SharedBool isAttacking;
 
     private float distance;
@@ -30,22 +29,19 @@ public class CheckTraceTaretRangeOnUpdate : Action
     public override TaskStatus OnUpdate()
     {
         if(monsterView.vm.TraceTarget == null) return TaskStatus.Failure;
-        if (isAttacking.Value) return TaskStatus.Failure;
         distance = Vector3.Distance(Owner.transform.position, monsterView.vm.TraceTarget.position);
         AttackRange.Value = monsterView.vm.CurrentAttackMethod.AttackRange;
 
-        agent.speed = monsterView._monsterData.RunSpeed;
-        agent.stoppingDistance = AttackRange.Value + 1.5f;
+        //agent.speed = monsterView._monsterData.RunSpeed;
+        //agent.stoppingDistance = AttackRange.Value + 1.5f;
 
         if (distance >= AttackRange.Value + 1.5f)
         {
-            isAttackAble.Value = false;
-            animator.SetFloat(hashMovespeed, 1);
+            //animator.SetFloat(hashMovespeed, 1);
             return TaskStatus.Running;
         }
 
-        isAttackAble.Value = true;
-        animator.SetFloat(hashMovespeed, 0);
+        //animator.SetFloat(hashMovespeed, 0);
         return TaskStatus.Success;
     }
 }

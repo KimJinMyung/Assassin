@@ -37,7 +37,22 @@ public static class MonsterExtension
     public static void OnResponseMonsterStaminaChangedEvent(this MonsterViewModel vm, float stamina)
     {
         vm.Stamina = stamina;
-
+    }
+    #endregion
+    #region LifeCount
+    public static void RegisterMonsterLifeCountChanged(this MonsterViewModel vm, bool isRegister, int monsterId)
+    {
+        LogicManager.instance.RegisterMonsterLifeCountChangedCallback(monsterId, vm.OnResponseMonsterLifeCountChangedEvent, isRegister);
+        MonsterManager.instance.RegisterMonsterLifeCountChangedCallback(monsterId, vm.OnResponseMonsterLifeCountChangedEvent, isRegister);
+    }
+    public static void RequestMonsterLifeCountChanged(this MonsterViewModel vm, float LifeCount, int monsterId)
+    {
+        LogicManager.instance.OnMonsterLifeCountChanged(monsterId, LifeCount);
+        MonsterManager.instance.SetMonsterLifeCount(monsterId, LifeCount);
+    }
+    public static void OnResponseMonsterLifeCountChangedEvent(this MonsterViewModel vm, float lifeCount)
+    {
+        vm.LifeCount = lifeCount;
     }
     #endregion
     #region ChangedAttackMethod

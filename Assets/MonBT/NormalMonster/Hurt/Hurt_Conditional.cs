@@ -7,6 +7,7 @@ using UnityEngine;
 [TaskCategory("Hurt")]
 public class Hurt_Conditional : Conditional
 {
+    private MonsterView monsterView;
     private AttackBox _attackBox;
 
     [SerializeField] SharedBool isHurt;
@@ -15,13 +16,14 @@ public class Hurt_Conditional : Conditional
 
     public override void OnAwake()
     {
-        _attackBox = Owner.GetComponentInChildren<AttackBox>();
+        monsterView = Owner.GetComponent<MonsterView>();
+        _attackBox = monsterView.attackBox;
     }
 
     public override TaskStatus OnUpdate()
     {
         if(!isHurt.Value || isDead.Value || isAssassinated.Value) return TaskStatus.Failure;
-        _attackBox.enabled = false;
-        return TaskStatus.Success;
+        if(_attackBox != null) _attackBox.enabled = false;
+        return TaskStatus.Running;
     }
 }

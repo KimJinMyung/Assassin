@@ -47,6 +47,7 @@ public class MonsterView : MonoBehaviour
     private List<Monster_Attack> monsterAttackMethodList = new List<Monster_Attack>();
 
     public BehaviorTree _behaviorTree { get; private set; }
+    public BehaviorTree subBehaviorTree { get; private set; }
 
     private NavMeshAgent agent;
     public Animator animator { get; private set; }
@@ -74,6 +75,7 @@ public class MonsterView : MonoBehaviour
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>(); 
         Collider = GetComponent<CapsuleCollider>();
+        _behaviorTree = GetComponent<BehaviorTree>();
     }
 
     private void OnEnable()
@@ -93,15 +95,15 @@ public class MonsterView : MonoBehaviour
             vm.PropertyChanged += OnPropertyChanged;
             vm.RegisterMonsterHPChanged(true, monsterId);
             vm.RegisterMonsterStaminaChanged(true, monsterId);
+            vm.RegisterMonsterLifeCountChanged(true, monsterId);
             vm.RegisterAttackMethodChanged(monsterId, true);
             vm.RegisterTraceTargetChanged(monsterId, true);
         }
 
         SetMonsterInfo(_type);
-        _behaviorTree = GetComponent<BehaviorTree>();
-        _behaviorTree.SetVariableValue("isDead", false);
-        _behaviorTree.SetVariableValue("isAssassinated", false);
-        _behaviorTree.SetVariableValue("isDisable", false);
+        //_behaviorTree.SetVariableValue("isDead", false);
+        //_behaviorTree.SetVariableValue("isAssassinated", false);
+        //_behaviorTree.SetVariableValue("isDisable", false);
 
         if (animator.layerCount > 1) animator.SetLayerWeight(1, 1);
 
@@ -117,6 +119,7 @@ public class MonsterView : MonoBehaviour
         {
             vm.RegisterTraceTargetChanged(monsterId, false);
             vm.RegisterAttackMethodChanged(monsterId, false);
+            vm.RegisterMonsterLifeCountChanged(false, monsterId);
             vm.RegisterMonsterStaminaChanged(false, monsterId);
             vm.RegisterMonsterHPChanged(false, monsterId);
             vm.PropertyChanged -= OnPropertyChanged;
@@ -134,11 +137,11 @@ public class MonsterView : MonoBehaviour
         //체력과 스테미너 초기 설정
         vm.RequestMonsterHPChanged(monsterId, _monsterData.HP);
         vm.RequestMonsterStaminaChanged(_monsterData.Stamina, monsterId);
+        vm.RequestMonsterLifeCountChanged(_monsterData.Life, monsterId);
 
         ChangedCharacterMesh(type);
         ChangedMonsterAnimationController();
         UpdateAttackMethod_Data(monster);
-
     }
 
     private void ChangedCharacterMesh(MonsterType type)
@@ -261,6 +264,9 @@ public class MonsterView : MonoBehaviour
             if ((bool)_behaviorTree.GetVariable("isAssassinated").GetValue() || (bool)_behaviorTree.GetVariable("isDead").GetValue() || (bool)_behaviorTree.GetVariable("isHurt").GetValue() || (bool)_behaviorTree.GetVariable("isSubded").GetValue()) return;
             MonsterBattleRotation();
         }
+
+        Debug.Log(_monsterData.MaxStamina);
+        Debug.Log(vm.Stamina);
     }
 
     private void MonsterBattleRotation()
@@ -284,6 +290,32 @@ public class MonsterView : MonoBehaviour
         MonsterManager.instance.DeadMonster_Update(this);
     }
 
+    public void BossMonsterDead()
+    {
+        if(vm.LifeCount > 0)
+        {
+            vm.RequestMonsterLifeCountChanged(vm.LifeCount-1, monsterId);
+            StartCoroutine(Recovery());
+
+            Debug.Log(vm.LifeCount);
+        }
+        else
+        {
+            Debug.Log(vm.LifeCount);
+            MonsterDead();
+        }
+    }
+
+    IEnumerator Recovery()
+    {
+        yield return new WaitForSeconds(3f);
+
+        vm.RequestMonsterHPChanged(monsterId, _monsterData.MaxHP);
+        vm.RequestMonsterStaminaChanged(_monsterData.MaxStamina, monsterId);
+        Debug.Log(vm.HP);
+
+    }
+
     public void Parried(PlayerView attacker)
     {
         float addParriedPower;
@@ -292,7 +324,6 @@ public class MonsterView : MonoBehaviour
         else addParriedPower = attacker.playerData.Strength * 10;
 
         vm.RequestMonsterStaminaChanged(vm.Stamina - addParriedPower, monsterId);
-        Debug.Log($"Monster Stamina : {vm.Stamina}");
         _behaviorTree.SetVariableValue("isParried", true);
     }
 

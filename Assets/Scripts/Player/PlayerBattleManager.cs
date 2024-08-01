@@ -79,7 +79,7 @@ public class PlayerBattleManager : MonoBehaviour
             if (owner.ViewModel.HP <= 0) return;
             if (!animator.GetBool("AttackAble")) return;
 
-            if (isDefence)
+            if (animator.GetBool("Defense"))
             {
                 //ÆÐ¸µ
                 if (animator.GetBool("ParryAble"))

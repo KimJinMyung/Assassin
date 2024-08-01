@@ -24,6 +24,6 @@ public class Parried_Conditional : Conditional
         if(!isParried.Value || isAssassinated.Value) return TaskStatus.Failure;
 
         _attackBox.enabled = false;
-        return TaskStatus.Success;
+        return TaskStatus.Running;
     }
 }

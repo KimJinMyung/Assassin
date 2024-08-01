@@ -119,7 +119,7 @@ public class MonsterManager : MonoBehaviour
                 _attackingTimer = UnityEngine.Random.Range(2f, 4f);
                 //몬스터 공격 수행
                 if (monsterAttackMethodsList.ContainsKey(attackMonster.monsterId))
-                {                   
+                {
                     monsterAttackMethodsList[attackMonster.monsterId]?.Invoke();
                 }
             }

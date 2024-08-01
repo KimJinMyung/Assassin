@@ -1,18 +1,28 @@
+using BehaviorDesigner.Runtime.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterType_Conditional : MonoBehaviour
+[TaskCategory("MonsterType")]
+public class MonsterType_Conditional : Conditional
 {
-    // Start is called before the first frame update
-    void Start()
+    private MonsterView MonsterView;
+
+    private bool isBoss;
+
+    public override void OnAwake()
     {
-        
+        MonsterView = Owner.GetComponent<MonsterView>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void OnStart()
     {
-        
+        isBoss = MonsterView.Type == MonsterType.Boss;
+    }
+
+    public override TaskStatus OnUpdate()
+    {
+        if(isBoss) return TaskStatus.Success;
+        else return TaskStatus.Failure;
     }
 }
