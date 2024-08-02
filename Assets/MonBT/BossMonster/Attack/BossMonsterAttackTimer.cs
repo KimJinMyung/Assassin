@@ -16,7 +16,8 @@ public class BossMonsterAttackTimer : Conditional
 
     public override TaskStatus OnUpdate()
     {       
-        if(isDead.Value || isHurt.Value || isAttacking.Value) return TaskStatus.Failure;
+        if(isDead.Value || isHurt.Value || isAttacking.Value) 
+            return TaskStatus.Running;
 
         timer.Value = Mathf.Clamp(timer.Value - Time.deltaTime, 0, 5);
 

@@ -47,18 +47,18 @@ public class Battle_Conditional : Conditional
         if(monsterView.vm.TraceTarget == null) return TaskStatus.Failure;
 
         distance = Vector3.Distance(monsterView.transform.position, monsterView.vm.TraceTarget.position);
-       
+
+        agent.SetDestination(monsterView.vm.TraceTarget.position);
+
         if (distance > AttackRange.Value + 1.5f)
         {
             if(monsterView.Type != MonsterType.Boss) isAttackAble.Value = false;
             animator.SetFloat(hashMovespeed, 1);
-            agent.SetDestination(monsterView.vm.TraceTarget.position);
         }
         else
         {
             if (monsterView.Type != MonsterType.Boss) isAttackAble.Value = true;
-            animator.SetFloat(hashMovespeed, 0);
-            return TaskStatus.Success;
+            animator.SetFloat(hashMovespeed, 0);            
         }
 
         return TaskStatus.Running;

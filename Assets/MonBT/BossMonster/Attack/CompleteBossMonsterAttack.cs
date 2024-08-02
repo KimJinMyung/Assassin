@@ -64,6 +64,5 @@ public class CompleteBossMonsterAttack : Conditional
 
             return TaskStatus.Failure;
         }
-        
-    }
+    }    
 }

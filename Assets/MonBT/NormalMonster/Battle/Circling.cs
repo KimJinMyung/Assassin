@@ -43,7 +43,7 @@ public class Circling : Action
         }
 
         //animator.SetBool(hashCircling, false);
-        return TaskStatus.Success;
+        return TaskStatus.Failure;
     }
 
     public override void OnEnd()
@@ -60,4 +60,6 @@ public class Circling : Action
         Owner.transform.rotation = Quaternion.LookRotation(-rotatedPos);
         animator.SetFloat(hashCirDir, circlingDir);
     }
+
+
 }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - RopePoint
   - ThrowPoint
+  - aaa
   layers:
   - Default
   - TransparentFX
