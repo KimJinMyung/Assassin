@@ -13,6 +13,7 @@ public class JumpAttackStart : Action
     private Rigidbody rb;
 
     [SerializeField] SharedAnimationCurve Cureve;
+    [SerializeField] float duration;
 
     private float elapsedTime = 0f;
 
@@ -49,9 +50,9 @@ public class JumpAttackStart : Action
 
     private void CurveMove()
     {
-        elapsedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        elapsedTime += Time.deltaTime;
 
-        float t = Mathf.Clamp01(elapsedTime);
+        float t = Mathf.Clamp01(elapsedTime/ duration);
 
         // XZ 평면에서 선형 보간
         Vector3 newPosition = Vector3.Lerp(startPoint, endPoint, t);
@@ -71,13 +72,14 @@ public class JumpAttackStart : Action
         }
         
 
-        if (elapsedTime >= 1f || isAction) return TaskStatus.Success;
+        if (elapsedTime >= duration || isAction) return TaskStatus.Success;
 
         return TaskStatus.Running;
     }
 
     public override void OnEnd()
     {
+        elapsedTime = 0f;
         isAction = false;
     }
 

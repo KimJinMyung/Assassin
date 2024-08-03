@@ -31,7 +31,7 @@ public class DecideBossAttackIndex : Action
     public override void OnStart()
     {
         traceTarget = monsterView.vm.TraceTarget;
-        AttackTypeIndex = 0;/* Random.Range(0, monsterView.AttackMethodCount);*/
+        AttackTypeIndex = 2;//Random.Range(0, monsterView.AttackMethodCount);
         switch (AttackTypeIndex)
         {
             case 0:

@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [TaskCategory("BossAttack")]
-public class JumpAttack_Conditional : Conditional
+public class AttackTypeIndex_Conditional : Conditional
 {
     private Animator animator;
+
+    [SerializeField] private int AttackTypeIndex;
 
     private int attackTypeIndex;
 
@@ -24,9 +26,7 @@ public class JumpAttack_Conditional : Conditional
 
     public override TaskStatus OnUpdate()
     {
-        Debug.Log(attackTypeIndex);
-
-        if (attackTypeIndex == 0) return TaskStatus.Success;
+        if (attackTypeIndex == AttackTypeIndex) return TaskStatus.Success;
         else return TaskStatus.Failure;
     }
 }

@@ -55,12 +55,12 @@ public class Battle_Conditional : Conditional
         if (distance > AttackRange.Value + 1.5f)
         {
             if(monsterView.Type != MonsterType.Boss) isAttackAble.Value = false;
-            animator.SetFloat(hashMovespeed, 1);
+            //animator.SetFloat(hashMovespeed, 1);
         }
         else
         {
             if (monsterView.Type != MonsterType.Boss) isAttackAble.Value = true;
-            animator.SetFloat(hashMovespeed, 0);            
+            //animator.SetFloat(hashMovespeed, 0);            
         }
 
         return TaskStatus.Running;

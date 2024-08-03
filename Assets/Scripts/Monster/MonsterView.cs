@@ -273,6 +273,8 @@ public class MonsterView : MonoBehaviour
 
     private void MonsterBattleRotation()
     {
+        if((bool)_behaviorTree.GetVariable("isAttacking").GetValue()) return ;
+
         //Player의 방향으로 회전
         Vector3 direction = vm.TraceTarget.position - transform.position;
         direction.y = 0f;

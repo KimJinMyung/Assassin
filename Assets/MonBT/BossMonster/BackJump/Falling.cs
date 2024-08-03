@@ -34,7 +34,6 @@ public class Falling : Action
     {
         startPoint = Owner.transform.position;
         endPoint = DecideEndPoint() + Owner.transform.forward * collider.radius;
-        Debug.Log(endPoint);
     }
 
     private Vector3 DecideEndPoint()
@@ -72,7 +71,6 @@ public class Falling : Action
         {
             var ground = hit.point;
             height = Mathf.Abs(Owner.transform.position.y - ground.y);
-            Debug.Log(height);
         }
         
     }

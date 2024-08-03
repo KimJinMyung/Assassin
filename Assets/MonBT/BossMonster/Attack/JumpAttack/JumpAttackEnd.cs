@@ -30,7 +30,7 @@ public class JumpAttackEnd : Action
     [SerializeField] private float distance = 1f;
 
     private int hashNextAction = Animator.StringToHash("NextAction");
-    private int hashJumpping = Animator.StringToHash("Jumpping");
+    private int hashJumpping = Animator.StringToHash("Jumpping"); 
     private int hashAttackTypeIndex = Animator.StringToHash("AttackTypeIndex");
     private int hashAttackIndex = Animator.StringToHash("AttackIndex");
 
@@ -68,8 +68,13 @@ public class JumpAttackEnd : Action
         var Target = monsterView.vm.TraceTarget;
         var Point = Target.position;
 
-        var dir = (Owner.transform.position - Point).normalized;
+        var dir = (Owner.transform.position - Point);
+        dir.y = 0;
+        dir.Normalize();
         endPoint = Point + dir * distance;
+
+        Debug.Log(Point);
+        Debug.Log(endPoint);
     }
 
     public override TaskStatus OnUpdate()
@@ -85,14 +90,14 @@ public class JumpAttackEnd : Action
             isAction = true;
         }
         
-        
         CurveMove();
 
-        if(elapsedTime >= duration)
+        var distance = Vector3.Distance(Owner.transform.position, endPoint);
+        if(distance <= 0.1f)
         {
+            animator.SetBool(hashJumpping, false);
             agent.enabled = true;
             rb.isKinematic = true;
-            animator.SetBool(hashJumpping, false);
             return TaskStatus.Success;
         }
 
