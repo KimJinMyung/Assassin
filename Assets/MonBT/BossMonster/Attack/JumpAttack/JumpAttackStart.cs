@@ -21,6 +21,8 @@ public class JumpAttackStart : Action
     private Vector3 startPoint;
     private Vector3 endPoint;
 
+    private int hashJumping = Animator.StringToHash("Jumpping");
+
     public override void OnAwake()
     {
         animator = Owner.GetComponent<Animator>();
@@ -63,7 +65,11 @@ public class JumpAttackStart : Action
 
     public override TaskStatus OnUpdate()
     {
-        CurveMove();
+        if (animator.GetBool(hashJumping))
+        {
+            CurveMove();
+        }
+        
 
         if (elapsedTime >= 1f || isAction) return TaskStatus.Success;
 
@@ -72,7 +78,6 @@ public class JumpAttackStart : Action
 
     public override void OnEnd()
     {
-        elapsedTime = 0f;
         isAction = false;
     }
 

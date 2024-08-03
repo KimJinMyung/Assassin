@@ -12,7 +12,7 @@ public class BossMonsterAttackDelay : Action
 
     public override void OnStart()
     {
-        AttackTimer.Value = Random.Range(2f, 3.5f);
+        AttackTimer.Value = Random.Range(2f, 5f);
     }
 
     public override TaskStatus OnUpdate()

@@ -24,6 +24,8 @@ public class JumpAttack_Conditional : Conditional
 
     public override TaskStatus OnUpdate()
     {
+        Debug.Log(attackTypeIndex);
+
         if (attackTypeIndex == 0) return TaskStatus.Success;
         else return TaskStatus.Failure;
     }

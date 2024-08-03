@@ -18,7 +18,16 @@ public class StartBossAttackAnimation : Action
     private Transform traceTarget;
     private bool isAction;
 
+    private string attackName;
+    private string attackType;
+
+    private int currentAttackTypeIndex;
+    private int currentAttackIndex;
+
+
     private int hashAttack = Animator.StringToHash("Attack");
+    private int hashAttackTypeIndex = Animator.StringToHash("AttackTypeIndex");
+    private int hashAttackIndex = Animator.StringToHash("AttackIndex");
 
     public override void OnAwake()
     {
@@ -29,13 +38,41 @@ public class StartBossAttackAnimation : Action
 
     public override void OnStart()
     {
+        currentAttackTypeIndex = animator.GetInteger(hashAttackTypeIndex);
+        currentAttackIndex = animator.GetInteger(hashAttackIndex);
+
         traceTarget = monsterView.vm.TraceTarget;
+
+        attackName = monsterView.vm.CurrentAttackMethod.DataName;
+        switch (currentAttackTypeIndex)
+        {
+            case 0:
+                attackType = "JumpAttack";
+                agent.stoppingDistance = 3f;
+                break;
+            case 1:
+                attackType = "ComBoAttack";
+                agent.stoppingDistance = 1.5f;
+                break;
+            case 2:
+                attackType = "DashAttack";
+                agent.stoppingDistance = 3f;
+                break;
+        }
     }
 
     public override TaskStatus OnUpdate()
     {        
         if(traceTarget == null) return TaskStatus.Failure;
+        if (isAction && monsterView.IsAnimationRunning($"{attackType}.attack0{currentAttackIndex}"))
+        {
+            return TaskStatus.Success;
+        }
+
+        agent.SetDestination(traceTarget.position);
+
         float distance = Vector3.Distance(Owner.transform.position, traceTarget.position);
+        //Debug.Log(distance);
         if(distance <= agent.stoppingDistance)
         {
             if (!isAction)
@@ -46,11 +83,9 @@ public class StartBossAttackAnimation : Action
                 animator.SetTrigger(hashAttack);
 
                 isAction = true;
-                return TaskStatus.Success;
             }            
         }
 
-        agent.SetDestination(traceTarget.position);
         return TaskStatus.Running;
     }
 

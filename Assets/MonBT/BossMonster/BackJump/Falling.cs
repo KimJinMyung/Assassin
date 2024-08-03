@@ -85,17 +85,19 @@ public class Falling : Action
 
     public override void OnEnd()
     {
-        elapsedTime = 0f;
-
-        agent.enabled = true;
-        rb.isKinematic = true;
+        elapsedTime = 0f;        
     }
 
     public override TaskStatus OnUpdate()
     {
         CurveMove();
 
-        if (elapsedTime >= duration) return TaskStatus.Success;
+        if (elapsedTime >= duration)
+        {
+            agent.enabled = true;
+            rb.isKinematic = true;
+            return TaskStatus.Success;
+        }
 
         return TaskStatus.Running;
     }

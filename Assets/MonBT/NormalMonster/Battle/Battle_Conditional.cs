@@ -17,6 +17,7 @@ public class Battle_Conditional : Conditional
     [SerializeField] SharedBool isHurt;
     [SerializeField] SharedBool isDead;
     [SerializeField] SharedBool isAssassinated;
+    [SerializeField] SharedFloat AttackDelay;
 
     [SerializeField] SharedBool isAttackAble;
 
@@ -45,6 +46,7 @@ public class Battle_Conditional : Conditional
     {
         if (isHurt.Value || isDead.Value || isAttacking.Value || isAssassinated.Value) return TaskStatus.Failure;
         if(monsterView.vm.TraceTarget == null) return TaskStatus.Failure;
+        if(monsterView.Type == MonsterType.Boss && AttackDelay.Value <= 0) return TaskStatus.Failure;
 
         distance = Vector3.Distance(monsterView.transform.position, monsterView.vm.TraceTarget.position);
 
