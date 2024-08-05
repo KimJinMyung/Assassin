@@ -15,7 +15,6 @@ public class RetreatAfterAttack : Action
     [SerializeField] SharedBool isAttackEnd;
     [SerializeField] SharedBool isAttacking;
 
-
     int hashMoveSpeed = Animator.StringToHash("MoveSpeed");
 
     private float AttackRange;
@@ -39,16 +38,14 @@ public class RetreatAfterAttack : Action
     {
         if (monsterView.vm.CurrentAttackMethod.AttackType == "Long")
         {
-            isAttackEnd.Value = false;
-            isAttacking.Value = false;
+            EndCurrentState();
             return TaskStatus.Success;
         }
 
         float distance = Vector3.Distance(Owner.transform.position, monsterView.vm.TraceTarget.position);
         if(distance >= AttackRange + 1.5f)
         {
-            isAttackEnd.Value = false;
-            isAttacking.Value = false;
+            EndCurrentState();
             return TaskStatus.Success;
         }
 
@@ -59,5 +56,12 @@ public class RetreatAfterAttack : Action
 
         Owner.transform.rotation = Quaternion.RotateTowards(Owner.transform.rotation, Quaternion.LookRotation(targetDir), 500 * Time.deltaTime);
         return TaskStatus.Running;
+    }
+
+    private void EndCurrentState()
+    {
+        isAttackEnd.Value = false;
+        isAttacking.Value = false;
+        animator.SetFloat(hashMoveSpeed, 0);
     }
 }

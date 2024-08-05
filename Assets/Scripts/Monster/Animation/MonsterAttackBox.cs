@@ -1,11 +1,14 @@
+using BehaviorDesigner.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 
 public class MonsterAttackBox : StateMachineBehaviour
 {
     private MonsterView monsterVIew;
+    private BehaviorTree tree;
     private AttackBox attackBox;
 
     private Monster_Attack monsterAttack;
@@ -24,6 +27,7 @@ public class MonsterAttackBox : StateMachineBehaviour
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         monsterVIew = animator.GetComponent<MonsterView>();
+        tree = monsterVIew._behaviorTree;
         attackBox = monsterVIew.attackBox;
 
         monsterAttack = monsterVIew.vm.CurrentAttackMethod;
@@ -54,9 +58,11 @@ public class MonsterAttackBox : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        float normalizeTime = Mathf.Clamp(stateInfo.normalizedTime, 0f, 1f);
+
         if (monsterAttack.DataName == Enum.GetName(typeof(WeaponsType), WeaponsType.ShurikenAttack) && !isAction)
         {
-            if ((animator.GetInteger(hashAttackIndex) == 0 && stateInfo.normalizedTime >= 0.34f) || (animator.GetInteger(hashAttackIndex) == 1 && stateInfo.normalizedTime >= 0.297f))
+            if ((animator.GetInteger(hashAttackIndex) == 0 && normalizeTime >= 0.34f) || (animator.GetInteger(hashAttackIndex) == 1 && normalizeTime >= 0.297f))
             {
                 isAction = true;
                 Debug.Log("¼ö¸®°Ë ´øÁü");
@@ -66,8 +72,8 @@ public class MonsterAttackBox : StateMachineBehaviour
             }
         }
         else
-        {
-            if (stateInfo.normalizedTime >= AttackBoxOnTime && stateInfo.normalizedTime <= AttackBoxOffTime)
+        {            
+            if (normalizeTime >= AttackBoxOnTime && normalizeTime <= AttackBoxOffTime)
             {
                 attackBox.enabled = true;
             }
@@ -77,6 +83,7 @@ public class MonsterAttackBox : StateMachineBehaviour
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        attackBox.enabled = false;
+        if(!(bool)tree.GetVariable("isAttacking").GetValue())
+            attackBox.enabled = false;
     }
 }

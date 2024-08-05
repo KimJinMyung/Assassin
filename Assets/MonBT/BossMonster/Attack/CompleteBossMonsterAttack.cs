@@ -52,9 +52,13 @@ public class CompleteBossMonsterAttack : Conditional
     {
         if (monsterView.IsAnimationRunning($"{attackType}.attack0{currentAttackIndex}"))
         {
+            //isMotionOn = true;
             return TaskStatus.Running;
         }
 
-        return TaskStatus.Success;
+        //if(isMotionOn)
+            return TaskStatus.Success;
+
+        //return TaskStatus.Running;
     }    
 }

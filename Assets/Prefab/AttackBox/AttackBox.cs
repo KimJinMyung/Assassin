@@ -55,7 +55,12 @@ public class AttackBox : MonoBehaviour
 
     private void Update()
     {
-        Attacking();
+        Attacking(); 
+
+        if(owner_monster != null)
+        {
+            Debug.Log("Monster AttackBox On");
+        }
     }
 
     public void Attacking()

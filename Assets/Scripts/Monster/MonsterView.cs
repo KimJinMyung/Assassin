@@ -47,7 +47,6 @@ public class MonsterView : MonoBehaviour
     private List<Monster_Attack> monsterAttackMethodList = new List<Monster_Attack>();
 
     public BehaviorTree _behaviorTree { get; private set; }
-    public BehaviorTree subBehaviorTree { get; private set; }
 
     private NavMeshAgent agent;
     public Animator animator { get; private set; }
@@ -376,7 +375,7 @@ public class MonsterView : MonoBehaviour
         var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
         if (stateInfo.IsName(animationName))
         {
-            float normalizedTime = stateInfo.normalizedTime;
+            float normalizedTime = Mathf.Clamp(stateInfo.normalizedTime,0,1);
             isRunning = normalizedTime > 0 && normalizedTime < 1.0f;
         }
 

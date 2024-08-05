@@ -52,7 +52,7 @@ public class StartBossAttackAnimation : Action
                 break;
             case 1:
                 attackType = "ComBoAttack";
-                agent.stoppingDistance = 1.5f;
+                agent.stoppingDistance = 4f;
                 break;
             case 2:
                 attackType = "DashAttack";
@@ -70,7 +70,6 @@ public class StartBossAttackAnimation : Action
         }
 
         agent.SetDestination(traceTarget.position);
-        Debug.Log(agent.stoppingDistance);
 
         float distance = Vector3.Distance(Owner.transform.position, traceTarget.position);
         //Debug.Log(distance);

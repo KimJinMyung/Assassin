@@ -7,7 +7,15 @@ using UnityEngine;
 [TaskCategory("Battle")]
 public class ChangeCirclingDelayTime : Action
 {
+    private Animator _animator;
+
     [SerializeField] SharedFloat CirclingDelayTime;
+
+    public override void OnAwake()
+    {
+        _animator = Owner.GetComponent<Animator>();
+    }
+
     public override void OnStart()
     {
         if(CirclingDelayTime.Value <= 0)
