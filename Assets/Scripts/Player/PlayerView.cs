@@ -17,15 +17,22 @@ public class PlayerView : MonoBehaviour
 
     private Vector3 attackerPosition;
     private float knockbackPower;
+    [SerializeField] private float knockbackTime;
+    private float defaultKnockbackTime;
+    [SerializeField] private float SubdedTime;
+    private float defaultSubdedTime;
 
     public bool isKnockback;
     private bool isDie;
-    private bool isAssassinated;
+    private bool isSubded;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         playerController = GetComponent<CharacterController>();
+
+        defaultKnockbackTime = knockbackTime;
+        defaultSubdedTime = SubdedTime;
     }
 
     private void OnEnable()
@@ -81,6 +88,12 @@ public class PlayerView : MonoBehaviour
                 break;
             case nameof(vm.Stamina):
                 //stamina UI客 楷包
+                isSubded = vm.Stamina <= 0f;
+                if (isSubded)
+                {
+                    animator.SetBool("Incapacitated", true);
+                    animator.SetTrigger("Incapacitate");
+                }
                 break;
             case nameof(vm.MaxHP):
                 break;
@@ -94,14 +107,13 @@ public class PlayerView : MonoBehaviour
 
     public void Hurt(MonsterView attacker, float damage)
     {
-        if (isDie || isAssassinated) return;
+        if (isDie || animator.GetBool("Assassinated")) return;
 
         //规绢 己傍
         if (IsDefenceSuccess(attacker.transform.position))
         {
             if (attacker.Type == MonsterType.Boss)
             {
-                //StartCoroutine(PushBack(attacker.transform.position, 1));
                 isKnockback = true;
                 attackerPosition = attacker.transform.position;
             }
@@ -122,10 +134,7 @@ public class PlayerView : MonoBehaviour
             {
                 //规绢 己傍
                 vm.RequestPlayerStaminaChanged(vm.Stamina - attacker.vm.Stamina);
-                isAssassinated = vm.Stamina <= 0f;
                 animator.SetTrigger("Hurt");
-
-                Debug.Log($"Player Stamina : {vm.Stamina}");
                 return;
             }
         }
@@ -154,8 +163,28 @@ public class PlayerView : MonoBehaviour
 
     private void Update()
     {
-        if(isKnockback) NockBacking();
+        if (isSubded)
+        {
+            SubdedTime = Mathf.Clamp(SubdedTime - Time.deltaTime, 0, defaultSubdedTime);
+            if(SubdedTime <= 0)
+            {
+                vm.RequestPlayerStaminaChanged(playerData.Stamina);
+                isSubded = false;
+                animator.SetBool("Incapacitated", false);
+            }
+        }
 
+        if(knockbackTime <= 0)
+        {
+            isKnockback = false;
+            knockbackTime = defaultKnockbackTime;
+        }
+
+        if(isKnockback)
+        {
+            knockbackTime = Mathf.Clamp(knockbackTime - Time.deltaTime, 0, knockbackTime);
+            NockBacking();
+        }
     }
 
     private void NockBacking()

@@ -59,7 +59,7 @@ public class JumpAttackEnd : Action
 
         attackIndex = animator.GetInteger(hashAttackIndex);
 
-        AttackPoint();
+        AttackPoint();        
     }
 
     private void AttackPoint()
@@ -72,9 +72,6 @@ public class JumpAttackEnd : Action
         dir.y = 0;
         dir.Normalize();
         endPoint = Point + dir * distance;
-
-        Debug.Log(Point);
-        Debug.Log(endPoint);
     }
 
     public override TaskStatus OnUpdate()

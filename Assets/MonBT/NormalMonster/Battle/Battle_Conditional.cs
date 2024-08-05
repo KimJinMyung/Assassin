@@ -17,6 +17,7 @@ public class Battle_Conditional : Conditional
     [SerializeField] SharedBool isHurt;
     [SerializeField] SharedBool isDead;
     [SerializeField] SharedBool isAssassinated;
+    [SerializeField] SharedBool isParried;
     [SerializeField] SharedFloat AttackDelay;
 
     [SerializeField] SharedBool isAttackAble;
@@ -38,13 +39,14 @@ public class Battle_Conditional : Conditional
         if(monsterView.vm.TraceTarget != null)        
         AttackRange.Value = monsterView.vm.CurrentAttackMethod.AttackRange;
 
+        agent.enabled = true;
         agent.stoppingDistance = AttackRange.Value + 1.5f;
         agent.speed = monsterView._monsterData.RunSpeed;
     }
 
     public override TaskStatus OnUpdate()
     {
-        if (isHurt.Value || isDead.Value || isAttacking.Value || isAssassinated.Value) return TaskStatus.Failure;
+        if (isHurt.Value || isDead.Value || isAttacking.Value || isAssassinated.Value || isParried.Value) return TaskStatus.Failure;
         if(monsterView.vm.TraceTarget == null) return TaskStatus.Failure;
         if(monsterView.Type == MonsterType.Boss && AttackDelay.Value <= 0) return TaskStatus.Failure;
 

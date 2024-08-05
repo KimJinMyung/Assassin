@@ -10,6 +10,7 @@ public class Falling : Action
     private CapsuleCollider collider;
     private NavMeshAgent agent;
     private Rigidbody rb;
+    private Animator animator;
 
     [SerializeField] SharedAnimationCurve curve;
     [SerializeField] private float duration = 1f;
@@ -25,6 +26,7 @@ public class Falling : Action
 
     public override void OnAwake()
     {
+        animator = Owner.GetComponent<Animator>();
         collider = Owner.GetComponent<CapsuleCollider>();
         agent = Owner.GetComponent<NavMeshAgent>();
         rb = Owner.GetComponent<Rigidbody>();
@@ -92,6 +94,7 @@ public class Falling : Action
 
         if (elapsedTime >= duration)
         {
+            animator.SetTrigger("NextAction");
             agent.enabled = true;
             rb.isKinematic = true;
             return TaskStatus.Success;

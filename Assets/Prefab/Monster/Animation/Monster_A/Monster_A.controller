@@ -1951,7 +1951,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: MoveSpeed
     m_Mirror: 0
-  m_BlendParameter: Forward
+  m_BlendParameter: Forward 0
   m_BlendParameterY: MoveSpeed
   m_MinThreshold: 0
   m_MaxThreshold: 1

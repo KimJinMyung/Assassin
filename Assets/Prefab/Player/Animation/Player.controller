@@ -239,6 +239,34 @@ AnimatorStateMachine:
   m_ExitPosition: {x: 430, y: 620, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 2188736157806030555}
+--- !u!1101 &-6869039018494837009
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: Incapacitated
+    m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: Incapacitate
+    m_EventTreshold: 0
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: -1256018481598293489}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.25
+  m_TransitionOffset: 0
+  m_ExitTime: 0.75
+  m_HasExitTime: 0
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
 --- !u!1102 &-6719033159266404497
 AnimatorState:
   serializedVersion: 6
@@ -680,6 +708,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1237a2e4a6ef3f544b64c3e19a918af5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ParringTime: 0.5
 --- !u!1102 &-2250270916328820963
 AnimatorState:
   serializedVersion: 6
@@ -727,7 +756,7 @@ AnimatorStateMachine:
     m_Position: {x: 600, y: 260, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7754299897811206004}
-    m_Position: {x: -160, y: 450, z: 0}
+    m_Position: {x: -160, y: 430, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4286371688695054108}
     m_Position: {x: -160, y: 380, z: 0}
@@ -740,6 +769,9 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: 5471985604462942705}
     m_Position: {x: -450, y: 570, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -1256018481598293489}
+    m_Position: {x: -160, y: 540, z: 0}
   m_ChildStateMachines:
   - serializedVersion: 1
     m_StateMachine: {fileID: -9209229027329232393}
@@ -758,18 +790,19 @@ AnimatorStateMachine:
   - {fileID: 6835456326980546647}
   - {fileID: 3460738254140506328}
   - {fileID: -3769942318131812791}
+  - {fileID: -6869039018494837009}
   m_EntryTransitions: []
   m_StateMachineTransitions:
-  - first: {fileID: -9209229027329232393}
-    second:
-    - {fileID: -6107913981455211922}
   - first: {fileID: -7474118731188015788}
     second:
     - {fileID: 3380028021988969305}
+  - first: {fileID: -9209229027329232393}
+    second:
+    - {fileID: -6107913981455211922}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 120, y: 330, z: 0}
   m_EntryPosition: {x: 50, y: 120, z: 0}
-  m_ExitPosition: {x: 120, y: 580, z: 0}
+  m_ExitPosition: {x: 110, y: 660, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 8405915129085892473}
 --- !u!1102 &-1797767933992835765
@@ -833,6 +866,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef324599266286f438241fecb54284db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1102 &-1256018481598293489
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Subdued
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 479651bcd8eb21a49a54815a19f28caf, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1101 &-963027489878419080
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -1064,6 +1123,18 @@ AnimatorController:
     m_Controller: {fileID: 9100000}
   - m_Name: isGround
     m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: Incapacitated
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: Incapacitate
+    m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0

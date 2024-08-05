@@ -6,6 +6,7 @@ using UnityEngine.AI;
 [TaskCategory("BossBackJump")]
 public class JumpStart : Action
 {
+    private Animator animator;
     private NavMeshAgent agent;
     private Rigidbody rb;
 
@@ -14,13 +15,17 @@ public class JumpStart : Action
 
     private float elapsedTime = 0f;
 
+    private bool isMove;
     private bool isAction;
 
     private Vector3 startPoint;
     private Vector3 endPoint;
 
+    private int hashJump = Animator.StringToHash("Jump");
+
     public override void OnAwake()
     {
+        animator = Owner.GetComponent<Animator>();
         agent = Owner.GetComponent<NavMeshAgent>();
         rb = Owner.GetComponent<Rigidbody>();
     }
@@ -31,6 +36,12 @@ public class JumpStart : Action
 
         agent.enabled = false;
         rb.isKinematic = false;
+
+        if (!isMove)
+        {
+            isMove = true;
+            animator.SetTrigger(hashJump);
+        }
     }
 
     private void PointsChanged()
@@ -59,7 +70,7 @@ public class JumpStart : Action
     }
 
     public override TaskStatus OnUpdate()
-    {
+    {       
         CurveMove();
 
         if (elapsedTime >= duration || isAction) return TaskStatus.Success;
@@ -71,6 +82,7 @@ public class JumpStart : Action
     {
         elapsedTime = 0f;
         isAction = false;
+        isMove = false;
     }
 
     public override void OnCollisionEnter(Collision collision)

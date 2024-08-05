@@ -50,7 +50,6 @@ public class MonsterView : MonoBehaviour
 
     private NavMeshAgent agent;
     public Animator animator { get; private set; }
-    private Rigidbody rb;
     private CapsuleCollider Collider;
 
     public int monsterId { get; private set; }
@@ -72,7 +71,6 @@ public class MonsterView : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody>(); 
         Collider = GetComponent<CapsuleCollider>();
         _behaviorTree = GetComponent<BehaviorTree>();
     }
@@ -267,10 +265,18 @@ public class MonsterView : MonoBehaviour
             MonsterBattleRotation();
         }
 
+        Debug.Log(vm.Stamina);
+
+        //µð¹ö±ë¿ë
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            vm.RequestMonsterStaminaChanged(vm.Stamina - 100, monsterId);
+            _behaviorTree.SetVariableValue("isParried", true);
+        }
     }
     
 
-    private void MonsterBattleRotation()
+    public void MonsterBattleRotation()
     {
         if((bool)_behaviorTree.GetVariable("isAttacking").GetValue()) return ;
 
@@ -321,6 +327,7 @@ public class MonsterView : MonoBehaviour
 
     public void Parried(PlayerView attacker)
     {
+        Debug.Log("Parried");
         float addParriedPower;
 
         if (_type != MonsterType.Boss) addParriedPower = attacker.playerData.Strength * 5;

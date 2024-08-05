@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.UI.GridLayoutGroup;
 
 [TaskCategory("BossAttack")]
 public class StartBossAttackAnimation : Action
@@ -21,6 +22,9 @@ public class StartBossAttackAnimation : Action
     private string attackName;
     private string attackType;
 
+    private float MovementValue_x;
+    private float MovementValue_z;
+
     private int currentAttackTypeIndex;
     private int currentAttackIndex;
 
@@ -28,6 +32,9 @@ public class StartBossAttackAnimation : Action
     private int hashAttack = Animator.StringToHash("Attack");
     private int hashAttackTypeIndex = Animator.StringToHash("AttackTypeIndex");
     private int hashAttackIndex = Animator.StringToHash("AttackIndex");
+
+    private static int hashMoveSpeed_x = Animator.StringToHash("MoveSpeed_X");
+    private static int hashMoveSpeed_z = Animator.StringToHash("MoveSpeed_Z");
 
     public override void OnAwake()
     {
@@ -75,6 +82,9 @@ public class StartBossAttackAnimation : Action
         //Debug.Log(distance);
         if(distance <= agent.stoppingDistance)
         {
+            MovementValue_x = 0;
+            MovementValue_z = 0;
+
             if (!isAction)
             {
                 isAttacking.Value = true;
@@ -83,8 +93,17 @@ public class StartBossAttackAnimation : Action
                 animator.SetTrigger(hashAttack);
 
                 isAction = true;
-            }            
+            }
         }
+        else
+        {
+            Vector3 velocity = agent.velocity;
+            MovementValue_x = velocity.x;
+            MovementValue_z = velocity.z;
+        }
+
+        animator.SetFloat(hashMoveSpeed_x, MovementValue_x);
+        animator.SetFloat(hashMoveSpeed_z, MovementValue_z);
 
         return TaskStatus.Running;
     }

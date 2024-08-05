@@ -38,6 +38,7 @@ public class Circling : Action
         if(CirclingTimer > 0)
         {
             CirclingTimer -= Time.deltaTime;
+            if(monsterView.Type != MonsterType.Boss)
             animator.SetBool(hashCircling, true);
             return TaskStatus.Running;
         }
@@ -48,7 +49,8 @@ public class Circling : Action
 
     public override void OnEnd()
     {
-        animator.SetBool(hashCircling, false);
+        if (monsterView.Type != MonsterType.Boss)
+            animator.SetBool(hashCircling, false);
     }
 
     public override void OnFixedUpdate()
@@ -58,7 +60,8 @@ public class Circling : Action
 
         agent.Move(rotatedPos - VecToTarget);
         Owner.transform.rotation = Quaternion.LookRotation(-rotatedPos);
-        animator.SetFloat(hashCirDir, circlingDir);
+        if(monsterView.Type != MonsterType.Boss)
+            animator.SetFloat(hashCirDir, circlingDir);
     }
 
 

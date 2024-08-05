@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerParryAnimation : StateMachineBehaviour
 {
     private PlayerBattleManager owner;
+
+    [SerializeField] float ParringTime;
     
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -16,7 +18,7 @@ public class PlayerParryAnimation : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(stateInfo.normalizedTime >= 0f && stateInfo.normalizedTime <= 0.3f)
+        if(stateInfo.normalizedTime >= 0f && stateInfo.normalizedTime <= ParringTime)
         {
             animator.SetBool("Parring", true);
         }
