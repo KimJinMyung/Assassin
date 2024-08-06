@@ -5,14 +5,15 @@ using UnityEngine;
 
 public class BossAssassinatedEnd : StateMachineBehaviour
 {
-    private BehaviorTree tree;
+    private MonsterView monsterView;
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        tree = animator.GetComponent<BehaviorTree>();
+        monsterView = animator.GetComponent<MonsterView>();
+    }
 
-        tree.SetVariableValue("isSubded", false);
-        tree.SetVariableValue("isDead", false);
-        tree.SetVariableValue("isAssassinated", false);
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        monsterView.Recovery();
     }
 }

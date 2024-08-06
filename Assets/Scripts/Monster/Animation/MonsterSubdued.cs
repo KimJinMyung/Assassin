@@ -11,6 +11,12 @@ public class MonsterSubdued : StateMachineBehaviour
     {
         behaviourTree = animator.GetComponent<BehaviorTree>();
 
+        animator.ResetTrigger("Parried");
+        animator.ResetTrigger("NextAction");
+        animator.ResetTrigger("Defence");
+        animator.ResetTrigger("Attack");
+        animator.ResetTrigger("Jump");
+
         if (animator.layerCount > 1) animator.SetLayerWeight(1, 0);
     }
 

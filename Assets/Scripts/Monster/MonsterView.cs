@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -227,7 +228,7 @@ public class MonsterView : MonoBehaviour
                 animator.SetBool("ComBatMode", vm.TraceTarget!= null);
                 break;
             case nameof(vm.HP):
-                if(vm.HP <= 0 && vm.LifeCount > 1)
+                if(vm.HP <= 0 )
                 {
                     BossMonsterDead();
                 }
@@ -311,8 +312,7 @@ public class MonsterView : MonoBehaviour
     {
         if(vm.LifeCount > 0)
         {
-            vm.RequestMonsterLifeCountChanged(vm.LifeCount-1, monsterId);
-            StartCoroutine(Recovery());
+            vm.RequestMonsterLifeCountChanged(vm.LifeCount-1, monsterId);            
 
             Debug.Log(vm.LifeCount);
         }
@@ -323,10 +323,9 @@ public class MonsterView : MonoBehaviour
         }
     }
 
-    IEnumerator Recovery()
+    public void Recovery()
     {
-        yield return new WaitForSeconds(3f);
-
+        _behaviorTree.SetVariableValue("isDead", false);
         _behaviorTree.SetVariableValue("isSubded", false);
         _behaviorTree.SetVariableValue("isAssassinated", false);
         _behaviorTree.SetVariableValue("isParried", false);
