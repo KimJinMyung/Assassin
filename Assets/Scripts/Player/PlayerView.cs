@@ -45,6 +45,7 @@ public class PlayerView : MonoBehaviour
             vm.RegisterPlayerMaxHPChanged(true);
             vm.RegisterPlayerStaminaChanged(true);
             vm.RegisterPlayerMaxStaminaChanged(true);
+            vm.RegisterPlayerAttackDamageChanged(true);
             vm.RegisterLockOnTargetChanged(true);
             vm.ReigsterAssassinatedTypeChanged(true);
         }
@@ -58,6 +59,7 @@ public class PlayerView : MonoBehaviour
         {
             vm.ReigsterAssassinatedTypeChanged(false);
             vm.RegisterLockOnTargetChanged(false);
+            vm.RegisterPlayerAttackDamageChanged(false);
             vm.RegisterPlayerMaxStaminaChanged(false);
             vm.RegisterPlayerStaminaChanged(false);
             vm.RegisterPlayerMaxHPChanged(false);
@@ -77,6 +79,7 @@ public class PlayerView : MonoBehaviour
         vm.RequestPlayerStaminaChanged(player.Clone().Stamina);
         vm.RequestPlayerMaxHPChanged(player.Clone().MaxHP);
         vm.RequestPlayerMaxStaminaChanged(player.Clone().MaxStamina);
+        vm.RequestPlayerAttackDamageChanged(player.Clone().ATK);
     }
 
     private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -177,6 +180,7 @@ public class PlayerView : MonoBehaviour
         if(knockbackTime <= 0)
         {
             isKnockback = false;
+            animator.SetBool("isMoveAble", true);
             knockbackTime = defaultKnockbackTime;
         }
 

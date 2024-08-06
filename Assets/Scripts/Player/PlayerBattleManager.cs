@@ -78,6 +78,7 @@ public class PlayerBattleManager : MonoBehaviour
         {
             if (owner.ViewModel.HP <= 0) return;
             if (!animator.GetBool("AttackAble")) return;
+            if(animator.GetBool(Assassinated)) return;
 
             if (animator.GetBool("Defense"))
             {
@@ -89,6 +90,7 @@ public class PlayerBattleManager : MonoBehaviour
                 }
                 return;
             }
+
             Transform hit = GetAssassinatedTarget();
             if(hit != null)
             {
@@ -116,6 +118,18 @@ public class PlayerBattleManager : MonoBehaviour
                     }
                     else if (!isForward)
                     {
+                        if(target.Type == MonsterType.Boss)
+                        {
+                            if (!(bool)target._behaviorTree.GetVariable("isSubded").GetValue())
+                            {
+                                characterRotate();
+
+                                //공격
+                                animator.SetTrigger("Attack");
+                                return;
+                            }
+                        } 
+
                         Vector3 targetPosition = target.transform.position - target.transform.forward * assassinationDistanceBack;
                         MovePlayerToPosition(targetPosition);
                         AssassinatedRotation(target.transform.position);
@@ -157,21 +171,26 @@ public class PlayerBattleManager : MonoBehaviour
                     }
                 }
 
-                //LockOnTarget을 지정하지 않았다면 LockOnAbleTarget을 바라보며 공격
-                bool condition1 = owner.ViewModel.LockOnTarget == null;
-                bool condition2 = ownerMovement.vm.Movement.magnitude < 0.1f;
-
-                if (condition1 && condition2)
-                {
-                    Vector3 dirTarget = ViewMonster.transform.position - transform.position;
-                    dirTarget.y = 0;
-                    Quaternion rotation = Quaternion.LookRotation(dirTarget);
-                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, rotation.eulerAngles.y, 0), 100f * Time.fixedDeltaTime);
-                }
+                characterRotate();
             }
 
             //공격
             animator.SetTrigger("Attack");
+        }
+    }
+
+    private void characterRotate()
+    {
+        //LockOnTarget을 지정하지 않았다면 LockOnAbleTarget을 바라보며 공격
+        bool condition1 = owner.ViewModel.LockOnTarget == null;
+        bool condition2 = ownerMovement.vm.Movement.magnitude < 0.1f;
+
+        if (condition1 && condition2)
+        {
+            Vector3 dirTarget = ViewMonster.transform.position - transform.position;
+            dirTarget.y = 0;
+            Quaternion rotation = Quaternion.LookRotation(dirTarget);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, rotation.eulerAngles.y, 0), 100f * Time.fixedDeltaTime);
         }
     }
 

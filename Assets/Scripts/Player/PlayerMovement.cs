@@ -1,3 +1,4 @@
+using BehaviorDesigner.Runtime.Tasks.Unity.UnityCharacterController;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +15,24 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Camera LookAt")]
     [SerializeField] private Transform _lookAt;
+
+
+    #region gravity
+    //중력 값
+    private float gravity = -20;
+    public float GravityValue { get { return gravity; } }
+    //현재 중력 가속도
+    public float _velocity { get; set; }
+
+    public bool isGravityAble { get; set; } = true;
+
+    [Header("그라운드 확인 overlap")]
+    [SerializeField]
+    private Transform overlapPos;
+
+    [SerializeField]
+    private LayerMask gravityLayermask;
+    #endregion
 
     private PlayerView owner;
     public PlayerViewModel vm { get; private set; }
@@ -58,8 +77,12 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+
+
     private void Update()
     {
+        Gravity();
+
         if (!animator.GetBool("LockOn"))
         {
             CameraRotation_Move();
@@ -75,6 +98,26 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         Rotation();
+    }
+
+    private void Gravity()
+    {
+        if (!isGravityAble) return;
+
+        Debug.DrawRay(transform.position, Vector3.down * 0.01f, Color.red);
+
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.1f, gravityLayermask) && _velocity <= 0.1f)
+        {
+            _velocity = 0f;
+           
+        }
+        else
+        {
+            _velocity += gravity * 0.5f * Time.deltaTime;
+
+        }
+
+        playerController.Move(new Vector3(0, _velocity, 0) * Time.deltaTime);
     }
 
     private void InitCameraRotation()

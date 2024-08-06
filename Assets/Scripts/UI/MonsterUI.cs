@@ -39,9 +39,7 @@ public class MonsterUI : MonoBehaviour
     {
         _monsterHUDSlotList.ForEach(e => DestroyImmediate(e.gameObject));
         _monsterHUDSlotList.Clear();
-    }
-
-    
+    }    
 
     public void CreateMonsterHUD(MonsterView monster)
     {
@@ -55,19 +53,19 @@ public class MonsterUI : MonoBehaviour
     }
 
     MonsterView BossMonster;
-    MonsterData Boss_data;
+    MonsterViewModel BossMonsterViewModel;
 
     private bool isViewBossMonsterHud;
 
     public void BindBossMonster(MonsterView monster)
     {
         BossMonster = monster;
-        Boss_data = BossMonster._monsterData;
+        BossMonsterViewModel = BossMonster.vm;
 
-        BossMonster_Stamina.SetMaxStamina(Boss_data.MaxStamina);
-        BossMonster_Stamina.SetCurrentStamina(Boss_data.Stamina);
+        BossMonster_Stamina.SetMaxStamina(BossMonster._monsterData.MaxStamina);
+        BossMonster_Stamina.SetCurrentStamina(BossMonsterViewModel.Stamina);        
 
-        MonsterName.text = Boss_data.Name;
+        MonsterName.text = BossMonster._monsterData.Name;
     }
 
     public void OffMonsterHUD(MonsterView monster)
@@ -89,15 +87,14 @@ public class MonsterUI : MonoBehaviour
 
     private void Update()
     {
-        if (BossMonster == null)
-        {
-            return;
-        }
+        if (BossMonster == null) return;
 
         ViewBossHud(isViewBossMonsterHud);
 
-        BossMonster_HPBar.fillAmount = (Boss_data.HP / Boss_data.MaxHP);
-        BossMonster_Stamina.SetCurrentStamina(Boss_data.Stamina);
+        BossMonster_HPBar.fillAmount = (BossMonsterViewModel.HP / BossMonster._monsterData.MaxHP);
+        BossMonster_Stamina.SetCurrentStamina(BossMonsterViewModel.Stamina);
+
+        Debug.Log(BossMonsterViewModel.Stamina);
     }
 
     private void ViewBossHud(bool onOff)
@@ -111,7 +108,7 @@ public class MonsterUI : MonoBehaviour
         BossMonster_HPBar.enabled = onOff;
 
         if (!onOff) UpdateLifeCount(0);
-        else UpdateLifeCount((int)Boss_data.Life);
+        else UpdateLifeCount((int)BossMonsterViewModel.LifeCount);
     }
 
     private void UpdateLifeCount(int LifeCount)

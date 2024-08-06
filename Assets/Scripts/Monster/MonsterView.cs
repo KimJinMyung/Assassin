@@ -226,6 +226,18 @@ public class MonsterView : MonoBehaviour
             case nameof(vm.TraceTarget):
                 animator.SetBool("ComBatMode", vm.TraceTarget!= null);
                 break;
+            case nameof(vm.HP):
+                if(vm.HP <= 0 && vm.LifeCount > 1)
+                {
+                    BossMonsterDead();
+                }
+                break;
+            case nameof(vm.Stamina):
+                if(vm.Stamina <= 0)
+                {
+                    _behaviorTree.SetVariableValue("isSubded", true);
+                }
+                break;
         }
     }
 
@@ -252,8 +264,6 @@ public class MonsterView : MonoBehaviour
     {
         UpdateAttackMethod();
 
-        //_monsterBTRunner.Execute();
-
         //µð¹ö±ë ¿ë
         //isSubdued = true;
 
@@ -264,8 +274,6 @@ public class MonsterView : MonoBehaviour
             if ((bool)_behaviorTree.GetVariable("isAssassinated").GetValue() || (bool)_behaviorTree.GetVariable("isDead").GetValue() || (bool)_behaviorTree.GetVariable("isHurt").GetValue() || (bool)_behaviorTree.GetVariable("isSubded").GetValue()) return;
             MonsterBattleRotation();
         }
-
-        Debug.Log(vm.Stamina);
 
         //µð¹ö±ë¿ë
         if (Input.GetKeyDown(KeyCode.N))
@@ -319,8 +327,14 @@ public class MonsterView : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
 
+        _behaviorTree.SetVariableValue("isSubded", false);
+        _behaviorTree.SetVariableValue("isAssassinated", false);
+        _behaviorTree.SetVariableValue("isParried", false);
+
         vm.RequestMonsterHPChanged(monsterId, _monsterData.MaxHP);
         vm.RequestMonsterStaminaChanged(_monsterData.MaxStamina, monsterId);
+
+        animator.SetBool("Dead", false);
         Debug.Log(vm.HP);
 
     }
@@ -346,14 +360,20 @@ public class MonsterView : MonoBehaviour
             return;
         }
 
-        if (UnityEngine.Random.Range(0f, 100f) <= _monsterData.DefencePer)
-        {
-            Debug.Log("Monster Defense");
+        if(Vector3.Dot(transform.forward, attacker.transform.forward) < 0.5f)
+        {            
+            if (!(bool)_behaviorTree.GetVariable("isAttacking").GetValue() && UnityEngine.Random.Range(0f, 100f) <= _monsterData.DefencePer)
+            {
+                Debug.Log("Monster Defense");
 
-            animator.SetTrigger("Defense");
-            vm.RequestMonsterStaminaChanged(vm.Stamina - attacker.playerData.ATK, monsterId);
-            return;
+                animator.SetTrigger("Defence");
+                animator.ResetTrigger("Attack");
+                animator.ResetTrigger("NextAction");
+                vm.RequestMonsterStaminaChanged(vm.Stamina - attacker.playerData.ATK, monsterId);
+                return;
+            }
         }
+        
 
         vm.RequestMonsterHPChanged(monsterId, vm.HP - Damage);
 
@@ -363,7 +383,10 @@ public class MonsterView : MonoBehaviour
         }
         else
         {
-            _behaviorTree.SetVariableValue("isHurt", true);
+            if (!(bool)_behaviorTree.GetVariable("isAttacking").GetValue())
+            {
+                _behaviorTree.SetVariableValue("isHurt", true);
+            }
             KnockbackDir = transform.position - attacker.transform.position;
         }
     }

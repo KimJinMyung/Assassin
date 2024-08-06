@@ -65,6 +65,18 @@ public class PlayerViewModel
         }
     }
 
+    private float atk;
+    public float AttackDamage
+    {
+        get { return atk; }
+        set
+        {
+            if (atk == value) return;
+            atk = value;
+            OnPropertyChanged(nameof(AttackDamage));
+        }
+    }
+
     private Vector2 _movement;
     public Vector2 Movement
     {

@@ -79,7 +79,7 @@ public class AttackBox : MonoBehaviour
                         MonsterView target = collider.GetComponent<MonsterView>();
                         if (target != null && !animator.GetBool("Defense"))
                         {
-                            target.Hurt(owner_player, owner_player.playerData.ATK);
+                            target.Hurt(owner_player, owner_player.ViewModel.AttackDamage);
                         }
                     }                    
                 }

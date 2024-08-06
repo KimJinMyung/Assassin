@@ -24,6 +24,7 @@ public class JumpAttackEnd : Action
 
     private float elapsedTime = 0f;
     private bool isAction;
+    private bool isAttackEnd;
 
     [SerializeField] SharedAnimationCurve Curve;
     [SerializeField] private float duration = 0.3f;
@@ -76,10 +77,19 @@ public class JumpAttackEnd : Action
 
     public override TaskStatus OnUpdate()
     {
-        if (monsterView.IsAnimationRunning($"{attackTypeName}.{attackIndex}"))
+        if (monsterView.IsAnimationRunning($"{attackTypeName}.attack1{attackIndex}"))
         {
             return TaskStatus.Running;
         }
+
+        if (monsterView.IsAnimationRunning($"{attackTypeName}.attack2{attackIndex}"))
+        {
+            isAttackEnd = true;
+            return TaskStatus.Running;
+        }
+
+        if (isAttackEnd) 
+            return TaskStatus.Success;
 
         if (!isAction)
         {
@@ -95,7 +105,7 @@ public class JumpAttackEnd : Action
             animator.SetBool(hashJumpping, false);
             agent.enabled = true;
             rb.isKinematic = true;
-            return TaskStatus.Success;
+            //return TaskStatus.Success;
         }
 
         return TaskStatus.Running;
@@ -121,5 +131,6 @@ public class JumpAttackEnd : Action
     {
         elapsedTime = 0f;
         isAction = false;
+        isAttackEnd = false;
     }
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [TaskCategory("BossAttack")]
-public class BossMonsterAttackTimer : Conditional
+public class BossMonsterAttackTimer : Action
 {
     [SerializeField] SharedBool isDead;
     [SerializeField] SharedBool isHurt;

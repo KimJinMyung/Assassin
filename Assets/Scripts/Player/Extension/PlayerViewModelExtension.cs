@@ -68,6 +68,20 @@ public static class PlayerViewModelExtension
         vm.MaxHP = maxStamina;
     }
     #endregion
+    #region AttackDamage
+    public static void RegisterPlayerAttackDamageChanged(this PlayerViewModel vm, bool isRegister)
+    {
+        LogicManager.instance.RegisterPlayerAttackDamageChangedCallback(vm.OnResponsePlayerAttackDamageChangedEvent, isRegister);
+    }
+    public static void RequestPlayerAttackDamageChanged(this PlayerViewModel vm, float atk)
+    {
+        LogicManager.instance.OnPlayerAttackDamageChanged(atk);
+    }
+    public static void OnResponsePlayerAttackDamageChangedEvent(this PlayerViewModel vm, float atk)
+    {
+        vm.AttackDamage = atk;
+    }
+    #endregion
     #region Move
     public static void RegisterMoveVelocity(this PlayerViewModel vm, bool isRegister)
     {
@@ -128,7 +142,10 @@ public static class PlayerViewModelExtension
     public static void OnResponseAssassinatedTypeChangedEvent(this PlayerViewModel vm, MonsterView monster)
     {
         monster._behaviorTree.SetVariableValue("isAssassinated", true);
-        monster._behaviorTree.SetVariableValue("isDead", true);
+
+        if (monster.Type != MonsterType.Boss)
+            monster._behaviorTree.SetVariableValue("isDead", true);
+        else monster.animator.SetTrigger("Assassinated");
         vm.AssassinatedMonsters = monster;
     }
     #endregion

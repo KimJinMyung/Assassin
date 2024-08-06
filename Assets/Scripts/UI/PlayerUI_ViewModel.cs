@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 
-public class PlayerUI_ViewModel : MonoBehaviour
+public class PlayerUI_ViewModel
 {
     private float _hP;
     public float HP

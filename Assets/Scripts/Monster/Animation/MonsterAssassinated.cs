@@ -13,10 +13,12 @@ public class MonsterAssassinated : StateMachineBehaviour
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         owner = animator.GetComponent<MonsterView>();
+
         owner.vm.RequestMonsterHPChanged(owner.monsterId, 0);
 
+
         if (animator.layerCount > 1)
-        animator.SetLayerWeight(1, 0);
+            animator.SetLayerWeight(1, 0);
 
         Vector3 dir;
 
@@ -33,6 +35,8 @@ public class MonsterAssassinated : StateMachineBehaviour
 
         dir.y = 0;
         owner.transform.rotation = Quaternion.LookRotation(dir.normalized);
-        animator.SetBool(hashDead, true);
+
+        if(owner.vm.HP <= 0)
+            animator.SetBool(hashDead, true);
     }
 }

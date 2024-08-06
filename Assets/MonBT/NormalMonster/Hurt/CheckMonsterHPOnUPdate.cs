@@ -17,12 +17,20 @@ public class CheckMonsterHPOnUPdate : Action
     int hashHurt = Animator.StringToHash("Hurt");
     int hashHurtDirz = Animator.StringToHash("HurtDir_z");
     int hashHurtDirx = Animator.StringToHash("HurtDir_x");
+    int hashNextAction = Animator.StringToHash("NextAction");
+    int hashAttack = Animator.StringToHash("Attack");
 
     public override void OnAwake()
     {
         monsterView = Owner.GetComponent<MonsterView>();
         animator = Owner.GetComponent<Animator>();
         agent = Owner.GetComponent<NavMeshAgent>();
+    }
+
+    public override void OnStart()
+    {
+        animator.ResetTrigger(hashNextAction);
+        animator.ResetTrigger(hashAttack);
     }
 
     public override TaskStatus OnUpdate()

@@ -64,16 +64,31 @@ public class LogicManager : MonoBehaviour
     #region PlayerMaxStamina
     private Action<float> _playerMaxStaminaChangedCallback;
 
-    public void RegisterPlayerMaxStaminaChangedCallback(Action<float> playerStaminaChangedCallback, bool isRegister)
+    public void RegisterPlayerMaxStaminaChangedCallback(Action<float> playerAttackDamageChangedCallback, bool isRegister)
     {
-        if (isRegister) _playerMaxStaminaChangedCallback += playerStaminaChangedCallback;
-        else _playerMaxStaminaChangedCallback -= playerStaminaChangedCallback;
+        if (isRegister) _playerMaxStaminaChangedCallback += playerAttackDamageChangedCallback;
+        else _playerMaxStaminaChangedCallback -= playerAttackDamageChangedCallback;
     }
 
     public void OnPlayerMaxStaminaChanged(float playerHP)
     {
         if (_playerMaxStaminaChangedCallback == null) return;
         _playerMaxStaminaChangedCallback.Invoke(playerHP);
+    }
+    #endregion
+    #region PlayerAttackDamage
+    private Action<float> _playerAttackDamageChangedCallback;
+
+    public void RegisterPlayerAttackDamageChangedCallback(Action<float> playerAttackDamageChangedCallback, bool isRegister)
+    {
+        if (isRegister) _playerAttackDamageChangedCallback += playerAttackDamageChangedCallback;
+        else _playerAttackDamageChangedCallback -= playerAttackDamageChangedCallback;
+    }
+
+    public void OnPlayerAttackDamageChanged(float atk)
+    {
+        if (_playerAttackDamageChangedCallback == null) return;
+        _playerAttackDamageChangedCallback.Invoke(atk);
     }
     #endregion
     #region Move

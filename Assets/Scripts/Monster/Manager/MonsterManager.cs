@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem.iOS;
 
@@ -64,6 +65,9 @@ public class MonsterManager : MonoBehaviour
     {
         if (_monsterLists.ContainsKey(monster.monsterId))
         {
+            if (monster.Type == MonsterType.Boss)  ShowBossMonsterHUD_OnOff(false);
+            else _mainHud.OffMonsterHUD(monster);
+            
             _monsterLists.Remove(monster.monsterId);
             RegisterMonsgterAttackMethod(monster.monsterId, monster.Attack, false);
         }
