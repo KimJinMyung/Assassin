@@ -77,6 +77,7 @@ public class PlayerBattleManager : MonoBehaviour
         if (context.started)
         {
             if (owner.ViewModel.HP <= 0) return;
+            if (owner.isSubded) return;
             if (!animator.GetBool("AttackAble")) return;
             if(animator.GetBool(Assassinated)) return;
 
@@ -224,6 +225,12 @@ public class PlayerBattleManager : MonoBehaviour
     public void OnDefense(InputAction.CallbackContext context)
     {
         if (!animator.GetBool("AttackAble")) return;
+        if(owner.isSubded)
+        {
+            animator.SetBool("Defense", false);
+            return;
+        }
+
         isDefence = context.ReadValue<float>() > 0.5f;
 
         if (isDefence && !animator.GetBool("Defense"))

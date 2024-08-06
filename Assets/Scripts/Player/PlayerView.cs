@@ -24,7 +24,7 @@ public class PlayerView : MonoBehaviour
 
     public bool isKnockback;
     private bool isDie;
-    private bool isSubded;
+    public bool isSubded {  get; private set; }
 
     private void Awake()
     {
@@ -97,6 +97,8 @@ public class PlayerView : MonoBehaviour
                     animator.SetBool("Incapacitated", true);
                     animator.SetTrigger("Incapacitate");
                 }
+
+                Debug.Log(vm.Stamina);
                 break;
             case nameof(vm.MaxHP):
                 break;
@@ -136,7 +138,7 @@ public class PlayerView : MonoBehaviour
             if (animator.GetBool("Defense") && animator.GetBool("ParryAble"))
             {
                 //방어 성공
-                vm.RequestPlayerStaminaChanged(vm.Stamina - attacker.vm.Stamina);
+                vm.RequestPlayerStaminaChanged(vm.Stamina - attacker._monsterData.Strength);
                 animator.SetTrigger("Hurt");
                 return;
             }

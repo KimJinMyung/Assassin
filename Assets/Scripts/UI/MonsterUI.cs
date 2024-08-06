@@ -93,8 +93,6 @@ public class MonsterUI : MonoBehaviour
 
         BossMonster_HPBar.fillAmount = (BossMonsterViewModel.HP / BossMonster._monsterData.MaxHP);
         BossMonster_Stamina.SetCurrentStamina(BossMonsterViewModel.Stamina);
-
-        Debug.Log(BossMonsterViewModel.Stamina);
     }
 
     private void ViewBossHud(bool onOff)

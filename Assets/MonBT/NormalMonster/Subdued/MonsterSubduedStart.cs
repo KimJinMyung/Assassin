@@ -8,6 +8,7 @@ using UnityEngine;
 public class MonsterSubduedStart : Action
 {
     private Animator animator;
+    private Rigidbody rb;
 
     [SerializeField] SharedBool isSubed;
     [SerializeField] SharedBool isDead;
@@ -20,6 +21,12 @@ public class MonsterSubduedStart : Action
     public override void OnAwake()
     {
         animator = Owner.GetComponent<Animator>();
+        rb = Owner.GetComponent<Rigidbody>();
+    }
+
+    public override void OnStart()
+    {
+        rb.isKinematic = true;
     }
 
     public override TaskStatus OnUpdate()

@@ -376,6 +376,7 @@ public class MonsterView : MonoBehaviour
         
 
         vm.RequestMonsterHPChanged(monsterId, vm.HP - Damage);
+        vm.RequestMonsterStaminaChanged(vm.Stamina - attacker.playerData.Strength * 0.5f, monsterId);
 
         if (vm.HP <= 0)
         {

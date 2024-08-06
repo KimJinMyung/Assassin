@@ -130,9 +130,9 @@
     <Compile Include="Assets\Prefab\AttackBox\AttackBox.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Actions\Reflection\SetPropertyValue.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animator\SetBoolParameter.cs" />
+    <Compile Include="Assets\Scripts\Monster\Animation\BossJump.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\SetVelocity.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Quaternion\Dot.cs" />
-    <Compile Include="Assets\Scripts\Monster\Animation\BossJump.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Variables\SharedColor.cs" />
     <Compile Include="Assets\Scripts\Player\LockOn\PlayerLockOn.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\GetDuration.cs" />
@@ -328,8 +328,8 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Decorators\ReturnSuccess.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\GetDrag.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\BoxCollider\GetCenter.cs" />
-    <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Transform\SetParent.cs" />
     <Compile Include="Assets\MonBT\BossMonster\MoveAnimation.cs" />
+    <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Transform\SetParent.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\CompareSharedGameObject.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Actions\Reflection\SetFieldValue.cs" />
     <Compile Include="Assets\MonBT\NormalMonster\Hurt\Hurt_Conditional.cs" />
