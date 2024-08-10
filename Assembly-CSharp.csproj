@@ -677,6 +677,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Composites\PrioritySelector.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\AudioSource\Play.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\GameObject\Instantiate.cs" />
+    <Compile Include="Assets\Scripts\Player\Grapping\RopeAction.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\GetUseGravity.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\String\GetLength.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\SetStartRotation.cs" />

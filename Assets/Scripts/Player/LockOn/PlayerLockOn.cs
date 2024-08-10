@@ -110,6 +110,64 @@ public class PlayerLockOn : MonoBehaviour
         return ReturnTarget(colliders);
     }
 
+    //Transform ReturnTarget(Collider[] colliders)
+    //{
+    //    Transform closestTarget = null;
+    //    float closestAngle = Mathf.Infinity;
+
+    //    List<Transform> tempLockOnAbleList = new List<Transform>();
+
+    //    foreach (var collider in colliders)
+    //    {
+    //        Vector3 dirTarget = (collider.transform.position - Camera.main.transform.position).normalized;
+    //        float angleToTarget = Vector3.Angle(Camera.main.transform.forward, dirTarget);
+
+    //        if (angleToTarget < _viewAngle)
+    //        {
+    //            float cameraDis = Vector3.Distance(new Vector3(Camera.main.transform.position.x, 0, Camera.main.transform.position.z), new Vector3(transform.position.x, 0, transform.position.z));
+
+    //            float viewRange = 0f;
+
+    //            if (!collider.CompareTag("RopePoint"))
+    //            {
+    //                viewRange = _viewRangeToMonster;
+    //            }
+    //            else
+    //            {
+    //                viewRange = _viewRange;
+    //            }
+
+    //            if (Physics.Raycast(Camera.main.transform.position, dirTarget, out RaycastHit hit, viewRange + cameraDis, _lockOnAbleMask))
+    //            {
+    //                if (hit.collider == collider)
+    //                {
+    //                    if (hit.collider.CompareTag("RopePoint") && !IsGrapplingAblePoint(hit.point)) continue;
+
+    //                    MonsterView hitMonster = hit.transform.GetComponent<MonsterView>();
+    //                    if (MonsterManager.instance.CheckMonsterList(hitMonster))
+    //                    {
+    //                        tempLockOnAbleList.Add(collider.transform);
+
+    //                        if (angleToTarget < closestAngle)
+    //                        {
+    //                            closestAngle = angleToTarget;
+    //                            closestTarget = hit.transform;
+    //                        }
+    //                    }                        
+    //                }
+    //            }
+
+    //        }
+    //    }
+
+    //    Transform _lockOnTarget = owner.ViewModel.LockOnTarget;
+
+    //    if (_lockOnTarget != null && !tempLockOnAbleList.Contains(_lockOnTarget) && _lockOnTarget.gameObject.layer != LayerMask.NameToLayer("Dead")) tempLockOnAbleList.Add(_lockOnTarget);
+
+    //    _viewModel.RequestLockOnTargetList(tempLockOnAbleList);
+
+    //    return closestTarget;
+    //}
     Transform ReturnTarget(Collider[] colliders)
     {
         Transform closestTarget = null;
@@ -143,17 +201,13 @@ public class PlayerLockOn : MonoBehaviour
                     {
                         if (hit.collider.CompareTag("RopePoint") && !IsGrapplingAblePoint(hit.point)) continue;
 
-                        MonsterView hitMonster = hit.transform.GetComponent<MonsterView>();
-                        if (MonsterManager.instance.CheckMonsterList(hitMonster))
-                        {
-                            tempLockOnAbleList.Add(collider.transform);
+                        tempLockOnAbleList.Add(collider.transform);
 
-                            if (angleToTarget < closestAngle)
-                            {
-                                closestAngle = angleToTarget;
-                                closestTarget = hit.transform;
-                            }
-                        }                        
+                        if (angleToTarget < closestAngle)
+                        {
+                            closestAngle = angleToTarget;
+                            closestTarget = hit.transform;
+                        }
                     }
                 }
 

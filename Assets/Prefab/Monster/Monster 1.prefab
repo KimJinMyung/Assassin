@@ -3665,7 +3665,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70002d82c55b3bd489aa33f37d4349f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 2
+  _type: 0
   monsterMeshes:
   - _monsterType: 0
     mesh: {fileID: 6494053223894862513}

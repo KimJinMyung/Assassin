@@ -118,6 +118,6 @@ public class LockOn_UI : MonoBehaviour
         {
             _lockOnIcon.color = Color.magenta;
         }
-        //else _lockOnIcon.color = Color.white;
+        else _lockOnIcon.enabled = false;
     }
 }

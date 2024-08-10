@@ -19,7 +19,7 @@ TagManager:
   - LockOnAble
   - LockOnTarget
   - Dead
-  - GrapplingPoint
+  - RopePoint
   - MonsterWalkAble
   - DetectZone
   - 
