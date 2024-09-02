@@ -12,7 +12,7 @@ public class ScriptsManager : MonoBehaviour
     {
         foreach (GameObject go in GameObject)
         {
-            Instantiate(go);
+            go.SetActive(true);
         }
     }
 }

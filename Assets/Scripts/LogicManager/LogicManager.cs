@@ -1,20 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
+using Player;
 
-public class LogicManager : MonoBehaviour
+public class LogicManager : Singleton<LogicManager>
 {
-    public static LogicManager instance;
-
-    private void Awake()
-    {
-        if(instance == null) instance = this;
-        else if(instance != this) Destroy(instance);
-
-        DontDestroyOnLoad(this.gameObject);
-    }
 
     #region PlayerHP
     private Action<float> _playerHPChangedCallback;

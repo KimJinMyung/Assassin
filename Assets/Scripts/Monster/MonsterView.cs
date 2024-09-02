@@ -1,12 +1,11 @@
 using BehaviorDesigner.Runtime;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.AI;
+using Player;
 
 public enum MonsterType
 {

@@ -1,16 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Threading;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
+using Temp;
+using Player;
 
 public class PlayerBattleManager : MonoBehaviour
 {
     private PlayerView owner;
-    private PlayerMovement ownerMovement;
+    private Player.PlayerMovement ownerMovement;
     private Animator animator;
 
     private PlayerLockOn playerSight;
@@ -37,7 +33,7 @@ public class PlayerBattleManager : MonoBehaviour
     private void Awake()
     {
         owner = GetComponent<PlayerView>();
-        ownerMovement = GetComponent<PlayerMovement>();
+        ownerMovement = GetComponent<Player.PlayerMovement>();
         playerController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         playerSight = GetComponent<PlayerLockOn>();
@@ -184,9 +180,9 @@ public class PlayerBattleManager : MonoBehaviour
     {
         //LockOnTarget을 지정하지 않았다면 LockOnAbleTarget을 바라보며 공격
         bool condition1 = owner.ViewModel.LockOnTarget == null;
-        bool condition2 = ownerMovement.vm.Movement.magnitude < 0.1f;
+        //bool condition2 = ownerMovement.vm.Movement.magnitude < 0.1f;
 
-        if (condition1 && condition2)
+        if (condition1 /*&& condition2*/)
         {
             Vector3 dirTarget = ViewMonster.transform.position - transform.position;
             dirTarget.y = 0;

@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using UnityEngine;
+using EventEnum;
 
 public enum MonsterFileType
 {
@@ -9,10 +9,8 @@ public enum MonsterFileType
     Monster_Attack
 }
 
-public class DataManager : MonoBehaviour
+public class DataManager : Singleton<DataManager>
 {
-    public static DataManager Instance { get; private set; }
-
     #region LoadData
     public Dictionary<int, MonsterData> LoadedMonsterDataList { get; private set; }
     public Dictionary<string, Monster_Attack> LoadedMonsterAttackList { get; private set; }
@@ -159,19 +157,16 @@ public class DataManager : MonoBehaviour
 
     #endregion
 
-    private void Awake()
+    protected new void Awake()
     {
-        SetSingleton();
+        base.Awake();
 
         LoadFile();
         ReadDataOnAwake();
     }
 
-    private void SetSingleton()
+    private void Start()
     {
-        if (Instance == null) Instance = this;
-        else if (Instance != this) Destroy(this.gameObject);
-
-        DontDestroyOnLoad(this.gameObject);
+        EventManager<DataEvent>.TriggerEvent(DataEvent.LoadPlayerData, LoadPlayerData[1]);
     }
 }

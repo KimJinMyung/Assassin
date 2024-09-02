@@ -100,6 +100,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Conditionals\Physics\HasExitedTrigger2D.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Decorators\TaskGuard.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Math\RandomBool.cs" />
+    <Compile Include="Assets\NewPlayer\EnumCollection.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Actions\Log.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\CapsuleCollider\GetCenter.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animator\WaitForState.cs" />
@@ -312,6 +313,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\String\SetString.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Variables\SharedTransformList.cs" />
     <Compile Include="Assets\Scripts\Monster\Animation\MonsterSubdued.cs" />
+    <Compile Include="Assets\NewPlayer\PlayerMovement.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\AudioSource\SetIgnoreListenerVolume.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\CompareSharedTransformList.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\CharacterController\GetVelocity.cs" />
@@ -542,6 +544,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Conditionals\Physics\HasEnteredTrigger2D.cs" />
     <Compile Include="Assets\MonBT\BossMonster\Attack\CompleteBossMonsterAttack.cs" />
     <Compile Include="Assets\MonBT\BossMonster\BackJump\JumpStart.cs" />
+    <Compile Include="Assets\Scripts\Event\EventManager.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\PlayerPrefs\HasKey.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector3\SetValue.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\Simulate.cs" />
@@ -620,9 +623,12 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector3\SetXYZ.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Transform\Rotate.cs" />
     <Compile Include="Assets\Scripts\Monster\Animation\BossComboAttack.cs" />
+    <Compile Include="Assets\NewPlayer\PlayerJump.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\CompareSharedInt.cs" />
+    <Compile Include="Assets\Scripts\Singleton\Singleton.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\ExternalBehaviorTree.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Math\FloatComparison.cs" />
+    <Compile Include="Assets\NewPlayer\PlayerBattle.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animator\IsParameterControlledByCurve.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\IsStopped.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\CapsuleCollider\SetCenter.cs" />

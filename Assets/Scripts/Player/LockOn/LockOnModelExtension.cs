@@ -1,7 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
+using Player;
 
 public static class LockOnModelExtension
 {
@@ -14,12 +13,12 @@ public static class LockOnModelExtension
     #region LockOnTargetList
     public static void RegisterLockOnTargetListChanged(this LockOnViewModel model, bool isRegister)
     {
-        LogicManager.instance.RegisterLockOnTargetListChangedCallback(model.OnResponseLockOnTargetListChangedEvent, isRegister);
+        LogicManager.Instance.RegisterLockOnTargetListChangedCallback(model.OnResponseLockOnTargetListChangedEvent, isRegister);
     }
 
     public static void RequestLockOnTargetList(this LockOnViewModel model, List<Transform> tartgetlists)
     {
-        LogicManager.instance.OnLockOnTargetList(tartgetlists);
+        LogicManager.Instance.OnLockOnTargetList(tartgetlists);
     }
 
     public static void OnResponseLockOnTargetListChangedEvent(this LockOnViewModel model, List<Transform> tartgetlists)
@@ -62,12 +61,12 @@ public static class LockOnModelExtension
     #region LockOnAbleTarget
     public static void RegisterLockOnAbleTargetChanged(this LockOnViewModel model, bool isRegister)
     {
-        LogicManager.instance.RegisterLockOnAbleTargetChangedCallback(model.OnResponseLockOnAbleTargetChangedEvent, isRegister);
+        LogicManager.Instance.RegisterLockOnAbleTargetChangedCallback(model.OnResponseLockOnAbleTargetChangedEvent, isRegister);
     }
 
     public static void RequestLockOnAbleTarget(this LockOnViewModel model, Transform target)
     {
-        LogicManager.instance.OnLockOnAbleTarget(target);
+        LogicManager.Instance.OnLockOnAbleTarget(target);
     }
 
     public static void OnResponseLockOnAbleTargetChangedEvent(this LockOnViewModel model, Transform target)
@@ -122,12 +121,12 @@ public static class LockOnModelExtension
     #region LockOnTarget
     public static void RegisterLockOnViewModel_TargetChanged(this LockOnViewModel model, bool isRegister)
     {
-        LogicManager.instance.RegisterLockOnViewModel_TargetChangedCallback(model.OnResponseLockOnTargetChangedEvent, isRegister);
+        LogicManager.Instance.RegisterLockOnViewModel_TargetChangedCallback(model.OnResponseLockOnTargetChangedEvent, isRegister);
     }
 
     public static void RequestLockOnViewModel_Target(this LockOnViewModel model, Transform target, PlayerView player)
     {
-        LogicManager.instance.OnLockOnTarget_LockOnViewModel(target, player);
+        LogicManager.Instance.OnLockOnTarget_LockOnViewModel(target, player);
     }
 
     public static void OnResponseLockOnTargetChangedEvent(this LockOnViewModel model, Transform target, PlayerView player)

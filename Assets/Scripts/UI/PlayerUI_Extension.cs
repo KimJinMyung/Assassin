@@ -2,7 +2,7 @@ public static class PlayerUI_Extension
 {
     public static void RegisterPlayerHPChanged(this PlayerUI_ViewModel vm, bool isRegister)
     {
-        PlayerManager.instance.BindHPChanged(vm.OnPlayerHpChanged, isRegister);
+        PlayerManager.Instance.BindHPChanged(vm.OnPlayerHpChanged, isRegister);
     }
 
     public static void OnPlayerHpChanged(this PlayerUI_ViewModel vm, float HP)
@@ -11,7 +11,7 @@ public static class PlayerUI_Extension
     }
     public static void RegisterPlayerMaxHPChanged(this PlayerUI_ViewModel vm, bool isRegister)
     {
-        PlayerManager.instance.BindMaxHPChanged(vm.OnPlayerMaxHpChanged, isRegister);
+        PlayerManager.Instance.BindMaxHPChanged(vm.OnPlayerMaxHpChanged, isRegister);
     }
 
     public static void OnPlayerMaxHpChanged(this PlayerUI_ViewModel vm, float maxHp)
@@ -21,7 +21,7 @@ public static class PlayerUI_Extension
 
     public static void RegisterPlayerStaminaChanged(this PlayerUI_ViewModel vm, bool isRegister)
     {
-        PlayerManager.instance.BindStaminaChanged(vm.OnPlayerStaminaiChanged, isRegister);
+        PlayerManager.Instance.BindStaminaChanged(vm.OnPlayerStaminaiChanged, isRegister);
     }
 
     public static void OnPlayerStaminaiChanged(this PlayerUI_ViewModel vm, float stamina)
@@ -30,7 +30,7 @@ public static class PlayerUI_Extension
     }
     public static void RegisterPlayerMaxStaminaChanged(this PlayerUI_ViewModel vm, bool isRegister)
     {
-        PlayerManager.instance.BindMaxStaminaChanged(vm.OnPlayerMaxStaminaiChanged, isRegister);
+        PlayerManager.Instance.BindMaxStaminaChanged(vm.OnPlayerMaxStaminaiChanged, isRegister);
     }
 
     public static void OnPlayerMaxStaminaiChanged(this PlayerUI_ViewModel vm, float maxStamina)
@@ -39,7 +39,7 @@ public static class PlayerUI_Extension
     }
     public static void RegisterPlayerLifeCountChanged(this PlayerUI_ViewModel vm, bool isRegister)
     {
-        PlayerManager.instance.BindLifeCountChanged(vm.OnPlayerLifeCountChanged, isRegister);
+        PlayerManager.Instance.BindLifeCountChanged(vm.OnPlayerLifeCountChanged, isRegister);
     }
 
     public static void OnPlayerLifeCountChanged(this PlayerUI_ViewModel vm, float LifeCount)

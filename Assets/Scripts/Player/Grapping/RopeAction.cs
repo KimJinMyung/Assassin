@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEngine.UI.GridLayoutGroup;
+using Temp;
 
 public class RopeAction : MonoBehaviour
 {

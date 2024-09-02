@@ -10,12 +10,12 @@ public static class MonsterExtension
     #region HP
     public static void RegisterMonsterHPChanged(this MonsterViewModel vm, bool isRegister, int monsterId)
     {
-        LogicManager.instance.RegisterMonsterHPChangedCallback(monsterId, vm.OnResponseMonsterHPChangedEvent, isRegister);
+        LogicManager.Instance.RegisterMonsterHPChangedCallback(monsterId, vm.OnResponseMonsterHPChangedEvent, isRegister);
         MonsterManager.instance.RegisterMonsterHPChangedCallback(monsterId, vm.OnResponseMonsterHPChangedEvent, isRegister);
     }
     public static void RequestMonsterHPChanged(this MonsterViewModel vm, int monsterId, float hp)
     {
-        LogicManager.instance.OnMonsterHPChanged(monsterId, hp);
+        LogicManager.Instance.OnMonsterHPChanged(monsterId, hp);
         MonsterManager.instance.SetMonsterHP(monsterId, hp);
     }
     public static void OnResponseMonsterHPChangedEvent(this MonsterViewModel vm, float HP)
@@ -26,12 +26,12 @@ public static class MonsterExtension
     #region Stamina
     public static void RegisterMonsterStaminaChanged(this MonsterViewModel vm, bool isRegister, int monsterId)
     {
-        LogicManager.instance.RegisterMonsterStaminaChangedCallback(monsterId, vm.OnResponseMonsterStaminaChangedEvent, isRegister);
+        LogicManager.Instance.RegisterMonsterStaminaChangedCallback(monsterId, vm.OnResponseMonsterStaminaChangedEvent, isRegister);
         MonsterManager.instance.RegisterMonsterStaminaChangedCallback(monsterId, vm.OnResponseMonsterStaminaChangedEvent, isRegister);
     }
     public static void RequestMonsterStaminaChanged(this MonsterViewModel vm, float stamina, int monsterId)
     {
-        LogicManager.instance.OnMonsterStaminaChanged(monsterId, stamina);
+        LogicManager.Instance.OnMonsterStaminaChanged(monsterId, stamina);
         MonsterManager.instance.SetMonsterStamina(monsterId, stamina);
     }
     public static void OnResponseMonsterStaminaChangedEvent(this MonsterViewModel vm, float stamina)
@@ -42,12 +42,12 @@ public static class MonsterExtension
     #region LifeCount
     public static void RegisterMonsterLifeCountChanged(this MonsterViewModel vm, bool isRegister, int monsterId)
     {
-        LogicManager.instance.RegisterMonsterLifeCountChangedCallback(monsterId, vm.OnResponseMonsterLifeCountChangedEvent, isRegister);
+        LogicManager.Instance.RegisterMonsterLifeCountChangedCallback(monsterId, vm.OnResponseMonsterLifeCountChangedEvent, isRegister);
         MonsterManager.instance.RegisterMonsterLifeCountChangedCallback(monsterId, vm.OnResponseMonsterLifeCountChangedEvent, isRegister);
     }
     public static void RequestMonsterLifeCountChanged(this MonsterViewModel vm, float LifeCount, int monsterId)
     {
-        LogicManager.instance.OnMonsterLifeCountChanged(monsterId, LifeCount);
+        LogicManager.Instance.OnMonsterLifeCountChanged(monsterId, LifeCount);
         MonsterManager.instance.SetMonsterLifeCount(monsterId, LifeCount);
     }
     public static void OnResponseMonsterLifeCountChangedEvent(this MonsterViewModel vm, float lifeCount)
@@ -58,11 +58,11 @@ public static class MonsterExtension
     #region ChangedAttackMethod
     public static void RegisterAttackMethodChanged(this MonsterViewModel vm, int actorId, bool isRegister)
     {
-        LogicManager.instance.RegisterAttackMethodChangedCallback(actorId, vm.OnResponseAttackMethodChangedEvent, isRegister);
+        LogicManager.Instance.RegisterAttackMethodChangedCallback(actorId, vm.OnResponseAttackMethodChangedEvent, isRegister);
     }
     public static void RequestAttackMethodChanged(this MonsterViewModel vm, int actorId, List<Monster_Attack> attackList, MonsterView owner)
     {
-        LogicManager.instance.OnAttackMethodChanged(actorId, attackList, owner);
+        LogicManager.Instance.OnAttackMethodChanged(actorId, attackList, owner);
     }
 
     public static void OnResponseAttackMethodChangedEvent(this MonsterViewModel vm, List<Monster_Attack> attackList, MonsterView owner)
@@ -99,11 +99,11 @@ public static class MonsterExtension
     #region TraceTarget
     public static void RegisterTraceTargetChanged(this MonsterViewModel vm, int actorId, bool isRegister)
     {
-        LogicManager.instance.RegisterTraceTargetChangedCallback(vm.OnResponseTraceTargetChangedEvent, actorId, isRegister);
+        LogicManager.Instance.RegisterTraceTargetChangedCallback(vm.OnResponseTraceTargetChangedEvent, actorId, isRegister);
     }
     public static void RequestTraceTargetChanged(this MonsterViewModel vm, int actorId, Transform traceTarget)
     {
-        LogicManager.instance.OnTraceTarget(actorId, traceTarget);
+        LogicManager.Instance.OnTraceTarget(actorId, traceTarget);
     }
     public static void OnResponseTraceTargetChangedEvent(this MonsterViewModel vm, Transform traceTarget)
     {

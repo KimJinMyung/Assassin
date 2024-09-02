@@ -1,3 +1,4 @@
+using EventEnum;
 using UnityEngine;
 using UnityEngine.Windows;
 using static UnityEngine.UI.GridLayoutGroup;
@@ -7,13 +8,17 @@ public static class PlayerViewModelExtension
     #region HP
     public static void RegisterPlayerHPChanged(this PlayerViewModel vm, bool isRegister)
     {
-        LogicManager.instance.RegisterPlayerHPChangedCallback(vm.OnResponsePlayerHPChangedEvent, isRegister);
-        PlayerManager.instance.BindHPChanged(vm.OnResponsePlayerHPChangedEvent, isRegister);
+        //LogicManager.Instance.RegisterPlayerHPChangedCallback(vm.OnResponsePlayerHPChangedEvent, isRegister);
+        //PlayerManager.Instance.BindHPChanged(vm.OnResponsePlayerHPChangedEvent, isRegister);
+
+        EventManager<PlayerMVVM>.Binding<float>(isRegister, PlayerMVVM.ChangedHP, vm.OnResponsePlayerHPChangedEvent);
     }
     public static void RequestPlayerHPChanged(this PlayerViewModel vm, float hp)
     {
-        LogicManager.instance.OnPlayerHPChanged(hp);
-        PlayerManager.instance.SetPlayerHP(hp);
+        //LogicManager.Instance.OnPlayerHPChanged(hp);
+        //PlayerManager.Instance.SetPlayerHP(hp);
+
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedHP, hp);
     }
     public static void OnResponsePlayerHPChangedEvent(this PlayerViewModel vm, float HP) 
     {
@@ -23,13 +28,17 @@ public static class PlayerViewModelExtension
     #region MaxHP
     public static void RegisterPlayerMaxHPChanged(this PlayerViewModel vm, bool isRegister)
     {
-        LogicManager.instance.RegisterPlayerMaxHPChangedCallback(vm.OnResponsePlayerMaxHPChangedEvent, isRegister);
-        PlayerManager.instance.BindMaxHPChanged(vm.OnResponsePlayerMaxHPChangedEvent, isRegister);
+        //LogicManager.Instance.RegisterPlayerMaxHPChangedCallback(vm.OnResponsePlayerMaxHPChangedEvent, isRegister);
+        //PlayerManager.Instance.BindMaxHPChanged(vm.OnResponsePlayerMaxHPChangedEvent, isRegister);
+
+        EventManager<PlayerMVVM>.Binding<float>(isRegister, PlayerMVVM.ChangedMaxHP, vm.OnResponsePlayerMaxHPChangedEvent);
     }
     public static void RequestPlayerMaxHPChanged(this PlayerViewModel vm, float hp)
     {
-        LogicManager.instance.OnPlayerMaxHPChanged(hp);
-        PlayerManager.instance.SetPlayerMaxHP(hp);
+        //LogicManager.Instance.OnPlayerMaxHPChanged(hp);
+        //PlayerManager.Instance.SetPlayerMaxHP(hp);
+
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedMaxHP);
     }
     public static void OnResponsePlayerMaxHPChangedEvent(this PlayerViewModel vm, float MaxHP)
     {
@@ -39,13 +48,17 @@ public static class PlayerViewModelExtension
     #region Stamina
     public static void RegisterPlayerStaminaChanged(this PlayerViewModel vm, bool isRegister)
     {
-        LogicManager.instance.RegisterPlayerStaminaChangedCallback(vm.OnResponsePlayerStaminaChangedEvent, isRegister);
-        PlayerManager.instance.BindStaminaChanged(vm.OnResponsePlayerStaminaChangedEvent, isRegister);
+        //LogicManager.Instance.RegisterPlayerStaminaChangedCallback(vm.OnResponsePlayerStaminaChangedEvent, isRegister);
+        //PlayerManager.Instance.BindStaminaChanged(vm.OnResponsePlayerStaminaChangedEvent, isRegister);
+
+        EventManager<PlayerMVVM>.Binding<float>(isRegister, PlayerMVVM.ChangedStamina, vm.OnResponsePlayerStaminaChangedEvent);
     }
     public static void RequestPlayerStaminaChanged(this PlayerViewModel vm, float stamina)
     {
-        LogicManager.instance.OnPlayerStaminaChanged(stamina);
-        PlayerManager.instance.SetStamina(stamina);
+        //LogicManager.Instance.OnPlayerStaminaChanged(stamina);
+        //PlayerManager.Instance.SetStamina(stamina);
+
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedStamina);
     }
     public static void OnResponsePlayerStaminaChangedEvent(this PlayerViewModel vm, float stamina)
     {
@@ -55,13 +68,17 @@ public static class PlayerViewModelExtension
     #region MaxStamina
     public static void RegisterPlayerMaxStaminaChanged(this PlayerViewModel vm, bool isRegister)
     {
-        LogicManager.instance.RegisterPlayerMaxStaminaChangedCallback(vm.OnResponsePlayerMaxStaminaChangedEvent, isRegister);
-        PlayerManager.instance.BindStaminaChanged(vm.OnResponsePlayerMaxStaminaChangedEvent, isRegister);
+        //LogicManager.Instance.RegisterPlayerMaxStaminaChangedCallback(vm.OnResponsePlayerMaxStaminaChangedEvent, isRegister);
+        //PlayerManager.Instance.BindStaminaChanged(vm.OnResponsePlayerMaxStaminaChangedEvent, isRegister);
+
+        EventManager<PlayerMVVM>.Binding<float>(isRegister, PlayerMVVM.ChangedMaxStamina, vm.OnResponsePlayerMaxStaminaChangedEvent);
     }
     public static void RequestPlayerMaxStaminaChanged(this PlayerViewModel vm, float stamina)
     {
-        LogicManager.instance.OnPlayerMaxStaminaChanged(stamina);
-        PlayerManager.instance.SetMaxStamina(stamina);
+        //LogicManager.Instance.OnPlayerMaxStaminaChanged(stamina);
+        //PlayerManager.Instance.SetMaxStamina(stamina);
+
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedMaxStamina);
     }
     public static void OnResponsePlayerMaxStaminaChangedEvent(this PlayerViewModel vm, float maxStamina)
     {
@@ -71,11 +88,15 @@ public static class PlayerViewModelExtension
     #region AttackDamage
     public static void RegisterPlayerAttackDamageChanged(this PlayerViewModel vm, bool isRegister)
     {
-        LogicManager.instance.RegisterPlayerAttackDamageChangedCallback(vm.OnResponsePlayerAttackDamageChangedEvent, isRegister);
+        //LogicManager.Instance.RegisterPlayerAttackDamageChangedCallback(vm.OnResponsePlayerAttackDamageChangedEvent, isRegister);
+        
+        EventManager<PlayerMVVM>.Binding<float>(isRegister, PlayerMVVM.ChangedATK, vm.OnResponsePlayerAttackDamageChangedEvent);
     }
     public static void RequestPlayerAttackDamageChanged(this PlayerViewModel vm, float atk)
     {
-        LogicManager.instance.OnPlayerAttackDamageChanged(atk);
+        //LogicManager.Instance.OnPlayerAttackDamageChanged(atk);
+
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedATK);
     }
     public static void OnResponsePlayerAttackDamageChangedEvent(this PlayerViewModel vm, float atk)
     {
@@ -85,11 +106,15 @@ public static class PlayerViewModelExtension
     #region Move
     public static void RegisterMoveVelocity(this PlayerViewModel vm, bool isRegister)
     {
-        LogicManager.instance.RegisterMoveVelocityChangedCallback(vm.OnResponseMoveVelocityChangedEvent, isRegister);
+        //LogicManager.Instance.RegisterMoveVelocityChangedCallback(vm.OnResponseMoveVelocityChangedEvent, isRegister);
+
+        EventManager<PlayerMVVM>.Binding<float, float>(isRegister, PlayerMVVM.ChangedMoveDir, vm.OnResponseMoveVelocityChangedEvent);
     }
     public static void RequestMoveOnInput(this PlayerViewModel vm, float x, float y)
     {
-        LogicManager.instance.OnMoveInput(x, y);
+        //LogicManager.Instance.OnMoveInput(x, y);
+
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedMoveDir);
     }
 
     public static void OnResponseMoveVelocityChangedEvent(this PlayerViewModel vm, float contextValueX, float contextValueY)
@@ -100,11 +125,15 @@ public static class PlayerViewModelExtension
     #region Rotate
     public static void RegisterActorRotate(this PlayerViewModel vm, bool isRegister)
     {
-        LogicManager.instance.RegisterActorRotateChangedCallback(vm.OnResponseActorRotateChangedEvent, isRegister);
+        //LogicManager.Instance.RegisterActorRotateChangedCallback(vm.OnResponseActorRotateChangedEvent, isRegister);
+
+        EventManager<PlayerMVVM>.Binding<float, float, float>(isRegister, PlayerMVVM.ChangedRotate, vm.OnResponseActorRotateChangedEvent);
     }
     public static void RequestActorRotate(this PlayerViewModel vm, float x, float y, float z)
     {
-        LogicManager.instance.OnActorRotate(x, y, z);
+        //LogicManager.Instance.OnActorRotate(x, y, z);
+
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedRotate);
     }
 
     public static void OnResponseActorRotateChangedEvent(this PlayerViewModel vm, float contextValueX, float contextValueY, float contextValueZ)
@@ -115,12 +144,16 @@ public static class PlayerViewModelExtension
     #region LockOnTarget
     public static void RegisterLockOnTargetChanged(this PlayerViewModel vm, bool isRegister)
     {
-        LogicManager.instance.RegisterLockOnTargetChangedCallback(vm.OnResponseLockOnTargetChangedEvent, isRegister);
+        //LogicManager.Instance.RegisterLockOnTargetChangedCallback(vm.OnResponseLockOnTargetChangedEvent, isRegister);
+
+        EventManager<PlayerMVVM>.Binding<Transform>(isRegister, PlayerMVVM.ChangedLockOnTarget, vm.OnResponseLockOnTargetChangedEvent);
     }
 
     public static void RequestLockOnTarget(this PlayerViewModel vm, Transform target)
     {
-        LogicManager.instance.OnLockOnTarget(target);
+        //LogicManager.Instance.OnLockOnTarget(target);
+
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedLockOnTarget);
     }
 
     public static void OnResponseLockOnTargetChangedEvent(this PlayerViewModel vm, Transform tartget)
@@ -131,12 +164,16 @@ public static class PlayerViewModelExtension
     #region Assassinated
     public static void ReigsterAssassinatedTypeChanged(this PlayerViewModel vm, bool isRegister)
     {
-        LogicManager.instance.RegisterAssassinatedChangedCallback(vm.OnResponseAssassinatedTypeChangedEvent, isRegister);
+        //LogicManager.Instance.RegisterAssassinatedChangedCallback(vm.OnResponseAssassinatedTypeChangedEvent, isRegister);
+
+        EventManager<PlayerMVVM>.Binding<MonsterView>(isRegister, PlayerMVVM.ChangedAssassinatedTarget, vm.OnResponseAssassinatedTypeChangedEvent);
     }
 
     public static void RequestAssassinatedType(this PlayerViewModel vm, MonsterView monster)
     {
-        LogicManager.instance.OnAssassinated(monster);
+        //LogicManager.Instance.OnAssassinated(monster);
+
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedAssassinatedTarget);
     }
 
     public static void OnResponseAssassinatedTypeChangedEvent(this PlayerViewModel vm, MonsterView monster)

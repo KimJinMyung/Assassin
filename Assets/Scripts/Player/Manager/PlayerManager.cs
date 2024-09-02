@@ -3,23 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : Singleton<PlayerManager>
 {
-    public static PlayerManager instance;
-
     Action<float> HPChangedEvnetHandler;
     Action<float> MaxHPChangedEventHandler;
     Action<float> StaminaUpdateEvnetHandler;
     Action<float> MaxStaminaChangedEventHandler;
     Action<float> LifeCountUpdateEventHandler;
-
-    private void Awake()
-    {
-        if (instance == null) instance = this;
-        else if (instance != this) Destroy(this.gameObject);
-
-        DontDestroyOnLoad(gameObject);
-    }
 
     public void BindHPChanged(Action<float> HPChanged, bool isBind)
     {
