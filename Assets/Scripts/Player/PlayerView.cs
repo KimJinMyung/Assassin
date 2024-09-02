@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Collections;
 using UnityEngine;
 using EventEnum;
 
@@ -23,6 +24,8 @@ namespace Player
         private bool isDie;
         public bool isSubded { get; private set; }
 
+        private Coroutine staminaRecoveryCoroutine;
+
         private void Awake()
         {
             animator = GetComponent<Animator>();
@@ -38,6 +41,12 @@ namespace Player
         {
             RemoveViewModel();
             RemoveEvent();
+        }
+
+        private void OnEnable()
+        {
+            vm.RequestPlayerHPChanged(vm.MaxHP);
+            vm.RequestPlayerStaminaChanged(vm.MaxStamina);
         }
 
         private void AddViewModel()
@@ -77,11 +86,15 @@ namespace Player
         private void AddEvent()
         {
             EventManager<DataEvent>.Binding<PlayerData>(true, DataEvent.LoadPlayerData, ReadPlayerData);
+            EventManager<PlayerAction>.Binding(true, PlayerAction.RecoveryStamina, RecoveryPlayerStamina);
+            EventManager<PlayerAction>.Binding(true, PlayerAction.StopRecoveryStamina, StopRecoveryPlayerStamina);
         }
 
         private void RemoveEvent()
         {
             EventManager<DataEvent>.Binding<PlayerData>(false, DataEvent.LoadPlayerData, ReadPlayerData);
+            EventManager<PlayerAction>.Binding(false, PlayerAction.RecoveryStamina, RecoveryPlayerStamina);
+            EventManager<PlayerAction>.Binding(false, PlayerAction.StopRecoveryStamina, StopRecoveryPlayerStamina);
         }
 
         private void ReadPlayerData(PlayerData data)
@@ -199,6 +212,13 @@ namespace Player
             //    knockbackTime = Mathf.Clamp(knockbackTime - Time.deltaTime, 0, knockbackTime);
             //    NockBacking();
             //}
+
+            // 테스트 용
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                vm.RequestPlayerHPChanged(vm.HP - 10);
+                vm.RequestPlayerStaminaChanged(vm.Stamina - 10);
+            }
         }
 
         private void NockBacking()
@@ -230,6 +250,27 @@ namespace Player
             animator.SetFloat("Hurt_x", attackDir.x);
             animator.SetBool("Defense", false);
             animator.SetTrigger("Hurt");
+        }
+
+        private void RecoveryPlayerStamina()
+        {
+            StartCoroutine(ChargeStamina());
+        }
+
+        private void StopRecoveryPlayerStamina()
+        {
+            StopCoroutine(ChargeStamina());
+        }
+
+        IEnumerator ChargeStamina()
+        {
+            while(vm.Stamina < vm.MaxStamina)
+            {
+                vm.RequestPlayerStaminaChanged(vm.Stamina + 10 * Time.deltaTime);
+                yield return new WaitForSeconds(1f);
+            }
+
+            staminaRecoveryCoroutine = null;
         }
     }
 }

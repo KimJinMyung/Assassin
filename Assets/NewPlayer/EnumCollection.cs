@@ -4,6 +4,10 @@ namespace EventEnum
     {
         Jump,
         ChangedSpeed,
+        RecoveryStamina,
+        StopRecoveryStamina,
+        IsNotMoveAble,
+        SetAttackAble,
     }
     public enum PlayerMVVM
     {

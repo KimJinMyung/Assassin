@@ -36,6 +36,8 @@ namespace Player
         public bool isJumping { get; private set; }
         public bool isGround { get; private set; }
 
+        private bool isNotMove;
+
         //юс╫ц©К 
         private Transform target;
 
@@ -58,6 +60,7 @@ namespace Player
 
             MoveSpeed = WalkSpeed;
             isJumping = false;
+            isNotMove = false;
         }
 
         private void Update()
@@ -78,12 +81,14 @@ namespace Player
         {
             EventManager<PlayerAction>.Binding(true, PlayerAction.Jump, Jump);
             EventManager<PlayerAction>.Binding<float, float>(true, PlayerAction.ChangedSpeed, SetMovementSpeed);
+            EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.IsNotMoveAble, SetMovementAble);
         }
 
         private void RemoveEvent()
         {
             EventManager<PlayerAction>.Binding(false, PlayerAction.Jump, Jump);
             EventManager<PlayerAction>.Binding<float, float>(false, PlayerAction.ChangedSpeed, SetMovementSpeed);
+            EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.IsNotMoveAble, SetMovementAble);
         }
 
         private void SetMovementSpeed(float walkSpeed, float runSpeed)
@@ -121,6 +126,8 @@ namespace Player
 
         private void Movement()
         {
+            if (isNotMove) return;
+
             var moveDIr = new Vector3(movement.x, 0, movement.y).normalized;
 
             if (moveDIr.magnitude >= 0.1f)
@@ -221,6 +228,11 @@ namespace Player
             {
                 animator.SetTrigger("Land");
             }
+        }
+
+        private void SetMovementAble(bool isNotMoveAble)
+        {
+            isNotMove = isNotMoveAble;
         }
     }
 }

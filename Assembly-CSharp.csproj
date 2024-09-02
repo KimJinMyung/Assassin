@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{FCAF9891-BE80-D41A-5026-AE49274615AF}</ProjectGuid>
+    <ProjectGuid>{054D9129-5B67-CD6A-568D-AA77DA650217}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -223,6 +223,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\CharacterController\SetRadius.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector3\GetForwardVector.cs" />
     <Compile Include="Assets\MonBT\NormalMonster\Parried\Parried_Conditional.cs" />
+    <Compile Include="Assets\NewPlayer\PlayerAttack.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Variables\SharedGameObject.cs" />
     <Compile Include="Assets\Scripts\Player\Manager\PlayerManager.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animator\GetBoolParameter.cs" />
@@ -300,6 +301,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\WakeUp.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\GameObject\GetComponent.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Input\GetMousePosition.cs" />
+    <Compile Include="Assets\PlayerLand.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector3\GetVector2.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Variables\SharedVector2.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\GameObject\SetActive.cs" />
@@ -1045,18 +1047,6 @@
     </Reference>
     <Reference Include="BehaviorDesigner.Runtime">
       <HintPath>Assets\Behavior Designer\Runtime\BehaviorDesigner.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Android.Types">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.35f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Android.Gradle">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.35f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Gradle.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Android.GradleProject">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.35f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.GradleProject.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="netstandard">
