@@ -50,6 +50,7 @@ namespace Player
                 vm.RegisterPlayerMaxHPChanged(true);
                 vm.RegisterPlayerStaminaChanged(true);
                 vm.RegisterPlayerMaxStaminaChanged(true);
+                vm.RegisterPlayerLifeCountChanged(true);
                 vm.RegisterPlayerAttackDamageChanged(true);
                 vm.RegisterLockOnTargetChanged(true);
                 vm.ReigsterAssassinatedTypeChanged(true);
@@ -63,6 +64,7 @@ namespace Player
                 vm.ReigsterAssassinatedTypeChanged(false);
                 vm.RegisterLockOnTargetChanged(false);
                 vm.RegisterPlayerAttackDamageChanged(false);
+                vm.RegisterPlayerLifeCountChanged(false);
                 vm.RegisterPlayerMaxStaminaChanged(false);
                 vm.RegisterPlayerStaminaChanged(false);
                 vm.RegisterPlayerMaxHPChanged(false);
@@ -87,10 +89,11 @@ namespace Player
             if (data == null) return;
 
             playerData = data.Clone();
-            vm.RequestPlayerHPChanged(playerData.HP);
-            vm.RequestPlayerStaminaChanged(playerData.Stamina);
             vm.RequestPlayerMaxHPChanged(playerData.MaxHP);
+            vm.RequestPlayerHPChanged(playerData.HP);
             vm.RequestPlayerMaxStaminaChanged(playerData.MaxStamina);
+            vm.RequestPlayerStaminaChanged(playerData.Stamina);
+            vm.RequestPlayerLifeCountChanged(playerData.Life);
             vm.RequestPlayerAttackDamageChanged(playerData.ATK);
 
             EventManager<PlayerAction>.TriggerEvent(PlayerAction.ChangedSpeed, playerData.WalkSpeed, playerData.RunSpeed);

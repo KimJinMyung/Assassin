@@ -19,6 +19,7 @@ public static class PlayerViewModelExtension
         //PlayerManager.Instance.SetPlayerHP(hp);
 
         EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedHP, hp);
+        EventManager <PlayerUI>.TriggerEvent(PlayerUI.ChangedHP, hp);
     }
     public static void OnResponsePlayerHPChangedEvent(this PlayerViewModel vm, float HP) 
     {
@@ -38,7 +39,8 @@ public static class PlayerViewModelExtension
         //LogicManager.Instance.OnPlayerMaxHPChanged(hp);
         //PlayerManager.Instance.SetPlayerMaxHP(hp);
 
-        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedMaxHP);
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedMaxHP, hp);
+        EventManager<PlayerUI>.TriggerEvent(PlayerUI.ChangedMaxHP, hp);
     }
     public static void OnResponsePlayerMaxHPChangedEvent(this PlayerViewModel vm, float MaxHP)
     {
@@ -58,7 +60,8 @@ public static class PlayerViewModelExtension
         //LogicManager.Instance.OnPlayerStaminaChanged(stamina);
         //PlayerManager.Instance.SetStamina(stamina);
 
-        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedStamina);
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedStamina, stamina);
+        EventManager<PlayerUI>.TriggerEvent(PlayerUI.ChangedStamina, stamina);
     }
     public static void OnResponsePlayerStaminaChangedEvent(this PlayerViewModel vm, float stamina)
     {
@@ -78,11 +81,34 @@ public static class PlayerViewModelExtension
         //LogicManager.Instance.OnPlayerMaxStaminaChanged(stamina);
         //PlayerManager.Instance.SetMaxStamina(stamina);
 
-        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedMaxStamina);
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedMaxStamina, stamina);
+        EventManager<PlayerUI>.TriggerEvent(PlayerUI.ChangedMaxStamina, stamina);
     }
     public static void OnResponsePlayerMaxStaminaChangedEvent(this PlayerViewModel vm, float maxStamina)
     {
         vm.MaxHP = maxStamina;
+    }
+    #endregion
+    #region LifeCount
+    public static void RegisterPlayerLifeCountChanged(this PlayerViewModel vm, bool isRegister)
+    {
+        //LogicManager.Instance.RegisterPlayerMaxStaminaChangedCallback(vm.OnResponsePlayerMaxStaminaChangedEvent, isRegister);
+        //PlayerManager.Instance.BindStaminaChanged(vm.OnResponsePlayerMaxStaminaChangedEvent, isRegister);
+
+        EventManager<PlayerMVVM>.Binding<float>(isRegister, PlayerMVVM.ChangedLifeCount, vm.OnRegisterPlayerLifeCountChanged);
+    }
+    public static void RequestPlayerLifeCountChanged(this PlayerViewModel vm, float lifeCount)
+    {
+        //LogicManager.Instance.OnPlayerMaxStaminaChanged(stamina);
+        //PlayerManager.Instance.SetMaxStamina(stamina);
+
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedLifeCount, lifeCount);
+        EventManager<PlayerUI>.TriggerEvent(PlayerUI.ChangedLifeCount, lifeCount);
+    }
+    public static void OnRegisterPlayerLifeCountChanged(this PlayerViewModel vm, float lifeCount)
+    {
+        vm.LifeCount = lifeCount;
+        EventManager<PlayerUI>.TriggerEvent(PlayerUI.ChangedLifeCount, vm.LifeCount);
     }
     #endregion
     #region AttackDamage
@@ -96,7 +122,7 @@ public static class PlayerViewModelExtension
     {
         //LogicManager.Instance.OnPlayerAttackDamageChanged(atk);
 
-        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedATK);
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedATK, atk);
     }
     public static void OnResponsePlayerAttackDamageChangedEvent(this PlayerViewModel vm, float atk)
     {
@@ -114,7 +140,7 @@ public static class PlayerViewModelExtension
     {
         //LogicManager.Instance.OnMoveInput(x, y);
 
-        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedMoveDir);
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedMoveDir, x, y);
     }
 
     public static void OnResponseMoveVelocityChangedEvent(this PlayerViewModel vm, float contextValueX, float contextValueY)
@@ -133,7 +159,7 @@ public static class PlayerViewModelExtension
     {
         //LogicManager.Instance.OnActorRotate(x, y, z);
 
-        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedRotate);
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedRotate, x, y, z);
     }
 
     public static void OnResponseActorRotateChangedEvent(this PlayerViewModel vm, float contextValueX, float contextValueY, float contextValueZ)
@@ -153,7 +179,7 @@ public static class PlayerViewModelExtension
     {
         //LogicManager.Instance.OnLockOnTarget(target);
 
-        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedLockOnTarget);
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedLockOnTarget, target);
     }
 
     public static void OnResponseLockOnTargetChangedEvent(this PlayerViewModel vm, Transform tartget)
@@ -173,7 +199,7 @@ public static class PlayerViewModelExtension
     {
         //LogicManager.Instance.OnAssassinated(monster);
 
-        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedAssassinatedTarget);
+        EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.ChangedAssassinatedTarget, monster);
     }
 
     public static void OnResponseAssassinatedTypeChangedEvent(this PlayerViewModel vm, MonsterView monster)

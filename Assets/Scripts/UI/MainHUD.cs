@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class MainHUD : MonoBehaviour
 {
-
     [SerializeField] private Image HP_Bar;
     [SerializeField] private StaminaBar StaminaBar;
     [SerializeField] private Transform playerLife;
