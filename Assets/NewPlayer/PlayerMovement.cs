@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using EventEnum;
+using UnityEngine.XR;
 
 namespace Player
 {
@@ -31,12 +32,15 @@ namespace Player
         private Vector3 dir;
         private float MoveSpeed;
 
+        private Vector3 CameraDistance;
+
         public bool isRun { get; private set; }
         public bool isLockOn { get; private set; }
         public bool isJumping { get; private set; }
         public bool isGround { get; private set; }
 
         private bool isNotMove;
+        private bool isAttacking;
 
         //юс╫ц©К 
         private Transform target;
@@ -46,6 +50,8 @@ namespace Player
             rb = GetComponentInChildren<Rigidbody>();
             animator = GetComponentInChildren<Animator>();
             AddEvent();
+
+            CameraDistance = CameraArm.position - mesh.transform.position;
         }
 
         private void OnDestroy()
@@ -61,6 +67,7 @@ namespace Player
             MoveSpeed = WalkSpeed;
             isJumping = false;
             isNotMove = false;
+            isAttacking = false;
         }
 
         private void Update()
@@ -82,6 +89,8 @@ namespace Player
             EventManager<PlayerAction>.Binding(true, PlayerAction.Jump, Jump);
             EventManager<PlayerAction>.Binding<float, float>(true, PlayerAction.ChangedSpeed, SetMovementSpeed);
             EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.IsNotMoveAble, SetMovementAble);
+            EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.IsAttacking, SetIsAttacking);
+            EventManager<CameraPosEvent>.Binding(true, CameraPosEvent.UpdateCameraPosition, CameraFollowCharacterMesh);
         }
 
         private void RemoveEvent()
@@ -89,6 +98,8 @@ namespace Player
             EventManager<PlayerAction>.Binding(false, PlayerAction.Jump, Jump);
             EventManager<PlayerAction>.Binding<float, float>(false, PlayerAction.ChangedSpeed, SetMovementSpeed);
             EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.IsNotMoveAble, SetMovementAble);
+            EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.IsAttacking, SetIsAttacking);
+            EventManager<CameraPosEvent>.Binding(false, CameraPosEvent.UpdateCameraPosition, CameraFollowCharacterMesh);
         }
 
         private void SetMovementSpeed(float walkSpeed, float runSpeed)
@@ -126,7 +137,10 @@ namespace Player
 
         private void Movement()
         {
-            if (isNotMove) return;
+            if (isNotMove)
+            {
+                return;
+            }
 
             var moveDIr = new Vector3(movement.x, 0, movement.y).normalized;
 
@@ -134,8 +148,21 @@ namespace Player
             {
                 MoveAngle = Mathf.Atan2(moveDIr.x, moveDIr.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
                 dir = Quaternion.Euler(0, MoveAngle, 0) * Vector3.forward;
+
                 MoveSpeed = !isRun ? Mathf.Lerp(MoveSpeed, WalkSpeed, Time.deltaTime * 10f) : Mathf.Lerp(MoveSpeed, RunSpeed, Time.deltaTime * 10f);
-                var newPos = rb.position + dir.normalized * MoveSpeed * Time.fixedDeltaTime;
+                
+                float speed = 0;
+
+                if (isAttacking)
+                {
+                    speed = WalkSpeed;
+                }
+                else
+                {
+                    speed = MoveSpeed;
+                }
+
+                var newPos = rb.position + dir.normalized * speed * Time.fixedDeltaTime;
 
                 rb.MovePosition(newPos);
             }
@@ -234,5 +261,16 @@ namespace Player
         {
             isNotMove = isNotMoveAble;
         }
+
+        private void SetIsAttacking(bool isAttacking)
+        {
+            this.isAttacking = isAttacking;
+        }
+
+        private void CameraFollowCharacterMesh()
+        {
+            var targetPos = CameraDistance + mesh.transform.position;
+            CameraArm.position = Vector3.Lerp(CameraArm.position, targetPos, 5 * Time.deltaTime);
+        }        
     }
 }

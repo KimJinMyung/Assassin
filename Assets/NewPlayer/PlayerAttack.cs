@@ -10,8 +10,14 @@ namespace Player
         private bool isAttackAble;
         private bool isBattleMode;
 
+        private Animator animator;
+
+        private readonly int hashAttack = Animator.StringToHash("Attack");
+
         private void Awake()
         {
+            animator = GetComponentInChildren<Animator>();
+
             AddEvent();
         }
 
@@ -30,9 +36,25 @@ namespace Player
             EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.SetAttackAble, SetAttackAble);
         }
 
+        private void OnEnable()
+        {
+            isAttackAble = true;
+            isBattleMode = false;
+        }
+
         private void SetAttackAble(bool isAttackAble)
         {
             this.isAttackAble = isAttackAble;
+        }
+
+        public void OnAttack()
+        {
+            if (!isAttackAble) return;
+
+            if(!isBattleMode) 
+                isBattleMode = true;
+
+            animator.SetTrigger(hashAttack);
         }
     }
 }

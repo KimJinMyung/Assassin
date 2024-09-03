@@ -8,7 +8,9 @@ namespace EventEnum
         StopRecoveryStamina,
         IsNotMoveAble,
         SetAttackAble,
+        IsAttacking,
     }
+
     public enum PlayerMVVM
     {
         ChangedHP,
@@ -35,5 +37,10 @@ namespace EventEnum
     public enum DataEvent
     {        
         LoadPlayerData,
+    }
+
+    public enum CameraPosEvent
+    {
+        UpdateCameraPosition,
     }
 }

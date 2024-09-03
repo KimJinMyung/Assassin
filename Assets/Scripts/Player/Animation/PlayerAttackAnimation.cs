@@ -1,29 +1,51 @@
+using EventEnum;
 using UnityEngine;
 
 public class PlayerAttackAnimation : StateMachineBehaviour
 {
     private int _attackCount = 0;
+
+    private readonly int hashAttack = Animator.StringToHash("Attack");
+    private readonly int hashAttackIndex = Animator.StringToHash("AttackIndex");
+
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        _attackCount = animator.GetInteger("AttackIndex");
+        _attackCount = animator.GetInteger(hashAttackIndex);
         _attackCount = (_attackCount + 1) % 4;
+
+        animator.SetInteger(hashAttackIndex, _attackCount);
+        EventManager<PlayerAction>.TriggerEvent(PlayerAction.SetAttackAble, false);
+
+        EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, true);
+
         animator.applyRootMotion = true;
-        animator.SetInteger("AttackIndex", _attackCount);
-        animator.SetBool("AttackAble", false);
+        //animator.SetBool("AttackAble", false);
+    }
+
+    public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        EventManager<CameraPosEvent>.TriggerEvent(CameraPosEvent.UpdateCameraPosition);
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.ResetTrigger("Attack");
-        animator.SetBool("isMoveAble", true);
+        animator.ResetTrigger(hashAttack);
+        //animator.SetBool("isMoveAble", true);
+        EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, false);
     }
 
     public override void OnStateMachineExit(Animator animator, int stateMachinePathHash)
     {
         _attackCount = 0;
-        animator.SetInteger("AttackIndex", 0);
-        animator.ResetTrigger("Attack");
-        animator.SetBool("AttackAble", true);
-        animator.applyRootMotion =false;
+        animator.SetInteger(hashAttackIndex, 0);
+        animator.ResetTrigger(hashAttack);
+        //animator.SetBool("AttackAble", true);
+
+        Debug.Log("¹þ¾î³²");
+
+        EventManager<PlayerAction>.TriggerEvent(PlayerAction.SetAttackAble, true);
+        EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, false);
+
+        animator.applyRootMotion = false;
     }
 }

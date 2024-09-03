@@ -764,6 +764,7 @@ GameObject:
   - component: {fileID: 1118200479}
   - component: {fileID: 1118200481}
   - component: {fileID: 1118200480}
+  - component: {fileID: 1118200482}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -853,7 +854,19 @@ MonoBehaviour:
     m_ActionId: 3f3ee4d3-17ed-4336-a700-8f94b68b38fc
     m_ActionName: Player/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1118200482}
+        m_TargetAssemblyTypeName: Player.PlayerAttack, Assembly-CSharp
+        m_MethodName: OnAttack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 06cf37cc-3b15-41a3-8fab-02cf55cd0510
     m_ActionName: Player/Attack[/Mouse/leftButton]
   - m_PersistentCalls:
@@ -932,6 +945,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &1118200482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118200477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b090a5801b271a4db2899cd9f537c45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1127226335
 GameObject:
   m_ObjectHideFlags: 0
