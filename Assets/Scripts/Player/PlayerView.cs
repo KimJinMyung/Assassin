@@ -21,6 +21,8 @@ namespace Player
         private float defaultSubdedTime;
 
         public bool isKnockback;
+        private bool isDefense;
+        private bool isParring;
         private bool isDie;
         public bool isSubded { get; private set; }
 
@@ -88,6 +90,8 @@ namespace Player
             EventManager<DataEvent>.Binding<PlayerData>(true, DataEvent.LoadPlayerData, ReadPlayerData);
             EventManager<PlayerAction>.Binding(true, PlayerAction.RecoveryStamina, RecoveryPlayerStamina);
             EventManager<PlayerAction>.Binding(true, PlayerAction.StopRecoveryStamina, StopRecoveryPlayerStamina);
+            EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.Parring, SetParring);
+            EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.IsDefense, SetIsDefense);
         }
 
         private void RemoveEvent()
@@ -95,6 +99,8 @@ namespace Player
             EventManager<DataEvent>.Binding<PlayerData>(false, DataEvent.LoadPlayerData, ReadPlayerData);
             EventManager<PlayerAction>.Binding(false, PlayerAction.RecoveryStamina, RecoveryPlayerStamina);
             EventManager<PlayerAction>.Binding(false, PlayerAction.StopRecoveryStamina, StopRecoveryPlayerStamina);
+            EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.Parring, SetParring);
+            EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.IsDefense, SetIsDefense);
         }
 
         private void ReadPlayerData(PlayerData data)
@@ -144,11 +150,10 @@ namespace Player
                     attackerPosition = attacker.transform.position;
                 }
 
-                if (animator.GetBool("Parring"))
+                if (isParring)
                 {
                     if (attacker.vm.CurrentAttackMethod.AttackType != "Long")
                     {
-                        Debug.Log("ÆÐ¸µÁß...");
                         attacker.Parried(this);
                         return;
                     }
@@ -271,6 +276,20 @@ namespace Player
             }
 
             staminaRecoveryCoroutine = null;
+        }
+
+        private void SetParring(bool isParring)
+        {
+            if (this.isParring == isParring) return;
+            
+            this.isParring = isParring;
+        }
+
+        private void SetIsDefense(bool isDefense)
+        {
+            if (this.isDefense == isDefense) return;
+
+            this.isDefense = isDefense;
         }
     }
 }

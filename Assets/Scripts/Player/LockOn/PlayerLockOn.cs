@@ -31,13 +31,22 @@ public class PlayerLockOn : MonoBehaviour
     private Animator animator;
     private Transform _lockOnAbleObject;
 
+    private readonly int hashLockOn = Animator.StringToHash("LockOn");
+
     private void Awake()
     {
         owner = GetComponent<PlayerView>();
         animator = GetComponent<Animator>();
+
+        AddEvent();
     }
 
-    private void OnEnable()
+    private void OnDestroy()
+    {
+        RemoveEvent();
+    }
+
+    private void AddEvent()
     {
         if (_viewModel == null)
         {
@@ -49,7 +58,7 @@ public class PlayerLockOn : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    private void RemoveEvent()
     {
         if (_viewModel != null)
         {
@@ -69,7 +78,7 @@ public class PlayerLockOn : MonoBehaviour
                 break;
             case nameof(_viewModel.LockOnTarget):
                 isLockOnMode = (_viewModel.LockOnTarget != null);
-                animator.SetBool("LockOn", isLockOnMode);
+                animator.SetBool(hashLockOn, isLockOnMode);
                 break;
         }
     }

@@ -9,6 +9,9 @@ namespace EventEnum
         IsNotMoveAble,
         SetAttackAble,
         IsAttacking,
+        IsDefense,
+        ParryAble,
+        Parring,
     }
 
     public enum PlayerMVVM
@@ -42,5 +45,17 @@ namespace EventEnum
     public enum CameraPosEvent
     {
         UpdateCameraPosition,
+    }
+
+    public enum AttackBoxEvent
+    {
+        IsDefense,
+    }
+
+    public enum LockOnEvent
+    {
+        UpdateLockOnTargetList,
+        UpdateLockOnAbleTarget,
+        UpdateLockOnTarget,
     }
 }

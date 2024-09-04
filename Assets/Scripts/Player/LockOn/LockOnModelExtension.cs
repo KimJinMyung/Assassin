@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Player;
+using EventEnum;
 
 public static class LockOnModelExtension
 {
@@ -13,12 +14,15 @@ public static class LockOnModelExtension
     #region LockOnTargetList
     public static void RegisterLockOnTargetListChanged(this LockOnViewModel model, bool isRegister)
     {
-        LogicManager.Instance.RegisterLockOnTargetListChangedCallback(model.OnResponseLockOnTargetListChangedEvent, isRegister);
+        //LogicManager.Instance.RegisterLockOnTargetListChangedCallback(model.OnResponseLockOnTargetListChangedEvent, isRegister);
+        EventManager<LockOnEvent>.Binding<List<Transform>>(isRegister, LockOnEvent.UpdateLockOnTargetList, model.OnResponseLockOnTargetListChangedEvent);
     }
 
-    public static void RequestLockOnTargetList(this LockOnViewModel model, List<Transform> tartgetlists)
+    public static void RequestLockOnTargetList(this LockOnViewModel model, List<Transform> targetLists)
     {
-        LogicManager.Instance.OnLockOnTargetList(tartgetlists);
+        //LogicManager.Instance.OnLockOnTargetList(targetLists);
+        var targetList = new List<Transform>(targetLists);
+        EventManager<LockOnEvent>.TriggerEvent(LockOnEvent.UpdateLockOnTargetList, targetList);
     }
 
     public static void OnResponseLockOnTargetListChangedEvent(this LockOnViewModel model, List<Transform> tartgetlists)
@@ -54,19 +58,22 @@ public static class LockOnModelExtension
         }
 
         model.HitColliders = newColliders;
-        MonsterManager.instance.LockOnAbleMonsterListChanged(newColliders);
+        if(newColliders != null)
+            MonsterManager.instance.LockOnAbleMonsterListChanged(newColliders);
     }
     #endregion
 
     #region LockOnAbleTarget
     public static void RegisterLockOnAbleTargetChanged(this LockOnViewModel model, bool isRegister)
     {
-        LogicManager.Instance.RegisterLockOnAbleTargetChangedCallback(model.OnResponseLockOnAbleTargetChangedEvent, isRegister);
+        //LogicManager.Instance.RegisterLockOnAbleTargetChangedCallback(model.OnResponseLockOnAbleTargetChangedEvent, isRegister);
+        EventManager<LockOnEvent>.Binding<Transform>(isRegister, LockOnEvent.UpdateLockOnAbleTarget, model.OnResponseLockOnAbleTargetChangedEvent);
     }
 
     public static void RequestLockOnAbleTarget(this LockOnViewModel model, Transform target)
     {
-        LogicManager.Instance.OnLockOnAbleTarget(target);
+        //LogicManager.Instance.OnLockOnAbleTarget(target);
+        EventManager<LockOnEvent>.TriggerEvent(LockOnEvent.UpdateLockOnAbleTarget, target);
     }
 
     public static void OnResponseLockOnAbleTargetChangedEvent(this LockOnViewModel model, Transform target)
@@ -121,12 +128,14 @@ public static class LockOnModelExtension
     #region LockOnTarget
     public static void RegisterLockOnViewModel_TargetChanged(this LockOnViewModel model, bool isRegister)
     {
-        LogicManager.Instance.RegisterLockOnViewModel_TargetChangedCallback(model.OnResponseLockOnTargetChangedEvent, isRegister);
+        //LogicManager.Instance.RegisterLockOnViewModel_TargetChangedCallback(model.OnResponseLockOnTargetChangedEvent, isRegister);
+        EventManager<LockOnEvent>.Binding<Transform, PlayerView>(isRegister,LockOnEvent.UpdateLockOnTarget, model.OnResponseLockOnTargetChangedEvent);
     }
 
     public static void RequestLockOnViewModel_Target(this LockOnViewModel model, Transform target, PlayerView player)
     {
-        LogicManager.Instance.OnLockOnTarget_LockOnViewModel(target, player);
+        //LogicManager.Instance.OnLockOnTarget_LockOnViewModel(target, player);
+        EventManager<LockOnEvent>.TriggerEvent(LockOnEvent.UpdateLockOnTarget, target, player);
     }
 
     public static void OnResponseLockOnTargetChangedEvent(this LockOnViewModel model, Transform target, PlayerView player)

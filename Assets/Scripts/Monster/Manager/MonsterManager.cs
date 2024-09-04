@@ -6,7 +6,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem.iOS;
 
-public class MonsterManager : MonoBehaviour
+public class MonsterManager : Singleton<MonsterManager>
 {
     public static MonsterManager instance;
 
@@ -25,13 +25,6 @@ public class MonsterManager : MonoBehaviour
     Dictionary<int, Action<float>> _staminaChangedCallback = new Dictionary<int, Action<float>>();
     Dictionary<int, Action<float>> _maxStaminaChangedCallback = new Dictionary<int, Action<float>>();
     Dictionary<int, Action<float>> _LifeCountChangedCallback = new Dictionary<int, Action<float>>();
-
-    private void Awake()
-    {
-        if (instance == null) instance = this;
-        else if (instance != this) Destroy(this.gameObject);
-        DontDestroyOnLoad(gameObject);        
-    }
 
     public void SetHUD(MonsterUI uI)
     {
