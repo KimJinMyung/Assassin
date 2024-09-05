@@ -24,7 +24,7 @@ public class PlayerAttackAnimation : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        EventManager<CameraPosEvent>.TriggerEvent(CameraPosEvent.UpdateCameraPosition);
+        EventManager<CameraEvent>.TriggerEvent(CameraEvent.UpdateCameraPosition);
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

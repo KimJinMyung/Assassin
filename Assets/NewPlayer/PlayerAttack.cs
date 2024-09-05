@@ -8,10 +8,16 @@ namespace Player
 {
     public class PlayerAttack : MonoBehaviour
     {
+        [SerializeField] private Transform shakeCamera;
+
+        private bool isShakeRotate;
         private bool isAttackAble;
         private bool isBattleMode;
         private bool isDefense;
         private bool isParryAble;
+
+        private Vector3 originPos;
+        private Quaternion originRotation;
 
         private Animator animator;
 
@@ -36,12 +42,14 @@ namespace Player
         {
             EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.SetAttackAble, SetAttackAble);
             EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.ParryAble, SetParring);
+            EventManager<CameraEvent>.Binding(true, CameraEvent.PlayerAttackSuccess, ShakeCamera);
         }
 
         private void RemoveEvent()
         {
             EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.SetAttackAble, SetAttackAble);
             EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.ParryAble, SetParring);
+            EventManager<CameraEvent>.Binding(true, CameraEvent.PlayerAttackSuccess, ShakeCamera);
         }
 
         private void OnEnable()
@@ -50,6 +58,7 @@ namespace Player
             isBattleMode = false;
             isDefense = false;
             isParryAble = false;
+            isShakeRotate = false;
         }
 
         private void SetAttackAble(bool isAttackAble)
@@ -71,8 +80,10 @@ namespace Player
                 if (!isBattleMode)
                     isBattleMode = true;
 
-                if(!isDefense)
+                if (!isDefense)
+                {
                     animator.SetTrigger(hashAttack);
+                }                    
                 else if(!isParryAble)
                     animator.SetTrigger(hashParry);
             }
@@ -90,6 +101,41 @@ namespace Player
 
             EventManager<AttackBoxEvent>.TriggerEvent(AttackBoxEvent.IsDefense, isDefense);
             EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsDefense, isDefense);
+        }
+
+        private void ShakeCamera()
+        {
+            originPos = shakeCamera.transform.localPosition;
+            originRotation = shakeCamera.transform.localRotation;
+
+            StartCoroutine(ShakingCamera());
+        }
+
+        IEnumerator ShakingCamera(float duration = 0.05f,
+                                    float magnitudePos = 0.09f,
+                                    float magnitudeRot = 0.1f)
+        {
+            float passTime = 0f;
+
+            while(passTime < duration)
+            {
+                Vector3 shakePos = Random.insideUnitSphere;
+                shakeCamera.localPosition += shakePos * magnitudePos;
+
+                //if(isShakeRotate)
+                //{
+                //    Vector3 shakeRot = new Vector3(0, 0, Mathf.PerlinNoise(Time.time * magnitudeRot, 0.0f));
+                    
+                //    shakeCamera.localRotation = Quaternion.Euler(shakeRot);
+                //}
+
+                passTime += Time.deltaTime;
+
+                yield return null;  
+            }
+
+            shakeCamera.localPosition = originPos;
+            shakeCamera.localRotation = originRotation;
         }
     }
 }

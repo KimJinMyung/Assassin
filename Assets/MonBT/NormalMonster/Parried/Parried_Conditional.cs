@@ -25,8 +25,8 @@ public class Parried_Conditional : Conditional
 
     public override void OnStart()
     {
-        animator.ResetTrigger(hashJump);
-        animator.ResetTrigger(hashAttack);
+        //animator.ResetTrigger(hashJump);
+        //animator.ResetTrigger(hashAttack);
     }
 
     public override TaskStatus OnUpdate()

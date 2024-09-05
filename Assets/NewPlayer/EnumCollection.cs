@@ -12,6 +12,8 @@ namespace EventEnum
         IsDefense,
         ParryAble,
         Parring,
+        IsLockOn,
+        ChangedLockOnTarget,
     }
 
     public enum PlayerMVVM
@@ -42,9 +44,10 @@ namespace EventEnum
         LoadPlayerData,
     }
 
-    public enum CameraPosEvent
+    public enum CameraEvent
     {
         UpdateCameraPosition,
+        PlayerAttackSuccess,
     }
 
     public enum AttackBoxEvent
@@ -52,10 +55,9 @@ namespace EventEnum
         IsDefense,
     }
 
-    public enum LockOnEvent
+    public enum MonsterEvent
     {
-        UpdateLockOnTargetList,
-        UpdateLockOnAbleTarget,
-        UpdateLockOnTarget,
+        SpawnMonster,
+        ChangedLockOnAbleMonsterList,
     }
 }

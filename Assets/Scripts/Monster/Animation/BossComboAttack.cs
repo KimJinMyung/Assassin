@@ -6,7 +6,7 @@ using UnityEngine.InputSystem.iOS;
 public class BossComboAttack : StateMachineBehaviour
 {
     private MonsterView monsterView;
-    private AttackBox attackBox;
+    private Monster.AttackBox_Monster attackBox;
 
     [Serializable]
     public class AttackBoxTime

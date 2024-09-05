@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using UnityEditor;
 using UnityEngine;
 
 public class MonsterDetectZone : MonoBehaviour

@@ -1,3 +1,4 @@
+using EventEnum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,13 +27,51 @@ public class MonsterManager : Singleton<MonsterManager>
     Dictionary<int, Action<float>> _maxStaminaChangedCallback = new Dictionary<int, Action<float>>();
     Dictionary<int, Action<float>> _LifeCountChangedCallback = new Dictionary<int, Action<float>>();
 
+    protected new void Awake()
+    {
+        base.Awake();
+
+        AddEvent();
+    }
+
+    private void OnDestroy()
+    {
+        RemoveEvent();
+    }
+
+    private void OnEnable()
+    {
+        _monsterLists.Clear();
+        _lockOnAbleMonsterList.Clear();
+        monsterAttackMethodsList.Clear();
+        _hpChangedCallback.Clear();
+        _maxHpChangedCallback.Clear();
+        _staminaChangedCallback.Clear();
+        _maxStaminaChangedCallback.Clear();
+        _LifeCountChangedCallback.Clear();
+
+        _attackingTimer = UnityEngine.Random.Range(2f, 4f);
+    }
+
+    private void AddEvent()
+    {
+        EventManager<MonsterEvent>.Binding<MonsterView>(true, MonsterEvent.SpawnMonster, SpawnMonster);
+        EventManager<MonsterEvent>.Binding<List<Transform>>(true, MonsterEvent.ChangedLockOnAbleMonsterList, LockOnAbleMonsterListChanged);
+    }
+
+    private void RemoveEvent()
+    {
+        EventManager<MonsterEvent>.Binding<MonsterView>(false, MonsterEvent.SpawnMonster, SpawnMonster);
+        EventManager<MonsterEvent>.Binding<List<Transform>>(false, MonsterEvent.ChangedLockOnAbleMonsterList, LockOnAbleMonsterListChanged);
+    }
+
     public void SetHUD(MonsterUI uI)
     {
         this._mainHud = uI;
     }
 
     #region MonsterList
-    public void SpawnMonster(MonsterView monster)
+    private void SpawnMonster(MonsterView monster)
     {
         if (_monsterLists.ContainsKey(monster.monsterId)) return;
 
@@ -47,7 +86,7 @@ public class MonsterManager : Singleton<MonsterManager>
         RegisterMonsgterAttackMethod(monster.monsterId, monster.Attack, true);
     }
 
-    public void LockOnAbleMonsterListChanged(List<Transform> monster)
+    private void LockOnAbleMonsterListChanged(List<Transform> monster)
     {
         if (_lockOnAbleMonsterList.Equals(monster)) return;
 
@@ -92,11 +131,6 @@ public class MonsterManager : Singleton<MonsterManager>
     public bool CheckMonsterList(MonsterView monster)
     {
         return _monsterLists.ContainsKey(monster.monsterId);
-    }
-
-    private void OnEnable()
-    {
-        _attackingTimer = UnityEngine.Random.Range(2f, 4f);
     }
 
     private void Update()
@@ -171,6 +205,58 @@ public class MonsterManager : Singleton<MonsterManager>
         }
 
         return monsterList.OrderByDescending(e => e.CombatMovementTimer).FirstOrDefault();
+    }
+    #endregion
+    #region MonsterAttackMethod
+    private Dictionary<int, Action<List<Monster_Attack>, MonsterView>> _monsterAttackMethodList = new Dictionary<int, Action<List<Monster_Attack>, MonsterView>>();
+
+    public void RegisterAttackMethodChangedCallback(int monsterId, Action<List<Monster_Attack>, MonsterView> AttackMethodChangedCallback, bool isRegister)
+    {
+        if (isRegister)
+        {
+            if (!_monsterAttackMethodList.ContainsKey(monsterId)) _monsterAttackMethodList.Add(monsterId, AttackMethodChangedCallback);
+            else _monsterAttackMethodList[monsterId] = AttackMethodChangedCallback;
+        }
+        else
+        {
+            if (_monsterAttackMethodList.ContainsKey(monsterId))
+            {
+                _monsterAttackMethodList[monsterId] -= AttackMethodChangedCallback;
+                if (_monsterAttackMethodList[monsterId] == null) _monsterAttackMethodList.Remove(monsterId);
+            }
+        }
+    }
+
+    public void OnAttackMethodChanged(int actorId, List<Monster_Attack> attackList, MonsterView owner)
+    {
+        if (_monsterAttackMethodList.ContainsKey(actorId)) _monsterAttackMethodList[actorId]?.Invoke(attackList, owner);
+    }
+    #endregion
+    #region MonsterTraceTarget
+    private Dictionary<int, Action<Transform>> _traceTargetChangedCallback = new Dictionary<int, Action<Transform>>();
+    public void RegisterTraceTargetChangedCallback(Action<Transform> TraceTargetChangedCallback, int actorId, bool isRegister)
+    {
+        if (isRegister)
+        {
+            if (isRegister)
+            {
+                if (_traceTargetChangedCallback.ContainsKey(actorId)) _traceTargetChangedCallback[actorId] = TraceTargetChangedCallback;
+                else _traceTargetChangedCallback.Add(actorId, TraceTargetChangedCallback);
+            }
+            else
+            {
+                if (_traceTargetChangedCallback.ContainsKey(actorId))
+                {
+                    _traceTargetChangedCallback[actorId] -= TraceTargetChangedCallback;
+                    if (_traceTargetChangedCallback[actorId] == null) _traceTargetChangedCallback.Remove(actorId);
+                }
+            }
+        }
+    }
+
+    public void OnTraceTarget(int actorId, Transform target)
+    {
+        if (_traceTargetChangedCallback.ContainsKey(actorId)) _traceTargetChangedCallback[actorId]?.Invoke(target);
     }
     #endregion
 

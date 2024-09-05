@@ -4,17 +4,19 @@ using UnityEngine;
 public class PlayerAttack_NextAttackAble : StateMachineBehaviour
 {
     private AttackBox attackBox;
+    //private bool IsAttackShaking;
 
     [SerializeField] 
     private float NextAttackAbleTime = 0.25f;
 
-    //public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    if (attackBox == null)
-    //    {
-    //        attackBox = animator.GetComponentInChildren<AttackBox>();
-    //    }
-    //}
+    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        //IsAttackShaking = false;
+        //if (attackBox == null)
+        //{
+        //    attackBox = animator.GetComponentInChildren<AttackBox>();
+        //}
+    }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -24,15 +26,17 @@ public class PlayerAttack_NextAttackAble : StateMachineBehaviour
         if (stateInfo.normalizedTime >= NextAttackAbleTime)
         {
             //attackBox.enabled = false;
-            Debug.Log("공격 가능");
+            //if (!IsAttackShaking)
+            //{
+            //    EventManager<CameraEvent>.TriggerEvent(CameraEvent.PlayerAttackSuccess);
+            //    IsAttackShaking = true;
+            //}
 
             EventManager<PlayerAction>.TriggerEvent(PlayerAction.SetAttackAble, true);
         }
         else
         {
             //attackBox.enabled = true;
-
-            Debug.Log("공격 불가능");
             EventManager<PlayerAction>.TriggerEvent(PlayerAction.SetAttackAble, false);
         }
     }

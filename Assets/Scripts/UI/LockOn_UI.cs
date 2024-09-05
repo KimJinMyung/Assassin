@@ -18,7 +18,8 @@ public class LockOn_UI : MonoBehaviour
 
     private void Update()
     {
-        foreach (var monster in MonsterManager.instance.LockOnAbleMonsterList)
+        var monsterList = new List<Transform>(MonsterManager.Instance.LockOnAbleMonsterList);
+        foreach (var monster in monsterList)
         {
             if (monster == null) continue;
 
@@ -43,7 +44,7 @@ public class LockOn_UI : MonoBehaviour
         List<Transform> removeList = new List<Transform>();
         foreach (var monster in monsterIcons)
         {
-            if (!MonsterManager.instance.LockOnAbleMonsterList.Contains(monster.Key))
+            if (!monsterList.Contains(monster.Key))
             {
                 removeList.Add(monster.Key);
                 monster.Value.enabled = false;

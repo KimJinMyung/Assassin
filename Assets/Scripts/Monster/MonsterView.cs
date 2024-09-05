@@ -6,6 +6,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using Player;
+using Monster;
+using EventEnum;
 
 public enum MonsterType
 {
@@ -56,7 +58,7 @@ public class MonsterView : MonoBehaviour
     public float MonsterHeight { get; private set; }
 
     #region attack
-    public AttackBox attackBox { get; private set; }
+    public Monster.AttackBox_Monster attackBox { get; private set; }
     public float CombatMovementTimer { get; private set; }
     public int AttackMethodCount { get; private set; }
     #endregion
@@ -86,6 +88,8 @@ public class MonsterView : MonoBehaviour
 
         Collider.enabled = true;
 
+        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.SpawnMonster, this);
+
         if (vm == null)
         {
             vm = new MonsterViewModel();
@@ -104,7 +108,7 @@ public class MonsterView : MonoBehaviour
 
         if (animator.layerCount > 1) animator.SetLayerWeight(1, 1);
 
-        MonsterManager.instance.SpawnMonster(this);
+        //MonsterManager.instance.SpawnMonster(this);
 
         //µð¹ö±ë ¿ë
         //vm.TraceTarget = GameObject.FindWithTag("Player").transform;
@@ -196,7 +200,7 @@ public class MonsterView : MonoBehaviour
             if (AttackMethodName == CurrentWeaponsType)
             {
                 weapon.weaponMesh.SetActive(true);
-                attackBox = weapon.weaponMesh.GetComponentInChildren<AttackBox>();
+                attackBox = weapon.weaponMesh.GetComponentInChildren<Monster.AttackBox_Monster>();
                 attackBox.enabled = false;
                 currentWeaponMesh = weapon.weaponMesh;                
                 continue;

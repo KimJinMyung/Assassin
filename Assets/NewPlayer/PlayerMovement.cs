@@ -90,7 +90,9 @@ namespace Player
             EventManager<PlayerAction>.Binding<float, float>(true, PlayerAction.ChangedSpeed, SetMovementSpeed);
             EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.IsNotMoveAble, SetMovementAble);
             EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.IsAttacking, SetIsAttacking);
-            EventManager<CameraPosEvent>.Binding(true, CameraPosEvent.UpdateCameraPosition, CameraFollowCharacterMesh);
+            EventManager<CameraEvent>.Binding(true, CameraEvent.UpdateCameraPosition, CameraFollowCharacterMesh);
+            EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.IsLockOn, SetLockOnMode);
+            EventManager<PlayerAction>.Binding<Transform>(true, PlayerAction.ChangedLockOnTarget, SetLockOnTarget);
         }
 
         private void RemoveEvent()
@@ -99,7 +101,9 @@ namespace Player
             EventManager<PlayerAction>.Binding<float, float>(false, PlayerAction.ChangedSpeed, SetMovementSpeed);
             EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.IsNotMoveAble, SetMovementAble);
             EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.IsAttacking, SetIsAttacking);
-            EventManager<CameraPosEvent>.Binding(false, CameraPosEvent.UpdateCameraPosition, CameraFollowCharacterMesh);
+            EventManager<CameraEvent>.Binding(false, CameraEvent.UpdateCameraPosition, CameraFollowCharacterMesh);
+            EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.IsLockOn, SetLockOnMode);
+            EventManager<PlayerAction>.Binding<Transform>(false, PlayerAction.ChangedLockOnTarget, SetLockOnTarget);
         }
 
         private void SetMovementSpeed(float walkSpeed, float runSpeed)
@@ -265,6 +269,16 @@ namespace Player
         private void SetIsAttacking(bool isAttacking)
         {
             this.isAttacking = isAttacking;
+        }
+
+        private void SetLockOnMode(bool isLockOn)
+        {
+            this.isLockOn = isLockOn;
+        }
+
+        private void SetLockOnTarget(Transform target)
+        {
+            this.target = target;
         }
 
         private void CameraFollowCharacterMesh()

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Player;
+using EventEnum;
 
 public class PlayerLockOn : MonoBehaviour
 {
@@ -78,6 +79,9 @@ public class PlayerLockOn : MonoBehaviour
                 break;
             case nameof(_viewModel.LockOnTarget):
                 isLockOnMode = (_viewModel.LockOnTarget != null);
+                EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsLockOn, isLockOnMode);
+                if(isLockOnMode)
+                    EventManager<PlayerAction>.TriggerEvent(PlayerAction.ChangedLockOnTarget, _viewModel.LockOnTarget);
                 animator.SetBool(hashLockOn, isLockOnMode);
                 break;
         }

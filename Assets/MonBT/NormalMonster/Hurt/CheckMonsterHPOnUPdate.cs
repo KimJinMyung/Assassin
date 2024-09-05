@@ -29,8 +29,8 @@ public class CheckMonsterHPOnUPdate : Action
 
     public override void OnStart()
     {
-        animator.ResetTrigger(hashNextAction);
-        animator.ResetTrigger(hashAttack);
+        //animator.ResetTrigger(hashNextAction);
+        //animator.ResetTrigger(hashAttack);
     }
 
     public override TaskStatus OnUpdate()

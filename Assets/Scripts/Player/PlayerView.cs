@@ -142,7 +142,7 @@ namespace Player
             if (isDie || animator.GetBool("Assassinated")) return;
 
             //방어 성공
-            if (IsDefenceSuccess(attacker.transform.position))
+            if (isDefense && IsDefenceSuccess(attacker.transform.position))
             {
                 if (attacker.Type == MonsterType.Boss)
                 {

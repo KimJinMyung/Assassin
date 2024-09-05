@@ -8,7 +8,7 @@ using UnityEngine;
 public class Hurt_Conditional : Conditional
 {
     private MonsterView monsterView;
-    private AttackBox _attackBox;
+    private Monster.AttackBox_Monster _attackBox;
 
     [SerializeField] SharedBool isHurt;
     [SerializeField] SharedBool isDead;

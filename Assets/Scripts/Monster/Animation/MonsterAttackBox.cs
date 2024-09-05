@@ -7,9 +7,9 @@ using UnityEngine;
 
 public class MonsterAttackBox : StateMachineBehaviour
 {
-    private MonsterView monsterVIew;
+    private MonsterView MonsterView;
     private BehaviorTree tree;
-    private AttackBox attackBox;
+    private Monster.AttackBox_Monster attackBox;
 
     private Monster_Attack monsterAttack;
 
@@ -26,13 +26,13 @@ public class MonsterAttackBox : StateMachineBehaviour
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        monsterVIew = animator.GetComponent<MonsterView>();
-        tree = monsterVIew._behaviorTree;
-        attackBox = monsterVIew.attackBox;
+        MonsterView = animator.GetComponent<MonsterView>();
+        tree = MonsterView._behaviorTree;
+        attackBox = MonsterView.attackBox;
 
-        monsterAttack = monsterVIew.vm.CurrentAttackMethod;
+        monsterAttack = MonsterView.vm.CurrentAttackMethod;
 
-        throwShurikenPoint = FindChildWithTag(monsterVIew.transform, "ThrowPoint");
+        throwShurikenPoint = FindChildWithTag(MonsterView.transform, "ThrowPoint");
 
         isAction = false;
     }
@@ -66,9 +66,9 @@ public class MonsterAttackBox : StateMachineBehaviour
             {
                 isAction = true;
                 Debug.Log("¼ö¸®°Ë ´øÁü");
-                Quaternion CreateDir = Quaternion.LookRotation(monsterVIew.vm.TraceTarget.position + Vector3.up - throwShurikenPoint.position);
+                Quaternion CreateDir = Quaternion.LookRotation(MonsterView.vm.TraceTarget.position + Vector3.up - throwShurikenPoint.position);
                 Shuriken shootShuriken = Instantiate(shuriken, throwShurikenPoint.position, CreateDir).GetComponent<Shuriken>();
-                shootShuriken.SetShooterData(monsterVIew);
+                shootShuriken.SetShooterData(MonsterView);
             }
         }
         else

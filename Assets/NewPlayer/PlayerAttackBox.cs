@@ -59,6 +59,7 @@ namespace Player
             if (HurtMonster.Contains(monsterView)) return;
 
             monsterView.Hurt(playerView, playerView.ViewModel.AttackDamage);
+            EventManager<CameraEvent>.TriggerEvent(CameraEvent.PlayerAttackSuccess);
 
             HurtMonster.Add(monsterView);
         }
