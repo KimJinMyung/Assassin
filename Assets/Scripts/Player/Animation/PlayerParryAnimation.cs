@@ -12,7 +12,7 @@ public class PlayerParryAnimation : StateMachineBehaviour
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, true);
-        EventManager<PlayerAction>.TriggerEvent(PlayerAction.ParryAble, false);
+        EventManager<PlayerAction>.TriggerEvent(PlayerAction.ParryAble_PlayerAttack, true);
         //animator.SetBool("ParryAble", false);
         //owner = animator.GetComponent<PlayerBattleManager>();
         //owner.isParried = true;
@@ -33,7 +33,7 @@ public class PlayerParryAnimation : StateMachineBehaviour
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, false);
-        EventManager<PlayerAction>.TriggerEvent(PlayerAction.ParryAble, true);
+        EventManager<PlayerAction>.TriggerEvent(PlayerAction.ParryAble_PlayerAttack, true);
         //owner.isParried = false;
     }
 }

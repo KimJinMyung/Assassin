@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class LockOn_UI : MonoBehaviour
 {
     [SerializeField] private GameObject _lockOnIconPrefab;
+    [SerializeField] private Transform _LockOnIconParent;
 
     private Canvas _thisCanvas;
 
@@ -28,7 +29,7 @@ public class LockOn_UI : MonoBehaviour
                 GameObject newIcon;
                 if (!ActivateInactiveChild(transform, out newIcon))
                 {
-                    newIcon = Instantiate(_lockOnIconPrefab);
+                    newIcon = Instantiate(_lockOnIconPrefab, _LockOnIconParent);
                 }
                 newIcon.gameObject.SetActive(true);
                 newIcon.transform.SetParent(_thisCanvas.transform);

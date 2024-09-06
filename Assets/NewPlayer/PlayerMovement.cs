@@ -72,6 +72,7 @@ namespace Player
 
         private void Update()
         {
+            LockOnLookAround();
             LookAround();
             Rotation();
         }
@@ -196,6 +197,15 @@ namespace Player
             }
         }
 
+        private void LockOnLookAround()
+        {
+            if (!isLockOn || target == null) return;
+
+            Vector3 dir = (target.position - CameraArm.position);
+            Quaternion targetRotation = Quaternion.LookRotation(new Vector3(dir.x, 0, dir.z));
+            CameraArm.rotation = Quaternion.Slerp(CameraArm.rotation, targetRotation, Time.deltaTime * 1f);
+        }
+
         private void LookAround()
         {
             Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
@@ -215,9 +225,9 @@ namespace Player
             if (isLockOn)
             {
                 // Lock On 모드일 때: 캐릭터가 항상 타겟을 향해 회전
-                Vector3 directionToTarget = (target.position - transform.position).normalized;
+                Vector3 directionToTarget = (target.position - mesh.transform.position).normalized;
                 Quaternion lookRotation = Quaternion.LookRotation(new Vector3(directionToTarget.x, 0, directionToTarget.z));
-                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);  // 부드럽게 회전
+                mesh.transform.rotation = Quaternion.Slerp(mesh.transform.rotation, lookRotation, Time.deltaTime * 10f);  // 부드럽게 회전
             }
             else
             {

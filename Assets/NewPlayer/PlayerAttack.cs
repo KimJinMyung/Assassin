@@ -1,6 +1,7 @@
 using EventEnum;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -41,14 +42,14 @@ namespace Player
         private void AddEvent()
         {
             EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.SetAttackAble, SetAttackAble);
-            EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.ParryAble, SetParring);
+            EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.ParryAble_PlayerAttack, SetParring);
             EventManager<CameraEvent>.Binding(true, CameraEvent.PlayerAttackSuccess, ShakeCamera);
         }
 
         private void RemoveEvent()
         {
             EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.SetAttackAble, SetAttackAble);
-            EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.ParryAble, SetParring);
+            EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.ParryAble_PlayerAttack, SetParring);
             EventManager<CameraEvent>.Binding(true, CameraEvent.PlayerAttackSuccess, ShakeCamera);
         }
 
@@ -57,8 +58,8 @@ namespace Player
             isAttackAble = true;
             isBattleMode = false;
             isDefense = false;
-            isParryAble = false;
             isShakeRotate = false;
+            isParryAble = true;
         }
 
         private void SetAttackAble(bool isAttackAble)
@@ -69,6 +70,7 @@ namespace Player
         private void SetParring(bool isParring) 
         {
             this.isParryAble = isParring;
+            EventManager<PlayerAction>.TriggerEvent(PlayerAction.ParryAble_PlayerView, this.isParryAble);
         }
 
         public void OnAttack(InputAction.CallbackContext context)
@@ -84,7 +86,7 @@ namespace Player
                 {
                     animator.SetTrigger(hashAttack);
                 }                    
-                else if(!isParryAble)
+                else if(isParryAble)
                     animator.SetTrigger(hashParry);
             }
         }

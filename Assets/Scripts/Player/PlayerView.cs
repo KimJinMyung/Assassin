@@ -23,6 +23,7 @@ namespace Player
         public bool isKnockback;
         private bool isDefense;
         private bool isParring;
+        private bool isParryAble;
         private bool isDie;
         public bool isSubded { get; private set; }
 
@@ -49,6 +50,8 @@ namespace Player
         {
             vm.RequestPlayerHPChanged(vm.MaxHP);
             vm.RequestPlayerStaminaChanged(vm.MaxStamina);
+
+            isParryAble = true;
         }
 
         private void AddViewModel()
@@ -91,6 +94,7 @@ namespace Player
             EventManager<PlayerAction>.Binding(true, PlayerAction.RecoveryStamina, RecoveryPlayerStamina);
             EventManager<PlayerAction>.Binding(true, PlayerAction.StopRecoveryStamina, StopRecoveryPlayerStamina);
             EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.Parring, SetParring);
+            EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.ParryAble_PlayerView, SetParryAble);
             EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.IsDefense, SetIsDefense);
         }
 
@@ -100,6 +104,7 @@ namespace Player
             EventManager<PlayerAction>.Binding(false, PlayerAction.RecoveryStamina, RecoveryPlayerStamina);
             EventManager<PlayerAction>.Binding(false, PlayerAction.StopRecoveryStamina, StopRecoveryPlayerStamina);
             EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.Parring, SetParring);
+            EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.ParryAble_PlayerView, SetParryAble);
             EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.IsDefense, SetIsDefense);
         }
 
@@ -161,7 +166,7 @@ namespace Player
                     return;
                 }
 
-                if (animator.GetBool("Defense") && animator.GetBool("ParryAble"))
+                if (animator.GetBool("Defense") && isParryAble)
                 {
                     //방어 성공
                     vm.RequestPlayerStaminaChanged(vm.Stamina - attacker._monsterData.Strength);
@@ -224,6 +229,8 @@ namespace Player
                 vm.RequestPlayerHPChanged(vm.HP - 10);
                 vm.RequestPlayerStaminaChanged(vm.Stamina - 10);
             }
+
+            Debug.Log(isParryAble);
         }
 
         private void NockBacking()
@@ -283,6 +290,14 @@ namespace Player
             if (this.isParring == isParring) return;
             
             this.isParring = isParring;
+            EventManager<PlayerAction>.TriggerEvent(PlayerAction.ParryAble_PlayerAttack, !isParring);
+        }
+
+        private void SetParryAble(bool isParryAble)
+        {
+            if (this.isParryAble == isParryAble) return;
+
+            this.isParryAble = isParryAble;
         }
 
         private void SetIsDefense(bool isDefense)

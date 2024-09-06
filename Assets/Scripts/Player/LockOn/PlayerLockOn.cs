@@ -104,7 +104,7 @@ public class PlayerLockOn : MonoBehaviour
 
         if (context.performed)
         {
-            if (_lockOnAbleObject.CompareTag("RopePoint")) return;
+            if (_lockOnAbleObject != null && _lockOnAbleObject.CompareTag("RopePoint")) return;
             if (isLockOnMode && _lockOnAbleObject == _viewModel.LockOnTarget)
             {
                 _viewModel.RequestLockOnViewModel_Target(null, owner);

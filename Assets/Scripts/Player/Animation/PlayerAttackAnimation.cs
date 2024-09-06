@@ -41,8 +41,6 @@ public class PlayerAttackAnimation : StateMachineBehaviour
         animator.ResetTrigger(hashAttack);
         //animator.SetBool("AttackAble", true);
 
-        Debug.Log("¹þ¾î³²");
-
         EventManager<PlayerAction>.TriggerEvent(PlayerAction.SetAttackAble, true);
         EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, false);
 
