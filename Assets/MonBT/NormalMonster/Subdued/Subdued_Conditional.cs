@@ -1,5 +1,6 @@
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
+using Monster;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,7 @@ using UnityEngine;
 [TaskCategory("Subdued")]
 public class Subdued_Conditional : Conditional
 {
-    private AttackBox _attackBox;
+    private AttackBox_Monster _attackBox;
 
     [SerializeField] SharedBool isHurt;
     [SerializeField] SharedBool isDead;
@@ -17,7 +18,7 @@ public class Subdued_Conditional : Conditional
 
     public override void OnAwake()
     {
-        _attackBox = Owner.GetComponentInChildren<AttackBox>();
+        _attackBox = Owner.GetComponentInChildren<AttackBox_Monster>();
     }
 
     public override TaskStatus OnUpdate()

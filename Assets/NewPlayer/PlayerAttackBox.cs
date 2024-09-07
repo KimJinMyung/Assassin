@@ -10,6 +10,7 @@ namespace Player
     public class PlayerAttackBox : MonoBehaviour
     {
         [SerializeField] private LayerMask AttackTargetLayer;
+        private Collider AttackBox;
 
         private PlayerView playerView;
 
@@ -19,6 +20,7 @@ namespace Player
         private void Awake()
         {
             playerView = GetComponentInParent<PlayerView>();
+            AttackBox = GetComponent<Collider>();
 
             AddEvent();
         }
@@ -31,11 +33,13 @@ namespace Player
         private void AddEvent()
         {
             EventManager<AttackBoxEvent>.Binding<bool>(true, AttackBoxEvent.IsDefense, SetDefense);
+            EventManager<AttackBoxEvent>.Binding<bool>(true, AttackBoxEvent.IsAttacking, SetAttackBox);
         }
 
         private void RemoveEvent()
         {
             EventManager<AttackBoxEvent>.Binding<bool>(false, AttackBoxEvent.IsDefense, SetDefense);
+            EventManager<AttackBoxEvent>.Binding<bool>(false, AttackBoxEvent.IsAttacking, SetAttackBox);
         }
 
         private void OnEnable()
@@ -45,11 +49,12 @@ namespace Player
 
         private void Start()
         {
-            this.enabled = false;
+            AttackBox.enabled = false;
         }
 
         private void OnTriggerEnter(Collider other)
         {
+            if(other.CompareTag("RopePoint")) return;
             if (((1 << other.gameObject.layer) & AttackTargetLayer) != 0)
             {
                 // 디펜스 모드가 아니면
@@ -61,6 +66,7 @@ namespace Player
         private void Attack(Collider other)
         {
             var monsterView = other.GetComponent<MonsterView>();
+            if (monsterView != null) return;
             if (HurtMonster.Contains(monsterView)) return;
 
             monsterView.Hurt(playerView, playerView.ViewModel.AttackDamage);
@@ -73,6 +79,11 @@ namespace Player
         {
             if (this.isDefense == isDefense) return;
             this.isDefense = isDefense;
+        }
+
+        private void SetAttackBox(bool isAttack)
+        {
+            AttackBox.enabled = isAttack;
         }
     }
 }

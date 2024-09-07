@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerDefense : StateMachineBehaviour
+public class PlayerDefenseHit : StateMachineBehaviour
 {
     private int hashParrAble = Animator.StringToHash("ParryAble");
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

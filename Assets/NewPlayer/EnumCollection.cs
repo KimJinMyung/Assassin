@@ -15,6 +15,7 @@ namespace EventEnum
         Parring,
         IsLockOn,
         ChangedLockOnTarget,
+        Grappling
     }
 
     public enum GrapplingEvent
@@ -60,6 +61,7 @@ namespace EventEnum
     public enum AttackBoxEvent
     {
         IsDefense,
+        IsAttacking,
     }
 
     public enum MonsterEvent

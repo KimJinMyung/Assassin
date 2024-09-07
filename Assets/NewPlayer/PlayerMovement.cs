@@ -42,6 +42,7 @@ namespace Player
         private bool isNotMove;
         private bool isAttacking;
         private bool isLand;
+        private bool isGrapplingRotation;
 
         //임시용 
         private Transform target;
@@ -70,6 +71,7 @@ namespace Player
             isNotMove = false;
             isAttacking = false;
             isLand = false;
+            isGrapplingRotation = false;
         }
 
         private void Update()
@@ -96,6 +98,7 @@ namespace Player
             EventManager<CameraEvent>.Binding(true, CameraEvent.UpdateCameraPosition, CameraFollowCharacterMesh);
             EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.IsLockOn, SetLockOnMode);
             EventManager<PlayerAction>.Binding<Transform>(true, PlayerAction.ChangedLockOnTarget, SetLockOnTarget);
+            EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.Grappling, SetGrappling);
         }
 
         private void RemoveEvent()
@@ -107,6 +110,7 @@ namespace Player
             EventManager<CameraEvent>.Binding(false, CameraEvent.UpdateCameraPosition, CameraFollowCharacterMesh);
             EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.IsLockOn, SetLockOnMode);
             EventManager<PlayerAction>.Binding<Transform>(false, PlayerAction.ChangedLockOnTarget, SetLockOnTarget);
+            EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.Grappling, SetGrappling);
         }
 
         private void SetMovementSpeed(float walkSpeed, float runSpeed)
@@ -226,6 +230,7 @@ namespace Player
 
         private void Rotation()
         {
+            if (isGrapplingRotation) return;
             if (isLockOn)
             {
                 // Lock On 모드일 때: 캐릭터가 항상 타겟을 향해 회전
@@ -293,6 +298,11 @@ namespace Player
         private void SetLockOnTarget(Transform target)
         {
             this.target = target;
+        }
+
+        private void SetGrappling(bool grappling)
+        {
+            this.isGrapplingRotation = grappling;
         }
 
         private void CameraFollowCharacterMesh()

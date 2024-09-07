@@ -449,8 +449,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1105372797640569727}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.68813735, z: -0, w: 0.72558045}
-  m_LocalPosition: {x: 0.020379543, y: 1.6759981, z: -0.38446045}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.6759981, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2303,7 +2303,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4478290796495113240}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.68813735, z: -0, w: 0.72558045}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2317,7 +2317,7 @@ Transform:
   - {fileID: 6646921538260646724}
   - {fileID: 5978180375656078712}
   m_Father: {fileID: 7002623163729700435}
-  m_LocalEulerAnglesHint: {x: 0, y: 86.966, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1120149436911633119
 Animator:
   serializedVersion: 5
@@ -3834,6 +3834,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b090a5801b271a4db2899cd9f537c45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shakeCamera: {fileID: 0}
 --- !u!1 &8175321824206229840
 GameObject:
   m_ObjectHideFlags: 0

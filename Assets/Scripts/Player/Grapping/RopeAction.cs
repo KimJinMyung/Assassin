@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Player;
 using EventEnum;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class RopeAction : MonoBehaviour
 {
@@ -35,6 +36,9 @@ public class RopeAction : MonoBehaviour
     public bool IsGrappling { get; private set; }
     private bool IsRotation;
     private bool IsGrapplingMove;
+
+    private bool isRotating = false;  // 회전 중인지 여부를 체크하는 변수
+    private Quaternion targetRotation;
 
     int GrapplinglayerIndex = 0;
 
@@ -110,29 +114,41 @@ public class RopeAction : MonoBehaviour
     {
         IsRotation = true;
         EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, true);
+        EventManager<PlayerAction>.TriggerEvent(PlayerAction.Grappling, true);
 
-        // 반복적으로 플레이어가 목표 지점을 향해 회전
         while (true)
         {
             // GrapplingPoint까지의 방향 벡터 계산 (y축만 고려한 회전)
             Vector3 directionToGrapplingPoint = GrapplingPoint - playerMesh.transform.position;
             directionToGrapplingPoint.y = 0;  // y축 고정 (수평 회전만 고려)
 
-            // 현재 회전과 목표 회전의 각도 차이 계산
+            // 목표 회전 계산
             Quaternion targetRotation = Quaternion.LookRotation(directionToGrapplingPoint);
             float angleDifference = Quaternion.Angle(playerMesh.transform.rotation, targetRotation);
 
-            // 각도 차이가 충분히 작으면 회전 종료
-            if (angleDifference < 1f) // 1도 이하의 차이가 나면 회전 종료
+            Debug.Log($"Angle difference: {angleDifference}");
+
+            // 각도 차이가 1도 이하가 되면 회전 종료
+            if (angleDifference < 1f)
             {
                 break;
             }
 
-            // 현재 회전과 목표 회전 사이를 부드럽게 회전
-            playerMesh.transform.rotation = Quaternion.Slerp(
+            // 현재 회전 방향과 목표 방향의 내적 값 계산 (Dot product)
+            float dotProduct = Vector3.Dot(playerMesh.transform.forward, directionToGrapplingPoint.normalized);
+
+            // 만약 목표가 캐릭터의 뒤에 있다면 (Dot product가 0보다 작음)
+            if (dotProduct < 0 && angleDifference > 90f)
+            {
+                // 180도를 돌지 않도록 방향을 조절해 짧은 경로로 회전
+                targetRotation = Quaternion.LookRotation(-playerMesh.transform.forward);
+            }
+
+            // 현재 회전에서 목표 회전으로 회전하는데, 한 프레임에 최대 300도까지 회전
+            playerMesh.transform.rotation = Quaternion.RotateTowards(
                 playerMesh.transform.rotation,
                 targetRotation,
-                Time.deltaTime * 10f // 회전 속도 조절
+                Time.deltaTime * 300f  // 회전 속도 조절 (300도/초)
             );
 
             yield return null; // 한 프레임 대기
@@ -143,8 +159,11 @@ public class RopeAction : MonoBehaviour
         animator.SetBool(hashIsGrappling, true);
 
         IsRotation = false;
+        EventManager<PlayerAction>.TriggerEvent(PlayerAction.Grappling, false);
         yield break;
     }
+
+
 
 
     private bool GetRopePoint(out Vector3 targetPos)
@@ -169,7 +188,7 @@ public class RopeAction : MonoBehaviour
     {
         IsGrapplingMove = false;
 
-        animator.SetLayerWeight(GrapplinglayerIndex, 0);
+        //animator.SetLayerWeight(GrapplinglayerIndex, 0);
         animator.SetBool(hashIsGrappling, false);
 
         animator.applyRootMotion = false;
@@ -181,64 +200,64 @@ public class RopeAction : MonoBehaviour
         lr.enabled = false;
     }
 
-    private IEnumerator Grapping()
-    {
-        IsGrapplingMove = true;
+    //private IEnumerator Grapping()
+    //{
+    //    IsGrapplingMove = true;
 
-        Vector3 startPosition = transform.position;
-        float totalDistance = Vector3.Distance(startPosition, GrapplingPoint);
-        float initialY = transform.position.y;
+    //    Vector3 startPosition = transform.position;
+    //    float totalDistance = Vector3.Distance(startPosition, GrapplingPoint);
+    //    float initialY = transform.position.y;
 
-        while (true)
-        {
-            if (!IsGrappling)
-            {
-                StopGrapple();
-                Debug.Log("그래플링 정지");
-                yield break;
-            }
+    //    while (true)
+    //    {
+    //        if (!IsGrappling)
+    //        {
+    //            StopGrapple();
+    //            Debug.Log("그래플링 정지");
+    //            yield break;
+    //        }
 
-            yield return null;
+    //        yield return null;
 
-            // 라인 렌더러 위치 초기화
-            lr.SetPosition(0, LeftHand.position);
+    //        // 라인 렌더러 위치 초기화
+    //        lr.SetPosition(0, LeftHand.position);
 
-            // 목표 지점으로의 방향 벡터 계산 (수평 이동만 고려)
-            Vector3 direction = (GrapplingPoint - transform.position).normalized;
-            direction.y = 0; // 수평 방향만 계산
+    //        // 목표 지점으로의 방향 벡터 계산 (수평 이동만 고려)
+    //        Vector3 direction = (GrapplingPoint - transform.position).normalized;
+    //        direction.y = 0; // 수평 방향만 계산
 
-            // 목표 지점까지의 남은 거리 계산
-            float distanceToTarget = Vector3.Distance(transform.position, GrapplingPoint);
+    //        // 목표 지점까지의 남은 거리 계산
+    //        float distanceToTarget = Vector3.Distance(transform.position, GrapplingPoint);
 
-            // t 값 계산 (0에서 1 사이)
-            float t = 1 - Mathf.Clamp01(distanceToTarget / totalDistance);
+    //        // t 값 계산 (0에서 1 사이)
+    //        float t = 1 - Mathf.Clamp01(distanceToTarget / totalDistance);
 
-            // AnimationCurve에서 상대적 y축 높이 변화 값 얻기
-            float heightOffset = heightCurve.Evaluate(t);
+    //        // AnimationCurve에서 상대적 y축 높이 변화 값 얻기
+    //        float heightOffset = heightCurve.Evaluate(t);
 
-            // 속도 감소 계산 (AnimationCurve를 통해 t에 따른 속도 비율 계산)
-            float speedMultiplier = speedCurve.Evaluate(t);
-            float currentSpeed = grapplingSpeed * speedMultiplier;
+    //        // 속도 감소 계산 (AnimationCurve를 통해 t에 따른 속도 비율 계산)
+    //        float speedMultiplier = speedCurve.Evaluate(t);
+    //        float currentSpeed = grapplingSpeed * speedMultiplier;
 
-            // 수평 이동 벡터 계산
-            Vector3 moveHorizontal = direction * currentSpeed;
+    //        // 수평 이동 벡터 계산
+    //        Vector3 moveHorizontal = direction * currentSpeed;
 
-            // y축 위치 계산 (기본 y 이동 + 추가 y 이동)
-            float newYPosition = Mathf.Lerp(initialY, GrapplingPoint.y, t) + heightOffset;
+    //        // y축 위치 계산 (기본 y 이동 + 추가 y 이동)
+    //        float newYPosition = Mathf.Lerp(initialY, GrapplingPoint.y, t) + heightOffset;
 
-            // 최종 이동 벡터
-            Vector3 targetPosition = new Vector3(transform.position.x + moveHorizontal.x, newYPosition, transform.position.z + moveHorizontal.z);
+    //        // 최종 이동 벡터
+    //        Vector3 targetPosition = new Vector3(transform.position.x + moveHorizontal.x, newYPosition, transform.position.z + moveHorizontal.z);
 
-            // Rigidbody의 MovePosition으로 이동 (정확한 경로를 따름)
-            rigidbody.MovePosition(targetPosition);
+    //        // Rigidbody의 MovePosition으로 이동 (정확한 경로를 따름)
+    //        rigidbody.MovePosition(targetPosition);
 
-            // 목적지에 도착했거나, 매우 가까워지면 그래플링 종료
-            if (distanceToTarget <= stopDistance)
-            {
-                IsGrappling = false;
-            }
-        }
-    }
+    //        // 목적지에 도착했거나, 매우 가까워지면 그래플링 종료
+    //        if (distanceToTarget <= stopDistance)
+    //        {
+    //            IsGrappling = false;
+    //        }
+    //    }
+    //}
 
     private void StartGrappling()
     {
@@ -264,7 +283,7 @@ public class RopeAction : MonoBehaviour
 
             Vector3 currentPoint = Vector3.Lerp(LeftHand.position, GrapplingPoint, t);
 
-            if (t >= 1f || currentPoint == GrapplingPoint)
+            if (t >= 1f || Vector3.Distance(currentPoint, GrapplingPoint) <= 1f )
             {
                 t = 1f;
                 lr.SetPosition(1, GrapplingPoint);
@@ -287,4 +306,63 @@ public class RopeAction : MonoBehaviour
         EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, true);
         yield break;
     }
+    private IEnumerator Grapping()
+    {
+        IsGrapplingMove = true;
+
+        Vector3 startPosition = transform.position;
+        float totalDistance = Vector3.Distance(startPosition, GrapplingPoint);
+
+        float currentDistance = 0f; // 현재 이동한 거리
+        float initialY = transform.position.y;
+
+        while (true)
+        {
+            if (!IsGrappling)
+            {
+                StopGrapple();
+                Debug.Log("그래플링 정지");
+                yield break;
+            }
+
+            yield return null;
+
+            // 현재까지 이동한 거리 계산
+            currentDistance += grapplingSpeed * Time.deltaTime;
+
+            // 이동 비율 t 계산 (0에서 1 사이)
+            float t = Mathf.Clamp01(currentDistance / totalDistance);
+
+            // AnimationCurve에서 y축 높이 변화 값 얻기
+            float heightOffset = heightCurve.Evaluate(t);
+
+            // 목표 지점으로의 방향 벡터 계산
+            Vector3 direction = (GrapplingPoint - startPosition).normalized;
+
+            // 수평 이동 벡터 계산 (t에 따른 이동 비율)
+            Vector3 moveHorizontal = direction * grapplingSpeed * Time.deltaTime;
+
+            // y축 위치 계산 (기본 y 이동 + 추가 y 이동)
+            float newYPosition = Mathf.Lerp(initialY, GrapplingPoint.y, t) + heightOffset;
+
+            // 최종 이동 벡터 계산
+            Vector3 targetPosition = new Vector3(startPosition.x + direction.x * currentDistance, newYPosition, startPosition.z + direction.z * currentDistance);
+
+            // Rigidbody의 MovePosition으로 이동
+            rigidbody.MovePosition(targetPosition);
+
+            // 목표 지점에 도착하면 그래플링 종료
+            if (t >= 1f)
+            {
+                IsGrappling = false;
+                break;
+            }
+        }
+
+        // 애니메이션 종료 및 그래플링 관련 처리
+        IsGrapplingMove = false;
+        StopGrapple();
+    }
+
+
 }
