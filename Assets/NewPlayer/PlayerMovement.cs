@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using EventEnum;
-using UnityEngine.XR;
+using System.Collections;
 
 namespace Player
 {
@@ -41,6 +41,7 @@ namespace Player
 
         private bool isNotMove;
         private bool isAttacking;
+        private bool isLand;
 
         //юс╫ц©К 
         private Transform target;
@@ -68,6 +69,7 @@ namespace Player
             isJumping = false;
             isNotMove = false;
             isAttacking = false;
+            isLand = false;
         }
 
         private void Update()
@@ -155,7 +157,9 @@ namespace Player
                 dir = Quaternion.Euler(0, MoveAngle, 0) * Vector3.forward;
 
                 MoveSpeed = !isRun ? Mathf.Lerp(MoveSpeed, WalkSpeed, Time.deltaTime * 10f) : Mathf.Lerp(MoveSpeed, RunSpeed, Time.deltaTime * 10f);
-                
+
+                MoveSpeed = isLand? MoveSpeed * 0.5f : MoveSpeed;
+
                 float speed = 0;
 
                 if (isAttacking)
@@ -296,5 +300,14 @@ namespace Player
             var targetPos = CameraDistance + mesh.transform.position;
             CameraArm.position = Vector3.Lerp(CameraArm.position, targetPos, 5 * Time.deltaTime);
         }        
+
+        IEnumerator PlayerLandGround()
+        {
+            isLand = true;
+
+            yield return new WaitForSeconds(1.5f);
+
+            isLand = false;
+        }
     }
 }

@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{FCAF9891-BE80-D41A-5026-AE49274615AF}</ProjectGuid>
+    <ProjectGuid>{054D9129-5B67-CD6A-568D-AA77DA650217}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -105,6 +105,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\CapsuleCollider\GetCenter.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animator\WaitForState.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\AudioSource\Pause.cs" />
+    <Compile Include="Assets\GrapplingMove.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\SetSharedVector4.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Light\SetColor.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector3\GetUpVector.cs" />
@@ -424,6 +425,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animation\GetAnimatePhysics.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\CompareSharedTransform.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\Warp.cs" />
+    <Compile Include="Assets\PlayerShootGrapplingHook.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\PlayerPrefs\Save.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Behaviour\SetEnabled.cs" />
     <Compile Include="Assets\NewPlayer\PlayerAttackBox.cs" />
@@ -1050,18 +1052,6 @@
     </Reference>
     <Reference Include="BehaviorDesigner.Runtime">
       <HintPath>Assets\Behavior Designer\Runtime\BehaviorDesigner.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Android.Types">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.35f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Types.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Android.Gradle">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.35f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.Gradle.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Android.GradleProject">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.35f1\Editor\Data\PlaybackEngines\AndroidPlayer\Unity.Android.GradleProject.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="netstandard">

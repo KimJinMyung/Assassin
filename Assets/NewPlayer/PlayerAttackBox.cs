@@ -43,6 +43,11 @@ namespace Player
             HurtMonster.Clear();
         }
 
+        private void Start()
+        {
+            this.enabled = false;
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (((1 << other.gameObject.layer) & AttackTargetLayer) != 0)

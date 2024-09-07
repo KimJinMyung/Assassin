@@ -17,6 +17,12 @@ namespace EventEnum
         ChangedLockOnTarget,
     }
 
+    public enum GrapplingEvent
+    {
+        GrapplingPull,
+        GrapplingMove,       
+    }
+
     public enum PlayerMVVM
     {
         ChangedHP,

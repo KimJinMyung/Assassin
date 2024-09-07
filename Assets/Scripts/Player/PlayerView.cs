@@ -222,15 +222,6 @@ namespace Player
             //    knockbackTime = Mathf.Clamp(knockbackTime - Time.deltaTime, 0, knockbackTime);
             //    NockBacking();
             //}
-
-            // 테스트 용
-            if (Input.GetKeyDown(KeyCode.K))
-            {
-                vm.RequestPlayerHPChanged(vm.HP - 10);
-                vm.RequestPlayerStaminaChanged(vm.Stamina - 10);
-            }
-
-            Debug.Log(isParryAble);
         }
 
         private void NockBacking()
