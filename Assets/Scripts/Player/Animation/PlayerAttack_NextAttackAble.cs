@@ -1,9 +1,10 @@
 using EventEnum;
+using Player;
 using UnityEngine;
 
 public class PlayerAttack_NextAttackAble : StateMachineBehaviour
 {
-    private AttackBox attackBox;
+    private PlayerAttackBox attackBox;
     //private bool IsAttackShaking;
 
     [SerializeField] 

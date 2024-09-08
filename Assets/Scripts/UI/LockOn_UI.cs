@@ -1,26 +1,50 @@
+using EventEnum;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LockOn_UI : MonoBehaviour
 {
     [SerializeField] private GameObject _lockOnIconPrefab;
-    [SerializeField] private Transform _LockOnIconParent;
 
     private Canvas _thisCanvas;
+    private List<Transform> LockOnTargetList = new List<Transform>();
 
     private Dictionary<Transform, Image> monsterIcons = new Dictionary<Transform, Image>();
 
     private void Awake()
     {
         _thisCanvas = GetComponent<Canvas>();
+
+        AddEvent();
+    }
+
+    private void OnDestroy()
+    {
+        RemoveEvent();
+    }
+
+    private void AddEvent()
+    {
+        EventManager<MonsterEvent>.Binding<List<Transform>>(true, MonsterEvent.ChangedLockOnIconEnableList, ChangedLockOnIconEnableList);
+    }
+
+    private void RemoveEvent()
+    {
+        EventManager<MonsterEvent>.Binding<List<Transform>>(false, MonsterEvent.ChangedLockOnIconEnableList, ChangedLockOnIconEnableList);
+    }
+
+    private void ChangedLockOnIconEnableList(List<Transform> LockOnAbleMonsterList)
+    {
+        LockOnTargetList.Clear();
+        LockOnTargetList = new List<Transform>(LockOnAbleMonsterList);
     }
 
     private void Update()
     {
-        var monsterList = new List<Transform>(MonsterManager.Instance.LockOnAbleMonsterList);
-        foreach (var monster in monsterList)
+        foreach (var monster in LockOnTargetList)
         {
             if (monster == null) continue;
 
@@ -29,15 +53,15 @@ public class LockOn_UI : MonoBehaviour
                 GameObject newIcon;
                 if (!ActivateInactiveChild(transform, out newIcon))
                 {
-                    newIcon = Instantiate(_lockOnIconPrefab, _LockOnIconParent);
+                    newIcon = Instantiate(_lockOnIconPrefab, transform);
                 }
                 newIcon.gameObject.SetActive(true);
-                newIcon.transform.SetParent(_thisCanvas.transform);
+                //newIcon.transform.SetParent(_LockOnIconParent);
                 Image _lockOnIcon = newIcon.GetComponent<Image>();
                 monsterIcons.Add(monster, _lockOnIcon);
             }
 
-            MonsterLockOnUIPrint(monster, monsterIcons[monster]);
+            MonsterLockOnUIPrint(monster, monsterIcons[monster]);           
         }
 
         if (monsterIcons.Count <= 0) return;
@@ -45,7 +69,7 @@ public class LockOn_UI : MonoBehaviour
         List<Transform> removeList = new List<Transform>();
         foreach (var monster in monsterIcons)
         {
-            if (!monsterList.Contains(monster.Key))
+            if (!LockOnTargetList.Contains(monster.Key))
             {
                 removeList.Add(monster.Key);
                 monster.Value.enabled = false;
@@ -81,6 +105,8 @@ public class LockOn_UI : MonoBehaviour
         if (_target.CompareTag("RopePoint")) ScreenPosition = Camera.main.WorldToScreenPoint(_target.position);
         else ScreenPosition = Camera.main.WorldToScreenPoint(_target.position + Vector3.up);
 
+        Debug.Log($"{_target.name} Screen Position: " + ScreenPosition + ", Z: " + ScreenPosition.z);
+
         if (ScreenPosition.z > 0)
         {
             Vector2 canvasPosition;
@@ -92,6 +118,7 @@ public class LockOn_UI : MonoBehaviour
                 out canvasPosition);
 
             icon.rectTransform.anchoredPosition = canvasPosition;
+            Debug.Log($"{_target.name}" + canvasPosition);
             icon.enabled = true;
 
             IconColorChanged(_target.gameObject, icon);
@@ -99,7 +126,7 @@ public class LockOn_UI : MonoBehaviour
         else
         {
             icon.enabled = false;
-        }
+        }                
     }
 
     private void IconColorChanged(GameObject target, Image _lockOnIcon)

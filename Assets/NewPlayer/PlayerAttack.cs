@@ -1,15 +1,21 @@
 using EventEnum;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.UI.GridLayoutGroup;
 
 namespace Player 
 {
     public class PlayerAttack : MonoBehaviour
     {
         [SerializeField] private Transform shakeCamera;
+
+        [SerializeField] private LayerMask AttackTarget;
+        [SerializeField] private float assassinationDistanceForward;
+        [SerializeField] private float assassinationDistanceBack;
 
         private bool isShakeRotate;
         private bool isAttackAble;
@@ -19,17 +25,27 @@ namespace Player
 
         private Vector3 originPos;
         private Quaternion originRotation;
+        private Vector3 AssassinatedPos;
 
+        private PlayerView playerMesh;
         private Animator animator;
+        private PlayerLockOn playerSight;
+        private Rigidbody rigidbody;
 
         private readonly int hashAttack = Animator.StringToHash("Attack");
         private readonly int hashDefense = Animator.StringToHash("Defense");
         private readonly int hashDefenseStart = Animator.StringToHash("DefenseStart");
         private readonly int hashParry = Animator.StringToHash("Parry");
+        private readonly int hashFront = Animator.StringToHash("isForward");
+        private readonly int hashAssassinate = Animator.StringToHash("Assassinate");
+        private readonly int hashAssassinated = Animator.StringToHash("Assassinated");
 
         private void Awake()
         {
             animator = GetComponentInChildren<Animator>();
+            playerMesh = GetComponentInChildren<PlayerView>();
+            playerSight = GetComponentInChildren<PlayerLockOn>();
+            rigidbody = GetComponent<Rigidbody>();
 
             AddEvent();
         }
@@ -62,6 +78,17 @@ namespace Player
             isParryAble = true;
         }
 
+        private void FixedUpdate()
+        {
+            //if (isAssassinated)
+            //{
+            //    EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, true);
+            //    rigidbody.MovePosition(AssassinatedPos);
+            //    isAssassinated = false;
+            //    EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, false);
+            //}
+        }
+
         private void SetAttackAble(bool isAttackAble)
         {
             this.isAttackAble = isAttackAble;
@@ -84,11 +111,90 @@ namespace Player
 
                 if (!isDefense)
                 {
-                    animator.SetTrigger(hashAttack);
+                    SelectAttackAnimation();
+                    //animator.SetTrigger(hashAttack);
                 }                    
                 else if(isParryAble)
                     animator.SetTrigger(hashParry);
             }
+        }
+
+        private void SelectAttackAnimation()
+        {
+            Transform hit = GetAssassinatedTarget();
+            if (hit != null) 
+            { 
+                var target = hit.GetComponent<MonsterView>();
+                if(target != null)
+                {
+                    var IsFront = Vector3.Dot(target.transform.forward, playerMesh.transform.forward) < 0.5f;
+                    if (IsFront /*&& (bool)target._behaviorTree.GetVariable("isSubded").GetValue()*/)
+                    {                        
+                        AssassinatedPos = target.transform.position + target.transform.forward * assassinationDistanceForward;
+                        MovePlayerToPosition(AssassinatedPos);
+                        AssassinatedRotation(target.transform.position);
+
+                        animator.SetFloat(hashFront, 0);
+                        
+                        //몬스터 암살당하는 모션 전방
+                        target.animator.SetFloat("Forward", 0);
+                        target.vm.RequestTraceTargetChanged(target.monsterId, playerMesh.transform);
+
+                        playerMesh.ViewModel.RequestAssassinatedType(target);
+                        
+                        animator.SetTrigger(hashAssassinate);
+                        return;
+                    }
+                    else if(!IsFront)
+                    {
+                        AssassinatedPos = target.transform.position - target.transform.forward * assassinationDistanceBack;
+                        MovePlayerToPosition(AssassinatedPos);
+                        AssassinatedRotation(target.transform.position);
+
+                        animator.SetFloat(hashFront, 1);
+
+                        //몬스터 암살당하는 모션 후방
+                        target.animator.SetFloat("Forward", 1);
+                        target.vm.RequestTraceTargetChanged(target.monsterId, playerMesh.transform);
+
+                        playerMesh.ViewModel.RequestAssassinatedType(target);
+
+                        animator.SetTrigger(hashAssassinate);
+                        return;
+                    }
+
+                }               
+            }
+        }
+
+        private Transform GetAssassinatedTarget()
+        {
+            Collider[] hitColliders = Physics.OverlapSphere(playerMesh.transform.position + Vector3.up, 2f, AttackTarget);
+
+            Transform closestObject = null;
+            float closestDistance = Mathf.Infinity;
+
+            foreach (var hit in hitColliders)
+            {
+                var monster = hit.GetComponent<MonsterView>();
+                if (monster == null)  continue;
+
+                Vector3 directionToCollider = (hit.transform.position - playerMesh.transform.position).normalized;
+                float angle = Vector3.Angle(playerMesh.transform.forward, directionToCollider);
+
+                // 각도가 제한 내에 있는지 확인
+                if (angle <= 45)
+                {
+                    float distance = Vector3.Distance(playerMesh.transform.position, hit.transform.position);
+                    if (distance < closestDistance)
+                    {
+                        closestDistance = distance;
+                        closestObject = hit.transform;
+                    }
+                }
+            }
+
+            return closestObject;
         }
 
         public void OnDefense(InputAction.CallbackContext context)
@@ -138,6 +244,34 @@ namespace Player
 
             shakeCamera.localPosition = originPos;
             shakeCamera.localRotation = originRotation;
+        }
+
+        private void MovePlayerToPosition(Vector3 targetPosition)
+        {
+            rigidbody.MovePosition(targetPosition);
+        }
+
+        private void AssassinatedRotation(Vector3 targetPos)
+        {
+            EventManager<PlayerAction>.TriggerEvent(PlayerAction.StopRotation, true);
+            Vector3 direction = targetPos - playerMesh.transform.position;
+            direction.y = 0f;
+            playerMesh.transform.rotation = Quaternion.LookRotation(direction.normalized);
+        }
+
+        private void characterRotate(Vector3 targetPos)
+        {
+            //LockOnTarget을 지정하지 않았다면 LockOnAbleTarget을 바라보며 공격
+            bool condition1 = playerMesh.ViewModel.LockOnTarget == null;
+            //bool condition2 = ownerMovement.vm.Movement.magnitude < 0.1f;
+
+            if (condition1 /*&& condition2*/)
+            {
+                Vector3 dirTarget = targetPos - playerMesh.transform.position;
+                dirTarget.y = 0;
+                Quaternion rotation = Quaternion.LookRotation(dirTarget);
+                playerMesh.transform.rotation = Quaternion.Slerp(playerMesh.transform.rotation, Quaternion.Euler(0, rotation.eulerAngles.y, 0), 100f * Time.fixedDeltaTime);
+            }
         }
     }
 }

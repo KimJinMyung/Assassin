@@ -58,7 +58,8 @@ public static class LockOnModelExtension
         model.HitColliders = newColliders;
         if(newColliders.Count > 0)
         {
-            EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.ChangedLockOnAbleMonsterList, newColliders);
+            //EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.ChangedLockOnAbleMonsterList, newColliders);
+            MonsterManager.Instance.LockOnAbleMonsterListChanged(newColliders);
         }
     }
     #endregion

@@ -88,7 +88,7 @@ public class MonsterView : MonoBehaviour
 
         Collider.enabled = true;
 
-        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.SpawnMonster, this);
+        
 
         if (vm == null)
         {
@@ -102,6 +102,7 @@ public class MonsterView : MonoBehaviour
         }
 
         SetMonsterInfo(_type);
+        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.SpawnMonster, this);
         //_behaviorTree.SetVariableValue("isDead", false);
         //_behaviorTree.SetVariableValue("isAssassinated", false);
         //_behaviorTree.SetVariableValue("isDisable", false);
@@ -308,7 +309,7 @@ public class MonsterView : MonoBehaviour
         if (animator.layerCount > 1) animator.SetLayerWeight(1, 0);
 
         gameObject.layer = LayerMask.NameToLayer("Dead");
-        MonsterManager.instance.DeadMonster_Update(this);
+        MonsterManager.Instance.DeadMonster_Update(this);
     }
 
     public void BossMonsterDead()
@@ -431,4 +432,6 @@ public class MonsterView : MonoBehaviour
 
         return isRunning;
     }
+
+    
 }

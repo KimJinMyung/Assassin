@@ -114,7 +114,7 @@ public class RopeAction : MonoBehaviour
     {
         IsRotation = true;
         EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, true);
-        EventManager<PlayerAction>.TriggerEvent(PlayerAction.Grappling, true);
+        EventManager<PlayerAction>.TriggerEvent(PlayerAction.StopRotation, true);
 
         while (true)
         {
@@ -159,7 +159,7 @@ public class RopeAction : MonoBehaviour
         animator.SetBool(hashIsGrappling, true);
 
         IsRotation = false;
-        EventManager<PlayerAction>.TriggerEvent(PlayerAction.Grappling, false);
+        EventManager<PlayerAction>.TriggerEvent(PlayerAction.StopRotation, false);
         yield break;
     }
 
@@ -350,6 +350,8 @@ public class RopeAction : MonoBehaviour
 
             // Rigidbody의 MovePosition으로 이동
             rigidbody.MovePosition(targetPosition);
+
+            lr.SetPosition(0, LeftHand.position);
 
             // 목표 지점에 도착하면 그래플링 종료
             if (t >= 1f)

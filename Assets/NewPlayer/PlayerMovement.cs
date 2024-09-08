@@ -42,7 +42,7 @@ namespace Player
         private bool isNotMove;
         private bool isAttacking;
         private bool isLand;
-        private bool isGrapplingRotation;
+        private bool isStopRotation;
 
         //임시용 
         private Transform target;
@@ -71,7 +71,7 @@ namespace Player
             isNotMove = false;
             isAttacking = false;
             isLand = false;
-            isGrapplingRotation = false;
+            isStopRotation = false;
         }
 
         private void Update()
@@ -98,7 +98,7 @@ namespace Player
             EventManager<CameraEvent>.Binding(true, CameraEvent.UpdateCameraPosition, CameraFollowCharacterMesh);
             EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.IsLockOn, SetLockOnMode);
             EventManager<PlayerAction>.Binding<Transform>(true, PlayerAction.ChangedLockOnTarget, SetLockOnTarget);
-            EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.Grappling, SetGrappling);
+            EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.StopRotation, SetStopRotation);
         }
 
         private void RemoveEvent()
@@ -110,7 +110,7 @@ namespace Player
             EventManager<CameraEvent>.Binding(false, CameraEvent.UpdateCameraPosition, CameraFollowCharacterMesh);
             EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.IsLockOn, SetLockOnMode);
             EventManager<PlayerAction>.Binding<Transform>(false, PlayerAction.ChangedLockOnTarget, SetLockOnTarget);
-            EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.Grappling, SetGrappling);
+            EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.StopRotation, SetStopRotation);
         }
 
         private void SetMovementSpeed(float walkSpeed, float runSpeed)
@@ -131,7 +131,7 @@ namespace Player
 
         public void OnJump(InputAction.CallbackContext context)
         {
-            if (context.started && isGround)
+            if (context.started && isGround && !isJumping)
             {
                 isJumping = true;
                 animator.SetTrigger("isJumping");
@@ -230,7 +230,7 @@ namespace Player
 
         private void Rotation()
         {
-            if (isGrapplingRotation) return;
+            if (isStopRotation) return;
             if (isLockOn)
             {
                 // Lock On 모드일 때: 캐릭터가 항상 타겟을 향해 회전
@@ -300,9 +300,9 @@ namespace Player
             this.target = target;
         }
 
-        private void SetGrappling(bool grappling)
+        private void SetStopRotation(bool isStop)
         {
-            this.isGrapplingRotation = grappling;
+            this.isStopRotation = isStop;
         }
 
         private void CameraFollowCharacterMesh()

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Temp;
 using Player;
+using Monster;
 
 public class PlayerBattleManager : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class PlayerBattleManager : MonoBehaviour
 
     private PlayerLockOn playerSight;
 
-    private AttackBox attackBox;
+    private PlayerAttackBox attackBox;
     [SerializeField] private LayerMask AttackTarget;
     [SerializeField] private float assassinationDistanceForward;
     [SerializeField] private float assassinationDistanceBack;
@@ -38,7 +39,7 @@ public class PlayerBattleManager : MonoBehaviour
         animator = GetComponent<Animator>();
         playerSight = GetComponent<PlayerLockOn>();
 
-        attackBox = GetComponentInChildren<AttackBox>();
+        attackBox = GetComponentInChildren<PlayerAttackBox>();
     }
 
     private void Start()

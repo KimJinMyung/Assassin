@@ -2,15 +2,10 @@ using EventEnum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.InputSystem.iOS;
 
 public class MonsterManager : Singleton<MonsterManager>
 {
-    public static MonsterManager instance;
-
     private Dictionary<int, MonsterView> _monsterLists = new Dictionary<int, MonsterView>();
     private List<Transform> _lockOnAbleMonsterList = new List<Transform>();
     public List<Transform> LockOnAbleMonsterList { get { return _lockOnAbleMonsterList; } }
@@ -33,7 +28,7 @@ public class MonsterManager : Singleton<MonsterManager>
 
         AddEvent();
     }
-
+     
     private void OnDestroy()
     {
         RemoveEvent();
@@ -56,13 +51,13 @@ public class MonsterManager : Singleton<MonsterManager>
     private void AddEvent()
     {
         EventManager<MonsterEvent>.Binding<MonsterView>(true, MonsterEvent.SpawnMonster, SpawnMonster);
-        EventManager<MonsterEvent>.Binding<List<Transform>>(true, MonsterEvent.ChangedLockOnAbleMonsterList, LockOnAbleMonsterListChanged);
+        //EventManager<MonsterEvent>.Binding<List<Transform>>(true, MonsterEvent.ChangedLockOnAbleMonsterList, LockOnAbleMonsterListChanged);
     }
 
     private void RemoveEvent()
     {
         EventManager<MonsterEvent>.Binding<MonsterView>(false, MonsterEvent.SpawnMonster, SpawnMonster);
-        EventManager<MonsterEvent>.Binding<List<Transform>>(false, MonsterEvent.ChangedLockOnAbleMonsterList, LockOnAbleMonsterListChanged);
+        //EventManager<MonsterEvent>.Binding<List<Transform>>(false, MonsterEvent.ChangedLockOnAbleMonsterList, LockOnAbleMonsterListChanged);
     }
 
     public void SetHUD(MonsterUI uI)
@@ -86,11 +81,13 @@ public class MonsterManager : Singleton<MonsterManager>
         RegisterMonsgterAttackMethod(monster.monsterId, monster.Attack, true);
     }
 
-    private void LockOnAbleMonsterListChanged(List<Transform> monster)
+    public void LockOnAbleMonsterListChanged(List<Transform> monster)
     {
         if (_lockOnAbleMonsterList.Equals(monster)) return;
 
         _lockOnAbleMonsterList = monster;
+
+        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.ChangedLockOnIconEnableList, _lockOnAbleMonsterList);
     }
 
     public void DeadMonster_Update(MonsterView monster)

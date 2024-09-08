@@ -1,5 +1,6 @@
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
+using Monster;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -9,7 +10,7 @@ using UnityEngine;
 public class Parried_Conditional : Conditional
 {
     private Animator animator;
-    private AttackBox _attackBox;
+    private AttackBox_Monster _attackBox;
 
     [SerializeField] SharedBool isParried;
     [SerializeField] SharedBool isAssassinated;
@@ -20,7 +21,7 @@ public class Parried_Conditional : Conditional
     public override void OnAwake()
     {
         animator = Owner.GetComponent<Animator>();
-        _attackBox = Owner.GetComponentInChildren<AttackBox>();
+        _attackBox = Owner.GetComponentInChildren<AttackBox_Monster>();
     }
 
     public override void OnStart()

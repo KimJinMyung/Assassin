@@ -15,7 +15,7 @@ namespace EventEnum
         Parring,
         IsLockOn,
         ChangedLockOnTarget,
-        Grappling
+        StopRotation
     }
 
     public enum GrapplingEvent
@@ -68,5 +68,6 @@ namespace EventEnum
     {
         SpawnMonster,
         ChangedLockOnAbleMonsterList,
+        ChangedLockOnIconEnableList,
     }
 }

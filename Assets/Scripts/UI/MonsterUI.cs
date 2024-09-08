@@ -22,12 +22,12 @@ public class MonsterUI : MonoBehaviour
 
     private void Awake()
     {
-        _thisCanvase = GetComponent<Canvas>();
+        _thisCanvase = GetComponentInParent<Canvas>();
         HP_BackGround = BossMonster_HPBar.transform.parent.GetComponent<Image>();
         Stamina_Background = BossMonster_Stamina.GetComponent<Image>();
         Stamina_Left = BossMonster_Stamina.StaminaBarLeft;
         Stamina_Right = BossMonster_Stamina.StaminaBarRight;
-        MonsterManager.instance.SetHUD(this);
+        MonsterManager.Instance.SetHUD(this);
     }
 
     private void OnEnable()
