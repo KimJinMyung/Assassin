@@ -10,6 +10,11 @@ public class PlayerAttack_NextAttackAble : StateMachineBehaviour
     [SerializeField] 
     private float NextAttackAbleTime = 0.25f;
 
+    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        EventManager<AttackBoxEvent>.TriggerEvent(AttackBoxEvent.HitMonsterReset);
+    }
+
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         //animator.SetBool("isMoveAble", stateInfo.normalizedTime < 0.1f);

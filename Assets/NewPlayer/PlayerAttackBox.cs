@@ -34,17 +34,14 @@ namespace Player
         {
             EventManager<AttackBoxEvent>.Binding<bool>(true, AttackBoxEvent.IsDefense, SetDefense);
             EventManager<AttackBoxEvent>.Binding<bool>(true, AttackBoxEvent.IsAttacking, SetAttackBox);
+            EventManager<AttackBoxEvent>.Binding(true, AttackBoxEvent.HitMonsterReset, HitMonsterReset);
         }
 
         private void RemoveEvent()
         {
             EventManager<AttackBoxEvent>.Binding<bool>(false, AttackBoxEvent.IsDefense, SetDefense);
             EventManager<AttackBoxEvent>.Binding<bool>(false, AttackBoxEvent.IsAttacking, SetAttackBox);
-        }
-
-        private void OnEnable()
-        {
-            HurtMonster.Clear();
+            EventManager<AttackBoxEvent>.Binding(false, AttackBoxEvent.HitMonsterReset, HitMonsterReset);
         }
 
         private void Start()
@@ -66,10 +63,15 @@ namespace Player
         private void Attack(Collider other)
         {
             var monsterView = other.GetComponent<MonsterView>();
-            if (monsterView != null) return;
+            if (monsterView == null) return;
             if (HurtMonster.Contains(monsterView)) return;
 
             monsterView.Hurt(playerView, playerView.ViewModel.AttackDamage);
+            if(monsterView.vm.HP <= 0)
+            {
+                EventManager<PlayerAction>.TriggerEvent(PlayerAction.AttackLockOnEnable, monsterView);
+            }
+
             EventManager<CameraEvent>.TriggerEvent(CameraEvent.PlayerAttackSuccess);
 
             HurtMonster.Add(monsterView);
@@ -83,7 +85,14 @@ namespace Player
 
         private void SetAttackBox(bool isAttack)
         {
+            if (isAttack == AttackBox.enabled) return;
+
             AttackBox.enabled = isAttack;
+        }
+
+        private void HitMonsterReset()
+        {
+            HurtMonster.Clear();
         }
     }
 }

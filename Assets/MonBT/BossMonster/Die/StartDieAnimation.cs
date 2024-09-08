@@ -1,5 +1,6 @@
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
+using EventEnum;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,8 @@ public class StartDieAnimation : Action
     private MonsterView monsterView;
     private Animator animator;
 
+    private int instanceID;
+
     private bool isAction;
 
     private int hashDead = Animator.StringToHash("Dead");
@@ -26,12 +29,26 @@ public class StartDieAnimation : Action
     {
         monsterView = Owner.GetComponent<MonsterView>();
         animator = Owner.GetComponent<Animator>();
+
+        instanceID = monsterView.GetInstanceID();
     }
 
     public override TaskStatus OnUpdate()
     {
         if(!isDead.Value) return TaskStatus.Failure;
         if(isDone.Value) return TaskStatus.Failure;
+
+        var lifeCount = monsterView.vm.LifeCount - 1;
+        monsterView.vm.RequestMonsterLifeCountChanged(lifeCount, instanceID);
+
+        var IsDead = monsterView.vm.LifeCount <= 0;
+
+        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.IsDead, IsDead, instanceID);
+
+        if (IsDead)
+        {
+            monsterView.MonsterDead();
+        }
 
         if(!isAction)
         {

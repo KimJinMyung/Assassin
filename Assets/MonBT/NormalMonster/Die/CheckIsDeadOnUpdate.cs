@@ -1,5 +1,6 @@
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
+using EventEnum;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,24 +15,40 @@ public class CheckIsDeadOnUpdate : Action
     [SerializeField] SharedBool isDIsable;
     [SerializeField] SharedBool isAssassinated;
 
+    private int instanceID;
+
+    private bool isAction;
+
     private int hashDead = Animator.StringToHash("Dead");
     private int hashDie = Animator.StringToHash("Die");
     private int hashIncapacitated = Animator.StringToHash("Incapacitated");
     private int hashUpper = Animator.StringToHash("Upper");
     private int Assassinated = Animator.StringToHash("Assassinated");
 
-    private bool isAction;
-
     public override void OnAwake()
     {
         monsterView = Owner.GetComponent<MonsterView>();
         _animator = monsterView.GetComponent<Animator>();
+
+        instanceID = monsterView.GetInstanceID();
     }
 
     public override TaskStatus OnUpdate()
     {
         if (!isDead.Value) return TaskStatus.Failure;
         if(isDIsable.Value) return TaskStatus.Success;
+
+        var lifeCount = monsterView.vm.LifeCount - 1;
+        monsterView.vm.RequestMonsterLifeCountChanged(lifeCount, instanceID);
+
+        var IsDead = monsterView.vm.LifeCount <= 0;
+
+        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.IsDead, IsDead, instanceID);
+
+        if (IsDead)
+        {
+            monsterView.MonsterDead();
+        }
 
         //동작 실행
         if (!isAction)

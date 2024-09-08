@@ -1,3 +1,4 @@
+using EventEnum;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,6 @@ using UnityEngine.InputSystem.iOS;
 public class BossComboAttack : StateMachineBehaviour
 {
     private MonsterView monsterView;
-    private Monster.AttackBox_Monster attackBox;
 
     [Serializable]
     public class AttackBoxTime
@@ -21,7 +21,6 @@ public class BossComboAttack : StateMachineBehaviour
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         monsterView = animator.GetComponent<MonsterView>();
-        attackBox = monsterView.attackBox;
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -41,7 +40,7 @@ public class BossComboAttack : StateMachineBehaviour
             }
         }
 
-        attackBox.enabled = shouldEnableAttackBox;
+        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, GetInstanceID(), shouldEnableAttackBox);
     }
 
     private void Rotation()

@@ -22,6 +22,7 @@ namespace Player
         private bool isBattleMode;
         private bool isDefense;
         private bool isParryAble;
+        private bool isHealing;
 
         private Vector3 originPos;
         private Quaternion originRotation;
@@ -31,6 +32,8 @@ namespace Player
         private Animator animator;
         private PlayerLockOn playerSight;
         private Rigidbody rigidbody;
+
+        private Coroutine BattleModeCheck;
 
         private readonly int hashAttack = Animator.StringToHash("Attack");
         private readonly int hashDefense = Animator.StringToHash("Defense");
@@ -59,14 +62,18 @@ namespace Player
         {
             EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.SetAttackAble, SetAttackAble);
             EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.ParryAble_PlayerAttack, SetParring);
+            EventManager<PlayerAction>.Binding<MonsterView>(true, PlayerAction.AttackLockOnEnable, EnableLockOn);
             EventManager<CameraEvent>.Binding(true, CameraEvent.PlayerAttackSuccess, ShakeCamera);
+            EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.ChangedBattleMode, SetBattleMode);
         }
 
         private void RemoveEvent()
         {
             EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.SetAttackAble, SetAttackAble);
             EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.ParryAble_PlayerAttack, SetParring);
+            EventManager<PlayerAction>.Binding<MonsterView>(false, PlayerAction.AttackLockOnEnable, EnableLockOn);
             EventManager<CameraEvent>.Binding(true, CameraEvent.PlayerAttackSuccess, ShakeCamera);
+            EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.ChangedBattleMode, SetBattleMode);
         }
 
         private void OnEnable()
@@ -76,17 +83,56 @@ namespace Player
             isDefense = false;
             isShakeRotate = false;
             isParryAble = true;
+            isHealing = false;
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
-            //if (isAssassinated)
-            //{
-            //    EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, true);
-            //    rigidbody.MovePosition(AssassinatedPos);
-            //    isAssassinated = false;
-            //    EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, false);
-            //}
+            if(!isBattleMode && BattleModeCheck == null)
+            {
+                BattleModeCheck = StartCoroutine(CheckHealDelay(3f));
+            }else if(isBattleMode && BattleModeCheck != null)
+            {
+                StopCoroutine(BattleModeCheck);
+                BattleModeCheck = null;
+
+
+            }
+
+            if(isBattleMode &&  isHealing)
+            {
+                isHealing = false;
+                EventManager<PlayerAction>.TriggerEvent(PlayerAction.RecoveryHP, false);
+                EventManager<PlayerAction>.TriggerEvent(PlayerAction.StopRecoveryStamina);
+            }
+        }
+
+        private IEnumerator CheckHealDelay(float delay) 
+        {
+            float elapsedTime = 0f;
+
+            while (elapsedTime < delay)
+            {
+                if (isBattleMode)
+                {
+                    BattleModeCheck = null;
+                    yield break;
+                }
+
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            // 3초 동안 isBattleMode가 false일 때 Heal 실행
+            Heal();
+            BattleModeCheck = null;
+        }
+
+        private void Heal()
+        {
+            isHealing = true;
+            EventManager<PlayerAction>.TriggerEvent(PlayerAction.RecoveryHP, true);
+            EventManager<PlayerAction>.TriggerEvent(PlayerAction.RecoveryStamina);
         }
 
         private void SetAttackAble(bool isAttackAble)
@@ -98,6 +144,11 @@ namespace Player
         {
             this.isParryAble = isParring;
             EventManager<PlayerAction>.TriggerEvent(PlayerAction.ParryAble_PlayerView, this.isParryAble);
+        }
+
+        private void SetBattleMode(bool isBattleMode)
+        {
+            this.isBattleMode = isBattleMode;
         }
 
         public void OnAttack(InputAction.CallbackContext context)
@@ -128,7 +179,7 @@ namespace Player
                 if(target != null)
                 {
                     var IsFront = Vector3.Dot(target.transform.forward, playerMesh.transform.forward) < 0.5f;
-                    if (IsFront /*&& (bool)target._behaviorTree.GetVariable("isSubded").GetValue()*/)
+                    if (IsFront && (bool)target._behaviorTree.GetVariable("isSubded").GetValue())
                     {                        
                         AssassinatedPos = target.transform.position + target.transform.forward * assassinationDistanceForward;
                         MovePlayerToPosition(AssassinatedPos);
@@ -143,10 +194,23 @@ namespace Player
                         playerMesh.ViewModel.RequestAssassinatedType(target);
                         
                         animator.SetTrigger(hashAssassinate);
+                        EnableLockOn(target);
                         return;
                     }
                     else if(!IsFront)
                     {
+                        if (target.Type == MonsterType.Boss)
+                        {
+                            if (!(bool)target._behaviorTree.GetVariable("isSubded").GetValue())
+                            {
+                                characterRotate(target.transform.position);
+
+                                //공격
+                                animator.SetTrigger("Attack");
+                                return;
+                            }
+                        }
+
                         AssassinatedPos = target.transform.position - target.transform.forward * assassinationDistanceBack;
                         MovePlayerToPosition(AssassinatedPos);
                         AssassinatedRotation(target.transform.position);
@@ -160,10 +224,33 @@ namespace Player
                         playerMesh.ViewModel.RequestAssassinatedType(target);
 
                         animator.SetTrigger(hashAssassinate);
+                        EnableLockOn(target);
                         return;
                     }
 
-                }               
+                }  
+                
+
+            }
+
+            if(playerSight.ViewModel.LockOnAbleTarget != null)
+            {
+                var ViewMonster = playerSight.ViewModel.LockOnAbleTarget.GetComponent<MonsterView>();
+                if (ViewMonster != null)
+                {
+                    characterRotate(ViewMonster.transform.position);
+                }
+            }           
+
+            //공격
+            animator.SetTrigger(hashAttack);
+        }
+
+        private void EnableLockOn(MonsterView monster)
+        {
+            if(playerMesh.ViewModel.LockOnTarget == monster.transform)
+            {
+                EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsLockOn, false);
             }
         }
 

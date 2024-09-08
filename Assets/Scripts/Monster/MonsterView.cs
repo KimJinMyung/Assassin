@@ -43,6 +43,11 @@ public class MonsterView : MonoBehaviour
     [SerializeField]
     WeaponsMesh[] monsterWeapons;
 
+    [SerializeField] 
+    private bool isPatrolAble;
+
+    public bool IsPatrolAble { get { return isPatrolAble; } }
+
     public MonsterViewModel vm { get; private set; }
 
     public MonsterData _monsterData { get; private set; }
@@ -58,7 +63,6 @@ public class MonsterView : MonoBehaviour
     public float MonsterHeight { get; private set; }
 
     #region attack
-    public Monster.AttackBox_Monster attackBox { get; private set; }
     public float CombatMovementTimer { get; private set; }
     public int AttackMethodCount { get; private set; }
     #endregion
@@ -75,6 +79,13 @@ public class MonsterView : MonoBehaviour
         animator = GetComponent<Animator>();
         Collider = GetComponent<CapsuleCollider>();
         _behaviorTree = GetComponent<BehaviorTree>();
+
+        EventManager<MonsterEvent>.Binding<bool, int>(true, MonsterEvent.IsDead, IsDead);
+    }
+
+    private void OnDestroy()
+    {
+        EventManager<MonsterEvent>.Binding<bool, int>(false, MonsterEvent.IsDead, IsDead);
     }
 
     private void OnEnable()
@@ -102,7 +113,8 @@ public class MonsterView : MonoBehaviour
         }
 
         SetMonsterInfo(_type);
-        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.SpawnMonster, this);
+        MonsterManager.Instance.SpawnMonster(this);
+        //EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.SpawnMonster, this);
         //_behaviorTree.SetVariableValue("isDead", false);
         //_behaviorTree.SetVariableValue("isAssassinated", false);
         //_behaviorTree.SetVariableValue("isDisable", false);
@@ -201,8 +213,6 @@ public class MonsterView : MonoBehaviour
             if (AttackMethodName == CurrentWeaponsType)
             {
                 weapon.weaponMesh.SetActive(true);
-                attackBox = weapon.weaponMesh.GetComponentInChildren<Monster.AttackBox_Monster>();
-                attackBox.enabled = false;
                 currentWeaponMesh = weapon.weaponMesh;                
                 continue;
             }
@@ -232,10 +242,10 @@ public class MonsterView : MonoBehaviour
                 animator.SetBool("ComBatMode", vm.TraceTarget!= null);
                 break;
             case nameof(vm.HP):
-                if(vm.HP <= 0 )
-                {
-                    BossMonsterDead();
-                }
+                //if(vm.HP <= 0 )
+                //{
+                //    BossMonsterDead();
+                //}
                 break;
             case nameof(vm.Stamina):
                 if(vm.Stamina <= 0)
@@ -317,12 +327,9 @@ public class MonsterView : MonoBehaviour
         if(vm.LifeCount > 0)
         {
             vm.RequestMonsterLifeCountChanged(vm.LifeCount-1, monsterId);            
-
-            Debug.Log(vm.LifeCount);
         }
         else
         {
-            Debug.Log(vm.LifeCount);
             MonsterDead();
         }
     }
@@ -433,5 +440,10 @@ public class MonsterView : MonoBehaviour
         return isRunning;
     }
 
-    
+    private void IsDead(bool isDead, int instanceID)
+    {
+        if (this.GetInstanceID() != instanceID) return;
+
+        this.isDead = isDead;
+    }
 }

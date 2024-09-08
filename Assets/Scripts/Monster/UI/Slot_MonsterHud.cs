@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Slot_MonsterHud : MonoBehaviour
 {
-    [SerializeField] Text Text_MonsterName;
+    [SerializeField] TMP_Text Text_MonsterName;
     [SerializeField] Image Image_MonsterHP;
     [SerializeField] StaminaBar MonsterStamina;
 
@@ -42,6 +43,7 @@ public class Slot_MonsterHud : MonoBehaviour
 
         MonsterStamina.SetMaxStamina(monster_data.MaxStamina);
         MonsterStamina.SetCurrentStamina(_monster.vm.Stamina);
+        Text_MonsterName.text = monster_data.Name;
     }
     
 
@@ -93,6 +95,7 @@ public class Slot_MonsterHud : MonoBehaviour
         
 
         Image_MonsterHP.fillAmount = (_monster.vm.HP / _monster._monsterData.MaxHP);
+        Debug.Log(_monster.vm.HP);
         MonsterStamina.SetCurrentStamina(_monster.vm.Stamina);
         // _monster.gameObject;
         // Slo 위치 갱신

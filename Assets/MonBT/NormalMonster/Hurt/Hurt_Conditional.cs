@@ -1,14 +1,12 @@
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
-using System.Collections;
-using System.Collections.Generic;
+using EventEnum;
 using UnityEngine;
 
 [TaskCategory("Hurt")]
 public class Hurt_Conditional : Conditional
 {
     private MonsterView monsterView;
-    private Monster.AttackBox_Monster _attackBox;
 
     [SerializeField] SharedBool isHurt;
     [SerializeField] SharedBool isDead;
@@ -17,13 +15,12 @@ public class Hurt_Conditional : Conditional
     public override void OnAwake()
     {
         monsterView = Owner.GetComponent<MonsterView>();
-        _attackBox = monsterView.attackBox;
     }
 
     public override TaskStatus OnUpdate()
     {
         if(!isHurt.Value || isDead.Value || isAssassinated.Value) return TaskStatus.Failure;
-        if(_attackBox != null) _attackBox.enabled = false;
+        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, monsterView.GetInstanceID(), false);
         return TaskStatus.Running;
     }
 }

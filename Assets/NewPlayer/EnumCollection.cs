@@ -4,6 +4,7 @@ namespace EventEnum
     {
         Jump,
         ChangedSpeed,
+        RecoveryHP,
         RecoveryStamina,
         StopRecoveryStamina,
         IsNotMoveAble,
@@ -15,7 +16,11 @@ namespace EventEnum
         Parring,
         IsLockOn,
         ChangedLockOnTarget,
-        StopRotation
+        StopRotation,
+        AttackLockOnEnable,
+        SubdedStateEnd,
+        Resurrection,
+        ChangedBattleMode,
     }
 
     public enum GrapplingEvent
@@ -62,6 +67,7 @@ namespace EventEnum
     {
         IsDefense,
         IsAttacking,
+        HitMonsterReset,
     }
 
     public enum MonsterEvent
@@ -69,5 +75,7 @@ namespace EventEnum
         SpawnMonster,
         ChangedLockOnAbleMonsterList,
         ChangedLockOnIconEnableList,
+        Attack,
+        IsDead,
     }
 }

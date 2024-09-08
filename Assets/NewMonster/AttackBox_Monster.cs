@@ -1,3 +1,4 @@
+using EventEnum;
 using Player;
 using UnityEngine;
 
@@ -7,11 +8,33 @@ namespace Monster
     {
         [SerializeField] LayerMask _attackTargetLayer;
 
+        private BoxCollider boxCollider;
         private MonsterView MonsterView;
 
         private void Awake()
         {
             MonsterView = GetComponentInParent<MonsterView>();
+            boxCollider = GetComponent<BoxCollider>();
+
+            EventManager<MonsterEvent>.Binding<int, bool>(true, MonsterEvent.Attack, SetEnableAttackBox);
+        }
+
+        private void OnDestroy()
+        {
+            EventManager<MonsterEvent>.Binding<int, bool>(false, MonsterEvent.Attack, SetEnableAttackBox);
+        }
+
+        private void Start()
+        {
+            boxCollider.enabled = false;
+        }
+
+        private void SetEnableAttackBox(int instanceID,bool isEnable)
+        {
+            if (instanceID != MonsterView.GetInstanceID()) return;
+            if (isEnable == boxCollider.enabled) return;
+
+            boxCollider.enabled = isEnable;
         }
 
         private void OnTriggerEnter(Collider other)
@@ -28,11 +51,6 @@ namespace Monster
 
             if(Player != null) 
                 Player.Hurt(MonsterView, MonsterView._monsterData.ATK);
-        }
-
-        private void Update()
-        {
-            Debug.Log("∏ÛΩ∫≈Õ Attack Box On");
         }
     }
 }

@@ -1,4 +1,5 @@
 using BehaviorDesigner.Runtime;
+using EventEnum;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +10,6 @@ public class MonsterAttackBox : StateMachineBehaviour
 {
     private MonsterView MonsterView;
     private BehaviorTree tree;
-    private Monster.AttackBox_Monster attackBox;
 
     private Monster_Attack monsterAttack;
 
@@ -28,7 +28,6 @@ public class MonsterAttackBox : StateMachineBehaviour
     {
         MonsterView = animator.GetComponent<MonsterView>();
         tree = MonsterView._behaviorTree;
-        attackBox = MonsterView.attackBox;
 
         monsterAttack = MonsterView.vm.CurrentAttackMethod;
 
@@ -75,15 +74,16 @@ public class MonsterAttackBox : StateMachineBehaviour
         {            
             if (normalizeTime >= AttackBoxOnTime && normalizeTime <= AttackBoxOffTime)
             {
-                attackBox.enabled = true;
+                EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, MonsterView.GetInstanceID(), true);
+                Debug.Log("몬스터의 공격");
             }
-            else attackBox.enabled = false;
+            else EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, MonsterView.GetInstanceID(), false);
         }        
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         if(!(bool)tree.GetVariable("isAttacking").GetValue())
-            attackBox.enabled = false;
+            EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, MonsterView.GetInstanceID(), false);
     }
 }

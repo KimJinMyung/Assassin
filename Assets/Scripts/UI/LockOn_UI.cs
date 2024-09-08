@@ -56,7 +56,6 @@ public class LockOn_UI : MonoBehaviour
                     newIcon = Instantiate(_lockOnIconPrefab, transform);
                 }
                 newIcon.gameObject.SetActive(true);
-                //newIcon.transform.SetParent(_LockOnIconParent);
                 Image _lockOnIcon = newIcon.GetComponent<Image>();
                 monsterIcons.Add(monster, _lockOnIcon);
             }
@@ -105,8 +104,6 @@ public class LockOn_UI : MonoBehaviour
         if (_target.CompareTag("RopePoint")) ScreenPosition = Camera.main.WorldToScreenPoint(_target.position);
         else ScreenPosition = Camera.main.WorldToScreenPoint(_target.position + Vector3.up);
 
-        Debug.Log($"{_target.name} Screen Position: " + ScreenPosition + ", Z: " + ScreenPosition.z);
-
         if (ScreenPosition.z > 0)
         {
             Vector2 canvasPosition;
@@ -118,7 +115,6 @@ public class LockOn_UI : MonoBehaviour
                 out canvasPosition);
 
             icon.rectTransform.anchoredPosition = canvasPosition;
-            Debug.Log($"{_target.name}" + canvasPosition);
             icon.enabled = true;
 
             IconColorChanged(_target.gameObject, icon);

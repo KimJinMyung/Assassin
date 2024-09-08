@@ -86,7 +86,7 @@ public static class PlayerViewModelExtension
     }
     public static void OnResponsePlayerMaxStaminaChangedEvent(this PlayerViewModel vm, float maxStamina)
     {
-        vm.MaxHP = maxStamina;
+        vm.MaxStamina = maxStamina;
     }
     #endregion
     #region LifeCount

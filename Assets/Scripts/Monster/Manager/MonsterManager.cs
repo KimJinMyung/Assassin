@@ -66,7 +66,7 @@ public class MonsterManager : Singleton<MonsterManager>
     }
 
     #region MonsterList
-    private void SpawnMonster(MonsterView monster)
+    public void SpawnMonster(MonsterView monster)
     {
         if (_monsterLists.ContainsKey(monster.monsterId)) return;
 

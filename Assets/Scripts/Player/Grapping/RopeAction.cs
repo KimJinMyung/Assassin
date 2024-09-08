@@ -328,7 +328,7 @@ public class RopeAction : MonoBehaviour
             yield return null;
 
             // 현재까지 이동한 거리 계산
-            currentDistance += grapplingSpeed * Time.deltaTime;
+            currentDistance += grapplingSpeed * Time.fixedDeltaTime;
 
             // 이동 비율 t 계산 (0에서 1 사이)
             float t = Mathf.Clamp01(currentDistance / totalDistance);
