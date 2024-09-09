@@ -33,7 +33,7 @@ public class DecideBossAttackIndex : Action
         animator.ResetTrigger("NextAction");
 
         traceTarget = monsterView.vm.TraceTarget;
-        AttackTypeIndex = Random.Range(0, monsterView.AttackMethodCount);
+        AttackTypeIndex = 2;/*Random.Range(0, monsterView.AttackMethodCount);*/
         switch (AttackTypeIndex)
         {
             case 0:
@@ -48,16 +48,18 @@ public class DecideBossAttackIndex : Action
         }
 
         AttackIndex = Random.Range(0, maxAttackIndex);
+
+        animator.SetInteger(hashAttackTypeIndex, AttackTypeIndex);
+        animator.SetInteger(hashAttackIndex, AttackIndex);
+
+        Debug.Log($"{AttackTypeIndex} : {AttackIndex}");
     }
 
     public override TaskStatus OnUpdate()
     {        
         if(traceTarget == null)
             return TaskStatus.Failure;
-
-        animator.SetInteger(hashAttackTypeIndex, AttackTypeIndex);
-        animator.SetInteger(hashAttackIndex, AttackIndex);
-
-        return TaskStatus.Success;
+        else 
+            return TaskStatus.Success;
     }
 }

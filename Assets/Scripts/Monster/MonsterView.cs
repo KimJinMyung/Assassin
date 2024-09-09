@@ -58,6 +58,7 @@ public class MonsterView : MonoBehaviour
     private NavMeshAgent agent;
     public Animator animator { get; private set; }
     private CapsuleCollider Collider;
+    private Rigidbody rigidbody;
 
     public int monsterId { get; private set; }
     public float MonsterHeight { get; private set; }
@@ -81,6 +82,7 @@ public class MonsterView : MonoBehaviour
         animator = GetComponent<Animator>();
         Collider = GetComponent<CapsuleCollider>();
         _behaviorTree = GetComponent<BehaviorTree>();
+        rigidbody = GetComponent<Rigidbody>();
 
         EventManager<MonsterEvent>.Binding<bool, int>(true, MonsterEvent.IsDead, IsDead);
         EventManager<MonsterEvent>.Binding<string>(true, MonsterEvent.SetAttackType, SetAttackType);
@@ -144,6 +146,12 @@ public class MonsterView : MonoBehaviour
 
     private void SetMonsterInfo(MonsterType type)
     {
+        if(type == MonsterType.Boss)
+        {
+            rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+            rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        }
+
         var monster = DataManager.Instance.GetMonsterData((int)type);
         if (monster == null) return;
 

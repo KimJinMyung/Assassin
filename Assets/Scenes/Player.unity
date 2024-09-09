@@ -974,6 +974,10 @@ PrefabInstance:
       propertyPath: WarpPoint
       value: 
       objectReference: {fileID: 489729083}
+    - target: {fileID: 5785111904608433732, guid: e0d42d4495d9aff4da02c05fe0d21428, type: 3}
+      propertyPath: groundMask.m_Bits
+      value: 22785
+      objectReference: {fileID: 0}
     - target: {fileID: 5993711135239922646, guid: e0d42d4495d9aff4da02c05fe0d21428, type: 3}
       propertyPath: Damping.x
       value: 0
@@ -1250,7 +1254,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2861006097788289532, guid: c782012b199dec4479df8062d5d96ffb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -78.92
+      value: -77.34
       objectReference: {fileID: 0}
     - target: {fileID: 2861006097788289532, guid: c782012b199dec4479df8062d5d96ffb, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1258,7 +1262,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2861006097788289532, guid: c782012b199dec4479df8062d5d96ffb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -65.41
+      value: -67.84
       objectReference: {fileID: 0}
     - target: {fileID: 2861006097788289532, guid: c782012b199dec4479df8062d5d96ffb, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1299,6 +1303,14 @@ PrefabInstance:
     - target: {fileID: 6726298371753139405, guid: c782012b199dec4479df8062d5d96ffb, type: 3}
       propertyPath: _type
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7911951119446149343, guid: c782012b199dec4479df8062d5d96ffb, type: 3}
+      propertyPath: m_Constraints
+      value: 112
+      objectReference: {fileID: 0}
+    - target: {fileID: 7911951119446149343, guid: c782012b199dec4479df8062d5d96ffb, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

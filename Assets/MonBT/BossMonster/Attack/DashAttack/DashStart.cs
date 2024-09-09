@@ -1,4 +1,6 @@
 using BehaviorDesigner.Runtime.Tasks;
+using EventEnum;
+using Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -51,5 +53,22 @@ public class DashStart : Action
         }
 
         return TaskStatus.Running;
+    }
+
+    public override void OnTriggerEnter(Collider other)
+    {
+        base.OnTriggerEnter(other);
+
+        if (other.CompareTag("Player"))
+        {
+            var target = other.GetComponent<PlayerView>();
+            if (target == null) return;
+
+            EventManager<PlayerAction>.TriggerEvent(PlayerAction.ChangedKnockBackPower, 80f);
+
+            target.Hurt(monsterView, monsterView._monsterData.ATK);
+            EventManager<PlayerAction>.TriggerEvent(PlayerAction.KnockBack, Owner.transform.position);
+            Debug.Log("Monster Attack");
+        }
     }
 }
