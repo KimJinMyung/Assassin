@@ -24,6 +24,12 @@ namespace Player
         [SerializeField] private LayerMask groundMask;
         [SerializeField] private float groundDistance = 0.4f;
 
+        [Header("Debug")]
+        [SerializeField] private Transform WarpPoint;
+
+        [Header("KnockBack")]
+        [SerializeField] private int KnockbackPower;
+
         private Rigidbody rb;
         private Animator animator;
 
@@ -79,6 +85,12 @@ namespace Player
             LockOnLookAround();
             LookAround();
             Rotation();
+
+            // µð¹ö±ë ¿ë
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                transform.position = WarpPoint.position;
+            }
         }
 
         private void FixedUpdate()
@@ -99,6 +111,8 @@ namespace Player
             EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.IsLockOn, SetLockOnMode);
             EventManager<PlayerAction>.Binding<Transform>(true, PlayerAction.ChangedLockOnTarget, SetLockOnTarget);
             EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.StopRotation, SetStopRotation);
+            EventManager<PlayerAction>.Binding<Vector3>(true, PlayerAction.KnockBack, KnockBack);
+            EventManager<PlayerAction>.Binding<int>(true, PlayerAction.ChangedKnockBackPower, ChangedKnockBackPower);
         }
 
         private void RemoveEvent()
@@ -111,6 +125,8 @@ namespace Player
             EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.IsLockOn, SetLockOnMode);
             EventManager<PlayerAction>.Binding<Transform>(false, PlayerAction.ChangedLockOnTarget, SetLockOnTarget);
             EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.StopRotation, SetStopRotation);
+            EventManager<PlayerAction>.Binding<Vector3>(false, PlayerAction.KnockBack, KnockBack);
+            EventManager<PlayerAction>.Binding<int>(false, PlayerAction.ChangedKnockBackPower, ChangedKnockBackPower);
         }
 
         private void SetMovementSpeed(float walkSpeed, float runSpeed)
@@ -273,10 +289,11 @@ namespace Player
         {
             bool wasGrounded = isGround;
             isGround = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-
+             
             if (isGround && !wasGrounded && !isJumping)
             {
                 animator.SetTrigger("Land");
+                rb.velocity = Vector3.zero;
             }
         }
 
@@ -311,13 +328,17 @@ namespace Player
             CameraArm.position = Vector3.Lerp(CameraArm.position, targetPos, 5 * Time.deltaTime);
         }        
 
-        IEnumerator PlayerLandGround()
+        private void KnockBack(Vector3 AttackerPosition)
         {
-            isLand = true;
+            Vector3 AttackDir = transform.position - AttackerPosition;
+            EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, true);
+            rb.AddForce(AttackDir * KnockbackPower, ForceMode.Impulse);
+            EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, false);
+        }
 
-            yield return new WaitForSeconds(1.5f);
-
-            isLand = false;
+        private void ChangedKnockBackPower(int power)
+        {
+            this.KnockbackPower = power;
         }
     }
 }

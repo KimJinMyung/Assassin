@@ -21,6 +21,8 @@ namespace EventEnum
         SubdedStateEnd,
         Resurrection,
         ChangedBattleMode,
+        KnockBack,
+        ChangedKnockBackPower,
     }
 
     public enum GrapplingEvent
@@ -73,9 +75,24 @@ namespace EventEnum
     public enum MonsterEvent
     {
         SpawnMonster,
+        SpawnBossMonster,
         ChangedLockOnAbleMonsterList,
         ChangedLockOnIconEnableList,
         Attack,
         IsDead,
+        SetDetectRange,
+        ChangedAttackMethod,
+        SetAttackType,
+    }
+
+    public enum MonsterMVVM
+    {
+        ChangedInstanceID,
+        ChangedHP,
+        ChangedMaxHP,
+        ChangedStamina,
+        changedMaxStamina,
+        changedLifeCount,
+        ChangedATK,
     }
 }

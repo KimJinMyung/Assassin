@@ -2,7 +2,6 @@ using EventEnum;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem.iOS;
 
 public class BossComboAttack : StateMachineBehaviour
 {
@@ -40,7 +39,8 @@ public class BossComboAttack : StateMachineBehaviour
             }
         }
 
-        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, GetInstanceID(), shouldEnableAttackBox);
+        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, monsterView.monsterId, shouldEnableAttackBox);
+        Debug.Log(shouldEnableAttackBox);
     }
 
     private void Rotation()

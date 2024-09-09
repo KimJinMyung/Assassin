@@ -64,7 +64,6 @@ public class MonsterAttackBox : StateMachineBehaviour
             if ((animator.GetInteger(hashAttackIndex) == 0 && normalizeTime >= 0.34f) || (animator.GetInteger(hashAttackIndex) == 1 && normalizeTime >= 0.297f))
             {
                 isAction = true;
-                Debug.Log("수리검 던짐");
                 Quaternion CreateDir = Quaternion.LookRotation(MonsterView.vm.TraceTarget.position + Vector3.up - throwShurikenPoint.position);
                 Shuriken shootShuriken = Instantiate(shuriken, throwShurikenPoint.position, CreateDir).GetComponent<Shuriken>();
                 shootShuriken.SetShooterData(MonsterView);
@@ -74,16 +73,15 @@ public class MonsterAttackBox : StateMachineBehaviour
         {            
             if (normalizeTime >= AttackBoxOnTime && normalizeTime <= AttackBoxOffTime)
             {
-                EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, MonsterView.GetInstanceID(), true);
-                Debug.Log("몬스터의 공격");
+                EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, MonsterView.monsterId, true);
             }
-            else EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, MonsterView.GetInstanceID(), false);
+            else EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, MonsterView.monsterId, false);
         }        
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         if(!(bool)tree.GetVariable("isAttacking").GetValue())
-            EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, MonsterView.GetInstanceID(), false);
+            EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, MonsterView.monsterId, false);
     }
 }

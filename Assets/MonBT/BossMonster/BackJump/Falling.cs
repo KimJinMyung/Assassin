@@ -24,6 +24,8 @@ public class Falling : Action
     private Vector3 startPoint;
     private Vector3 endPoint;
 
+    private bool isLand;
+
     public override void OnAwake()
     {
         animator = Owner.GetComponent<Animator>();
@@ -36,6 +38,9 @@ public class Falling : Action
     {
         startPoint = Owner.transform.position;
         endPoint = DecideEndPoint() + Owner.transform.forward * collider.radius;
+
+        // 디버깅 용
+        Debug.Log(endPoint);
     }
 
     private Vector3 DecideEndPoint()
@@ -53,10 +58,10 @@ public class Falling : Action
             b.z = 0;
             var dir = a+b;
 
-            float length = Mathf.Sqrt(height * height + ZDis * ZDis);
+            float length = /*Mathf.Sqrt(height * height + ZDis * ZDis)*/Mathf.Infinity;
             if (Physics.Raycast(startPoint, dir, out RaycastHit hit, length, groundLayer))
             {
-                if (!hit.transform.CompareTag("aaa"))
+                if (!hit.transform.CompareTag("BossZoneWall"))
                 {
                     return hit.point;
                 }
@@ -81,6 +86,8 @@ public class Falling : Action
     {
         FindGroundYPos();
         PointsChanged();
+
+        isLand = false;
     }
 
     public override void OnEnd()
@@ -115,7 +122,20 @@ public class Falling : Action
         // Y 값에 곡선 값을 추가
         newPosition.y += curve.Value.Evaluate(t);
 
+        if (isLand) return;
+
         // 새로운 위치 설정
         Owner.transform.position = newPosition;
+        //rb.MovePosition(newPosition);
+    }
+
+    public override void OnTriggerEnter(Collider other)
+    {
+        base.OnTriggerEnter(other);
+
+        if (((1 << other.gameObject.layer) & groundLayer) != 0)
+        {
+            isLand = true;
+        }
     }
 }

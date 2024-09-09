@@ -3,6 +3,18 @@ using UnityEngine;
 
 public class MonsterViewModel
 {
+    private int _instanceID;
+    public int InstanceID
+    {
+        get { return _instanceID; }
+        set
+        {
+            if( _instanceID ==  value ) return;
+            _instanceID = value;
+            OnPropertyChanged(nameof( InstanceID));
+        }
+    }
+
     private float _hp;
     public float HP
     {

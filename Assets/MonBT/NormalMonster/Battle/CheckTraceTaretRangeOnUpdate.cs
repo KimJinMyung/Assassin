@@ -1,10 +1,7 @@
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem.iOS;
 
 [TaskCategory("Battle")]
 public class CheckTraceTaretRangeOnUpdate : Action

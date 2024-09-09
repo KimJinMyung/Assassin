@@ -95,7 +95,6 @@ public class Slot_MonsterHud : MonoBehaviour
         
 
         Image_MonsterHP.fillAmount = (_monster.vm.HP / _monster._monsterData.MaxHP);
-        Debug.Log(_monster.vm.HP);
         MonsterStamina.SetCurrentStamina(_monster.vm.Stamina);
         // _monster.gameObject;
         // Slo 위치 갱신

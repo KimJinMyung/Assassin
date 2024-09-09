@@ -126,10 +126,8 @@ public class RopeAction : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(directionToGrapplingPoint);
             float angleDifference = Quaternion.Angle(playerMesh.transform.rotation, targetRotation);
 
-            Debug.Log($"Angle difference: {angleDifference}");
-
             // 각도 차이가 1도 이하가 되면 회전 종료
-            if (angleDifference < 1f)
+            if (angleDifference < 10f)
             {
                 break;
             }

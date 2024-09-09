@@ -30,7 +30,7 @@ public class CheckIsDeadOnUpdate : Action
         monsterView = Owner.GetComponent<MonsterView>();
         _animator = monsterView.GetComponent<Animator>();
 
-        instanceID = monsterView.GetInstanceID();
+        instanceID = monsterView.monsterId;
     }
 
     public override TaskStatus OnUpdate()

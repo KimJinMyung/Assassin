@@ -1,3 +1,4 @@
+using EventEnum;
 using UnityEngine;
 
 public class MonsterDetectZone : MonoBehaviour
@@ -12,11 +13,13 @@ public class MonsterDetectZone : MonoBehaviour
     {
         owner = transform.parent.GetComponent<MonsterView>();
         collider = GetComponent<SphereCollider>();
+
+        EventManager<MonsterEvent>.Binding(true, MonsterEvent.SetDetectRange, DefaultDetectRange);
     }
 
-    private void OnEnable()
+    private void OnDestroy()
     {
-        DefaultDetectRange();
+        EventManager<MonsterEvent>.Binding(false, MonsterEvent.SetDetectRange, DefaultDetectRange);
     }
 
     private void OnTriggerEnter(Collider other)

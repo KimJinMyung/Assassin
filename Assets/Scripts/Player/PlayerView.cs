@@ -10,11 +10,10 @@ namespace Player
         public PlayerData playerData { get; private set; }
         private PlayerViewModel vm;
         public PlayerViewModel ViewModel { get { return vm; } }
-
+        private Rigidbody rb;
         private Animator animator;
 
         private Vector3 attackerPosition;
-        private float knockbackPower;
         [SerializeField] private float knockbackTime;
         private float defaultKnockbackTime;
         [SerializeField] private float SubdedTime;
@@ -179,8 +178,9 @@ namespace Player
             {
                 if (attacker.Type == MonsterType.Boss)
                 {
-                    isKnockback = true;
+                    //isKnockback = true;
                     attackerPosition = attacker.transform.position;
+                    EventManager<PlayerAction>.TriggerEvent(PlayerAction.KnockBack, attackerPosition);
                 }
 
                 if (isParring)
@@ -238,19 +238,19 @@ namespace Player
                 }
             }
 
-            if (knockbackTime <= 0)
-            {
-                isKnockback = false;
-                EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, false);
-                //animator.SetBool("isMoveAble", true);
-                knockbackTime = defaultKnockbackTime;
-            }
+            //if (knockbackTime <= 0)
+            //{
+            //    isKnockback = false;
+            //    EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, false);
+            //    //animator.SetBool("isMoveAble", true);
+            //    knockbackTime = defaultKnockbackTime;
+            //}
 
-            if (isKnockback)
-            {
-                knockbackTime = Mathf.Clamp(knockbackTime - Time.deltaTime, 0, knockbackTime);
-                NockBacking();
-            }
+            //if (isKnockback)
+            //{
+            //    knockbackTime = Mathf.Clamp(knockbackTime - Time.deltaTime, 0, knockbackTime);
+            //    //NockBacking();
+            //}
 
             if (Input.GetKeyDown(KeyCode.K))
             {
@@ -265,27 +265,35 @@ namespace Player
             }
         }
 
-        private void NockBacking()
-        {
-            EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, true);
-            //animator.SetBool("isMoveAble", false);
-            Vector3 AttackDir = transform.position - attackerPosition;
-            KnockBack(AttackDir, knockbackPower);
-        }
+        //private void NockBacking()
+        //{
+        //    EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, true);
+        //    //animator.SetBool("isMoveAble", false);
+        //    Vector3 AttackDir = transform.position - attackerPosition;
+        //    KnockBack(AttackDir, knockbackPower);
+        //}
 
-        private void KnockBack(Vector3 AttackDir, float addPower)
-        {
-            AttackDir.y = 0;
-            AttackDir.Normalize();
+        //private void KnockBack(Vector3 AttackDir, float addPower)
+        //{
+        //    AttackDir.y = 0;
+        //    AttackDir.Normalize();
 
-            //playerController.Move(AttackDir * addPower * Time.deltaTime);            
-        }
+            
+        //    //playerController.Move(AttackDir * addPower * Time.deltaTime);            
+        //}
 
         private void HurtAnimation(MonsterView attaker)
         {
             Vector3 attakerPosition = attaker.transform.position;
-            if (attaker.Type == MonsterType.Boss) knockbackPower = 5;
-            else knockbackPower = 1;
+
+            var knockbackPower = 0;
+            if (attaker.Type == MonsterType.Boss)
+            {
+                if (attaker.attackType == "DashAttack") knockbackPower = 80;
+                else knockbackPower = 40;
+            }
+            else knockbackPower = 10;
+            EventManager<PlayerAction>.TriggerEvent(PlayerAction.ChangedKnockBackPower, knockbackPower);
 
             Vector3 attackDir = transform.position - attakerPosition;
             attackDir.y = 0;

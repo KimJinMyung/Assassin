@@ -31,7 +31,10 @@ namespace Monster
 
         private void SetEnableAttackBox(int instanceID,bool isEnable)
         {
-            if (instanceID != MonsterView.GetInstanceID()) return;
+            var condition1 = instanceID != MonsterView.monsterId;
+            Debug.Log($"{instanceID} : {MonsterView.monsterId}");
+
+            if (condition1) return;
             if (isEnable == boxCollider.enabled) return;
 
             boxCollider.enabled = isEnable;

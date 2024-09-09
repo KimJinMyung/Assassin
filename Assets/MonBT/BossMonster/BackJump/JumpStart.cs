@@ -87,6 +87,6 @@ public class JumpStart : Action
 
     public override void OnCollisionEnter(Collision collision)
     {
-        if(collision.transform.CompareTag("aaa")) isAction = true;
+        if(collision.transform.CompareTag("BossZoneWall")) isAction = true;
     }
 }

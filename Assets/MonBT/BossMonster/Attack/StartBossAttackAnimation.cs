@@ -1,5 +1,6 @@
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
+using EventEnum;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -66,6 +67,8 @@ public class StartBossAttackAnimation : Action
                 agent.stoppingDistance = 8f;
                 break;
         }
+
+        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.SetAttackType, attackType);
     }
 
     public override TaskStatus OnUpdate()

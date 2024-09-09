@@ -62,6 +62,8 @@ public class MonsterView : MonoBehaviour
     public int monsterId { get; private set; }
     public float MonsterHeight { get; private set; }
 
+    public string attackType { get; private set; }
+
     #region attack
     public float CombatMovementTimer { get; private set; }
     public int AttackMethodCount { get; private set; }
@@ -81,11 +83,13 @@ public class MonsterView : MonoBehaviour
         _behaviorTree = GetComponent<BehaviorTree>();
 
         EventManager<MonsterEvent>.Binding<bool, int>(true, MonsterEvent.IsDead, IsDead);
+        EventManager<MonsterEvent>.Binding<string>(true, MonsterEvent.SetAttackType, SetAttackType);
     }
 
     private void OnDestroy()
     {
         EventManager<MonsterEvent>.Binding<bool, int>(false, MonsterEvent.IsDead, IsDead);
+        EventManager<MonsterEvent>.Binding<string>(false, MonsterEvent.SetAttackType, SetAttackType);
     }
 
     private void OnEnable()
@@ -97,14 +101,13 @@ public class MonsterView : MonoBehaviour
 
         gameObject.layer = LayerMask.NameToLayer("Monster");
 
-        Collider.enabled = true;
-
-        
+        Collider.enabled = true;        
 
         if (vm == null)
         {
             vm = new MonsterViewModel();
             vm.PropertyChanged += OnPropertyChanged;
+            vm.RegisterMonsterInstanceIDChanged(true);
             vm.RegisterMonsterHPChanged(true, monsterId);
             vm.RegisterMonsterStaminaChanged(true, monsterId);
             vm.RegisterMonsterLifeCountChanged(true, monsterId);
@@ -122,9 +125,6 @@ public class MonsterView : MonoBehaviour
         if (animator.layerCount > 1) animator.SetLayerWeight(1, 1);
 
         //MonsterManager.instance.SpawnMonster(this);
-
-        //디버깅 용
-        //vm.TraceTarget = GameObject.FindWithTag("Player").transform;
     }
 
     private void OnDisable()
@@ -136,6 +136,7 @@ public class MonsterView : MonoBehaviour
             vm.RegisterMonsterLifeCountChanged(false, monsterId);
             vm.RegisterMonsterStaminaChanged(false, monsterId);
             vm.RegisterMonsterHPChanged(false, monsterId);
+            vm.RegisterMonsterInstanceIDChanged(false);
             vm.PropertyChanged -= OnPropertyChanged;
             vm = null;
         }
@@ -149,6 +150,7 @@ public class MonsterView : MonoBehaviour
         _monsterData = monster.MonsterDataClone();
 
         //체력과 스테미너 초기 설정
+        vm.RequestMonsterInstanceIDChanged(monsterId);
         vm.RequestMonsterHPChanged(monsterId, _monsterData.HP);
         vm.RequestMonsterStaminaChanged(_monsterData.Stamina, monsterId);
         vm.RequestMonsterLifeCountChanged(_monsterData.Life, monsterId);
@@ -156,6 +158,8 @@ public class MonsterView : MonoBehaviour
         ChangedCharacterMesh(type);
         ChangedMonsterAnimationController();
         UpdateAttackMethod_Data(monster);
+
+        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.SetDetectRange);
     }
 
     private void ChangedCharacterMesh(MonsterType type)
@@ -279,9 +283,6 @@ public class MonsterView : MonoBehaviour
     {
         UpdateAttackMethod();
 
-        //디버깅 용
-        //isSubdued = true;
-
         if (vm.TraceTarget != null)
         {
             CombatMovementTimer += Time.deltaTime;
@@ -314,7 +315,10 @@ public class MonsterView : MonoBehaviour
     {
         Collider.enabled = false;
         agent.speed = 0;
-        agent.ResetPath();
+        if (agent.isActiveAndEnabled && agent.isOnNavMesh)
+        {
+            agent.ResetPath();
+        }
 
         if (animator.layerCount > 1) animator.SetLayerWeight(1, 0);
 
@@ -345,8 +349,6 @@ public class MonsterView : MonoBehaviour
         vm.RequestMonsterStaminaChanged(_monsterData.MaxStamina, monsterId);
 
         animator.SetBool("Dead", false);
-        Debug.Log(vm.HP);
-
     }
 
     public void Parried(PlayerView attacker)
@@ -442,8 +444,13 @@ public class MonsterView : MonoBehaviour
 
     private void IsDead(bool isDead, int instanceID)
     {
-        if (this.GetInstanceID() != instanceID) return;
+        if (this.monsterId != instanceID) return;
 
         this.isDead = isDead;
+    }
+
+    private void SetAttackType(string attack)
+    {
+        this.attackType = attack;
     }
 }
