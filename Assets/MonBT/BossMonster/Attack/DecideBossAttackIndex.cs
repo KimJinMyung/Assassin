@@ -33,7 +33,7 @@ public class DecideBossAttackIndex : Action
         animator.ResetTrigger("NextAction");
 
         traceTarget = monsterView.vm.TraceTarget;
-        AttackTypeIndex = 2;/*Random.Range(0, monsterView.AttackMethodCount);*/
+        AttackTypeIndex = Random.Range(0, monsterView.AttackMethodCount);
         switch (AttackTypeIndex)
         {
             case 0:
@@ -51,8 +51,6 @@ public class DecideBossAttackIndex : Action
 
         animator.SetInteger(hashAttackTypeIndex, AttackTypeIndex);
         animator.SetInteger(hashAttackIndex, AttackIndex);
-
-        Debug.Log($"{AttackTypeIndex} : {AttackIndex}");
     }
 
     public override TaskStatus OnUpdate()
