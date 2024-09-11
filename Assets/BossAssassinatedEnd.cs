@@ -12,8 +12,8 @@ public class BossAssassinatedEnd : StateMachineBehaviour
         monsterView = animator.GetComponent<MonsterView>();
     }
 
-    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        monsterView.Recovery();
-    }
+    //public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+    //    monsterView.Recovery();
+    //}
 }

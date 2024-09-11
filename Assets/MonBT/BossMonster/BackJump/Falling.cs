@@ -37,38 +37,34 @@ public class Falling : Action
     private void PointsChanged()
     {
         startPoint = Owner.transform.position;
-        endPoint = DecideEndPoint() + Owner.transform.forward * collider.radius;
+        endPoint = DecideEndPoint() /*+ Owner.transform.forward * collider.radius*/;
+    }
 
-        // µð¹ö±ë ¿ë
-        Debug.Log(endPoint);
+    private float CheckGroundYPos()
+    {
+        if(Physics.Raycast(startPoint, Vector3.down, out RaycastHit hit, Mathf.Infinity, groundLayer))
+        {
+            return hit.point.y;
+        }
+        
+        return 0f;
     }
 
     private Vector3 DecideEndPoint()
     {
-        float ZDis = -4f;
-
-        while (true)
+        Vector3 endPoint;
+        if(Physics.Raycast(startPoint, -transform.forward, out RaycastHit hit, 4f, LayerMask.NameToLayer("BossMonsterZoneWall")))
         {
-            var point = Owner.transform.position + (Owner.transform.forward * ZDis) + Vector3.up * height;
-            
-            var a = (point - Owner.transform.position).normalized;
-            a.y = 0;
-            var b = (Owner.transform.position - point).normalized;
-            b.x = 0;
-            b.z = 0;
-            var dir = a+b;
-
-            float length = /*Mathf.Sqrt(height * height + ZDis * ZDis)*/Mathf.Infinity;
-            if (Physics.Raycast(startPoint, dir, out RaycastHit hit, length, groundLayer))
-            {
-                if (!hit.transform.CompareTag("BossZoneWall"))
-                {
-                    return hit.point;
-                }
-            }
-
-            ZDis = Mathf.Clamp(ZDis + Time.deltaTime, ZDis, 0);
+            endPoint = hit.point;
         }
+        else
+        {
+            endPoint = startPoint + (-transform.forward * 4f);
+        }
+
+        endPoint.y = CheckGroundYPos();
+
+        return endPoint;
     }
 
 

@@ -2,6 +2,8 @@ using System.ComponentModel;
 using System.Collections;
 using UnityEngine;
 using EventEnum;
+using UnityEngine.InputSystem;
+using UnityEditor.Experimental.GraphView;
 
 namespace Player
 {
@@ -18,6 +20,8 @@ namespace Player
         private float defaultKnockbackTime;
         [SerializeField] private float SubdedTime;
         private float defaultSubdedTime;
+
+        private int KnockBackPower;
 
         public bool isKnockback;
         private bool isDefense;
@@ -180,7 +184,14 @@ namespace Player
                 {
                     //isKnockback = true;
                     attackerPosition = attacker.transform.position;
-                    EventManager<PlayerAction>.TriggerEvent(PlayerAction.KnockBack, attackerPosition);
+
+                    //var knockbackPower = 0;
+                    //if (attacker.attackType == "DashAttack") knockbackPower = 20;
+                    //else knockbackPower = 10;
+
+                    //SetKnockBackPower(knockbackPower);
+
+                    //EventManager<PlayerAction>.TriggerEvent(PlayerAction.KnockBack, attackerPosition);
                 }
 
                 if (isParring)
@@ -199,6 +210,9 @@ namespace Player
                     //방어 성공
                     vm.RequestPlayerStaminaChanged(vm.Stamina - attacker._monsterData.Strength);
                     animator.SetTrigger("Hurt");
+
+                    SetKnockBackPower(5);
+                    EventManager<PlayerAction>.TriggerEvent(PlayerAction.KnockBack, attackerPosition);
                     return;
                 }
             }
@@ -238,20 +252,6 @@ namespace Player
                 }
             }
 
-            //if (knockbackTime <= 0)
-            //{
-            //    isKnockback = false;
-            //    EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, false);
-            //    //animator.SetBool("isMoveAble", true);
-            //    knockbackTime = defaultKnockbackTime;
-            //}
-
-            //if (isKnockback)
-            //{
-            //    knockbackTime = Mathf.Clamp(knockbackTime - Time.deltaTime, 0, knockbackTime);
-            //    //NockBacking();
-            //}
-
             if (Input.GetKeyDown(KeyCode.K))
             {
                 var hp = Mathf.Clamp(vm.HP - 20, 0, vm.MaxHP);
@@ -265,22 +265,11 @@ namespace Player
             }
         }
 
-        //private void NockBacking()
-        //{
-        //    EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, true);
-        //    //animator.SetBool("isMoveAble", false);
-        //    Vector3 AttackDir = transform.position - attackerPosition;
-        //    KnockBack(AttackDir, knockbackPower);
-        //}
-
-        //private void KnockBack(Vector3 AttackDir, float addPower)
-        //{
-        //    AttackDir.y = 0;
-        //    AttackDir.Normalize();
-
-            
-        //    //playerController.Move(AttackDir * addPower * Time.deltaTime);            
-        //}
+        private void SetKnockBackPower(int power)
+        {
+            KnockBackPower = power;
+            EventManager<PlayerAction>.TriggerEvent(PlayerAction.ChangedKnockBackPower, KnockBackPower);
+        }
 
         private void HurtAnimation(MonsterView attaker)
         {
@@ -293,7 +282,8 @@ namespace Player
                 else knockbackPower = 40;
             }
             else knockbackPower = 10;
-            EventManager<PlayerAction>.TriggerEvent(PlayerAction.ChangedKnockBackPower, knockbackPower);
+
+            SetKnockBackPower(knockbackPower);
 
             Vector3 attackDir = transform.position - attakerPosition;
             attackDir.y = 0;
@@ -389,6 +379,11 @@ namespace Player
 
             var lifeCount = vm.LifeCount - 1;
             vm.RequestPlayerLifeCountChanged(lifeCount);
+        }
+
+        public void OnClick_DebugModeAttackDamage(InputAction.CallbackContext context)
+        {
+            vm.RequestPlayerAttackDamageChanged(1000);
         }
     }
 }

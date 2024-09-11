@@ -85,6 +85,11 @@ namespace EventEnum
         SetAttackType,
     }
 
+    public enum MonsterUIEvent
+    {
+        UpdateLifeCount,
+    }
+
     public enum MonsterMVVM
     {
         ChangedInstanceID,

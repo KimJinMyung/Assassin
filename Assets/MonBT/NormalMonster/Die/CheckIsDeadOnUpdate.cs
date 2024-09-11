@@ -33,6 +33,11 @@ public class CheckIsDeadOnUpdate : Action
         instanceID = monsterView.monsterId;
     }
 
+    public override void OnStart()
+    {
+        EventManager<PlayerAction>.TriggerEvent(PlayerAction.AttackLockOnEnable, this);
+    }
+
     public override TaskStatus OnUpdate()
     {
         if (!isDead.Value) return TaskStatus.Failure;

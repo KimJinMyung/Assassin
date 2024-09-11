@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using EventEnum;
 
 public class MonsterUI : MonoBehaviour
 {
@@ -28,6 +29,13 @@ public class MonsterUI : MonoBehaviour
         Stamina_Left = BossMonster_Stamina.StaminaBarLeft;
         Stamina_Right = BossMonster_Stamina.StaminaBarRight;
         MonsterManager.Instance.SetHUD(this);
+
+        AddEvent();
+    }
+
+    private void OnDestroy()
+    {
+        RemoveEvent();
     }
 
     private void OnEnable()
@@ -40,6 +48,16 @@ public class MonsterUI : MonoBehaviour
         _monsterHUDSlotList.ForEach(e => DestroyImmediate(e.gameObject));
         _monsterHUDSlotList.Clear();
     }    
+
+    private void AddEvent()
+    {
+        EventManager<MonsterUIEvent>.Binding<int>(true, MonsterUIEvent.UpdateLifeCount, UpdateLifeCount);
+    }
+
+    private void RemoveEvent()
+    {
+        EventManager<MonsterUIEvent>.Binding<int>(false, MonsterUIEvent.UpdateLifeCount, UpdateLifeCount);
+    }
 
     public void CreateMonsterHUD(MonsterView monster)
     {

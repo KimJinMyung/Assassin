@@ -8,6 +8,7 @@ public class Boss_Spawn : MonoBehaviour
     [SerializeField] private GameObject BossMonster;
 
     [SerializeField] private List<Collider> BossZoneWalls;
+    [SerializeField] private List<GameObject> RopePoint;
 
     private Collider collider;
 
@@ -38,6 +39,11 @@ public class Boss_Spawn : MonoBehaviour
             foreach (var wall in  BossZoneWalls)
             {
                 wall.enabled = true;
+            }
+
+            foreach (var wall in RopePoint)
+            {
+                wall.SetActive(false);
             }
 
             BossMonster.SetActive(true);

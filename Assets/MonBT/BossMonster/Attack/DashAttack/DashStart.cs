@@ -64,10 +64,8 @@ public class DashStart : Action
             var target = other.GetComponent<PlayerView>();
             if (target == null) return;
 
-            EventManager<PlayerAction>.TriggerEvent(PlayerAction.ChangedKnockBackPower, 80f);
-
             target.Hurt(monsterView, monsterView._monsterData.ATK);
-            EventManager<PlayerAction>.TriggerEvent(PlayerAction.KnockBack, Owner.transform.position);
+            //EventManager<PlayerAction>.TriggerEvent(PlayerAction.KnockBack, Owner.transform.position);
             Debug.Log("Monster Attack");
         }
     }

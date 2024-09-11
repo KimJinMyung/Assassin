@@ -206,9 +206,10 @@ public static class PlayerViewModelExtension
     {
         monster._behaviorTree.SetVariableValue("isAssassinated", true);
 
-        if (monster.Type != MonsterType.Boss)
-            monster._behaviorTree.SetVariableValue("isDead", true);
-        else monster.animator.SetTrigger("Assassinated");
+        monster._behaviorTree.SetVariableValue("isDead", true);
+
+        if(monster.Type != MonsterType.Boss)
+            monster.animator.SetTrigger("Assassinated");
         vm.AssassinatedMonsters = monster;
     }
     #endregion

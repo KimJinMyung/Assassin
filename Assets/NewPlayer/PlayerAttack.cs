@@ -1,11 +1,7 @@
 using EventEnum;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEngine.UI.GridLayoutGroup;
 
 namespace Player 
 {
@@ -180,7 +176,9 @@ namespace Player
                 {
                     var IsFront = Vector3.Dot(target.transform.forward, playerMesh.transform.forward) < 0.5f;
                     if (IsFront && (bool)target._behaviorTree.GetVariable("isSubded").GetValue())
-                    {                        
+                    {
+                        EnableLockOn(target);
+
                         AssassinatedPos = target.transform.position + target.transform.forward * assassinationDistanceForward;
                         MovePlayerToPosition(AssassinatedPos);
                         AssassinatedRotation(target.transform.position);
@@ -193,8 +191,7 @@ namespace Player
 
                         playerMesh.ViewModel.RequestAssassinatedType(target);
                         
-                        animator.SetTrigger(hashAssassinate);
-                        EnableLockOn(target);
+                        animator.SetTrigger(hashAssassinate);                        
                         return;
                     }
                     else if(!IsFront)
@@ -211,6 +208,8 @@ namespace Player
                             }
                         }
 
+                        EnableLockOn(target);
+
                         AssassinatedPos = target.transform.position - target.transform.forward * assassinationDistanceBack;
                         MovePlayerToPosition(AssassinatedPos);
                         AssassinatedRotation(target.transform.position);
@@ -224,7 +223,6 @@ namespace Player
                         playerMesh.ViewModel.RequestAssassinatedType(target);
 
                         animator.SetTrigger(hashAssassinate);
-                        EnableLockOn(target);
                         return;
                     }
 
@@ -340,10 +338,11 @@ namespace Player
 
         private void AssassinatedRotation(Vector3 targetPos)
         {
-            EventManager<PlayerAction>.TriggerEvent(PlayerAction.StopRotation, true);
-            Vector3 direction = targetPos - playerMesh.transform.position;
-            direction.y = 0f;
-            playerMesh.transform.rotation = Quaternion.LookRotation(direction.normalized);
+            //EventManager<PlayerAction>.TriggerEvent(PlayerAction.StopRotation, true);
+            //Vector3 direction = targetPos - playerMesh.transform.position;
+            //direction.y = 0f;
+            //playerMesh.transform.rotation = Quaternion.LookRotation(direction.normalized);
+            playerMesh.transform.forward = targetPos;
         }
 
         private void characterRotate(Vector3 targetPos)

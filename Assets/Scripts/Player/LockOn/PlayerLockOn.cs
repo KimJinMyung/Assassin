@@ -87,7 +87,7 @@ public class PlayerLockOn : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (owner.ViewModel.LockOnTarget == null || owner.ViewModel.LockOnTarget.gameObject.layer == LayerMask.NameToLayer("Dead"))
         {
@@ -150,7 +150,7 @@ public class PlayerLockOn : MonoBehaviour
                     viewRange = _viewRange;
                 }
 
-                if (Physics.Raycast(Camera.main.transform.position, dirTarget, out RaycastHit hit, viewRange + cameraDis, _lockOnAbleMask))
+                if (Physics.Raycast(Camera.main.transform.position, dirTarget, out RaycastHit hit, Mathf.Infinity/*viewRange + cameraDis*/, _lockOnAbleMask))
                 {
                     if (hit.collider == collider)
                     {

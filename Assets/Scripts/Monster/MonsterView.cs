@@ -299,11 +299,10 @@ public class MonsterView : MonoBehaviour
             MonsterBattleRotation();
         }
 
-        //µð¹ö±ë¿ë
-        if (Input.GetKeyDown(KeyCode.N))
+        // µð¹ö±ë ¿ë
+        if (Input.GetKeyDown(KeyCode.M))
         {
-            vm.RequestMonsterStaminaChanged(vm.Stamina - 100, monsterId);
-            _behaviorTree.SetVariableValue("isParried", true);
+            vm.RequestMonsterStaminaChanged(0, monsterId);
         }
     }
     
@@ -354,7 +353,7 @@ public class MonsterView : MonoBehaviour
         _behaviorTree.SetVariableValue("isParried", false);
 
         vm.RequestMonsterHPChanged(monsterId, _monsterData.MaxHP);
-        vm.RequestMonsterStaminaChanged(_monsterData.MaxStamina, monsterId);
+        vm.RequestMonsterStaminaChanged(_monsterData.MaxStamina, monsterId);        
 
         animator.SetBool("Dead", false);
     }
