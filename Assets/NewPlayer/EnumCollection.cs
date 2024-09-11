@@ -83,6 +83,8 @@ namespace EventEnum
         SetDetectRange,
         ChangedAttackMethod,
         SetAttackType,
+        ChangedPosition,
+        ChangedRotation,
     }
 
     public enum MonsterUIEvent

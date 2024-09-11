@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEngine;
 using EventEnum;
 using UnityEngine.InputSystem;
-using UnityEditor.Experimental.GraphView;
 
 namespace Player
 {
@@ -211,8 +210,8 @@ namespace Player
                     vm.RequestPlayerStaminaChanged(vm.Stamina - attacker._monsterData.Strength);
                     animator.SetTrigger("Hurt");
 
-                    SetKnockBackPower(5);
-                    EventManager<PlayerAction>.TriggerEvent(PlayerAction.KnockBack, attackerPosition);
+                    //SetKnockBackPower(5);
+                    //EventManager<PlayerAction>.TriggerEvent(PlayerAction.KnockBack, attackerPosition);
                     return;
                 }
             }

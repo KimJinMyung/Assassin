@@ -33,7 +33,7 @@ public class DecideBossAttackIndex : Action
         animator.ResetTrigger("NextAction");
 
         traceTarget = monsterView.vm.TraceTarget;
-        AttackTypeIndex =/* Random.Range(0, monsterView.AttackMethodCount)*/2;
+        AttackTypeIndex = Random.Range(0, monsterView.AttackMethodCount);
         switch (AttackTypeIndex)
         {
             case 0:

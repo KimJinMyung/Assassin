@@ -1,8 +1,5 @@
 using BehaviorDesigner.Runtime.Tasks;
-using EventEnum;
 using Player;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 

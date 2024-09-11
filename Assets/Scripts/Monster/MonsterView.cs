@@ -84,14 +84,28 @@ public class MonsterView : MonoBehaviour
         _behaviorTree = GetComponent<BehaviorTree>();
         rigidbody = GetComponent<Rigidbody>();
 
-        EventManager<MonsterEvent>.Binding<bool, int>(true, MonsterEvent.IsDead, IsDead);
-        EventManager<MonsterEvent>.Binding<string>(true, MonsterEvent.SetAttackType, SetAttackType);
+        AddEvent();
     }
 
     private void OnDestroy()
     {
+        RemoveEvent();
+    }
+
+    private void AddEvent()
+    {
+        EventManager<MonsterEvent>.Binding<bool, int>(true, MonsterEvent.IsDead, IsDead);
+        EventManager<MonsterEvent>.Binding<string>(true, MonsterEvent.SetAttackType, SetAttackType);
+        EventManager<MonsterEvent>.Binding<int, Vector3>(true, MonsterEvent.ChangedPosition, ChangedTransform);
+        EventManager<MonsterEvent>.Binding<int, Vector3>(true, MonsterEvent.ChangedRotation, ChangedRotation);
+    }
+
+    private void RemoveEvent()
+    {
         EventManager<MonsterEvent>.Binding<bool, int>(false, MonsterEvent.IsDead, IsDead);
         EventManager<MonsterEvent>.Binding<string>(false, MonsterEvent.SetAttackType, SetAttackType);
+        EventManager<MonsterEvent>.Binding<int, Vector3>(false, MonsterEvent.ChangedPosition, ChangedTransform);
+        EventManager<MonsterEvent>.Binding<int, Vector3>(false, MonsterEvent.ChangedRotation, ChangedRotation);
     }
 
     private void OnEnable()
@@ -459,5 +473,26 @@ public class MonsterView : MonoBehaviour
     private void SetAttackType(string attack)
     {
         this.attackType = attack;
+    }
+
+    private void ChangedTransform(int monsterID, Vector3 position)
+    {
+        if(this.monsterId != monsterID) return;
+
+        agent.Warp(position);
+    }
+
+    private void ChangedRotation(int monsterID, Vector3 rotation)
+    {
+        if(this.monsterId != monsterID) return;
+
+        transform.rotation = Quaternion.Euler(rotation);
+    }
+
+    // µð¹ö±ë¿ë
+    private void OnDrawGizmos()
+    {
+        Debug.DrawRay(transform.position + Vector3.up, transform.forward * 2f, Color.red);
+        Debug.DrawRay(transform.position + Vector3.up, -transform.forward * 2f, Color.black);
     }
 }

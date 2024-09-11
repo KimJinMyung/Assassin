@@ -181,13 +181,16 @@ namespace Player
 
                         AssassinatedPos = target.transform.position + target.transform.forward * assassinationDistanceForward;
                         MovePlayerToPosition(AssassinatedPos);
-                        AssassinatedRotation(target.transform.position);
+                        AssassinatedRotation(-target.transform.forward);
 
                         animator.SetFloat(hashFront, 0);
                         
                         //몬스터 암살당하는 모션 전방
                         target.animator.SetFloat("Forward", 0);
                         target.vm.RequestTraceTargetChanged(target.monsterId, playerMesh.transform);
+
+                        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.ChangedPosition, target.monsterId, target.transform.position);
+                        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.ChangedRotation, target.monsterId, playerMesh.transform.forward);
 
                         playerMesh.ViewModel.RequestAssassinatedType(target);
                         
@@ -212,13 +215,16 @@ namespace Player
 
                         AssassinatedPos = target.transform.position - target.transform.forward * assassinationDistanceBack;
                         MovePlayerToPosition(AssassinatedPos);
-                        AssassinatedRotation(target.transform.position);
+                        AssassinatedRotation(target.transform.forward);
 
                         animator.SetFloat(hashFront, 1);
 
                         //몬스터 암살당하는 모션 후방
                         target.animator.SetFloat("Forward", 1);
                         target.vm.RequestTraceTargetChanged(target.monsterId, playerMesh.transform);
+
+                        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.ChangedPosition, target.monsterId, target.transform.position);
+                        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.ChangedRotation, target.monsterId, -playerMesh.transform.forward);
 
                         playerMesh.ViewModel.RequestAssassinatedType(target);
 
@@ -333,15 +339,13 @@ namespace Player
 
         private void MovePlayerToPosition(Vector3 targetPosition)
         {
-            rigidbody.MovePosition(targetPosition);
+            //rigidbody.MovePosition(targetPosition);
+            transform.position = targetPosition;
+            playerMesh.transform.forward = transform.forward;
         }
 
         private void AssassinatedRotation(Vector3 targetPos)
         {
-            //EventManager<PlayerAction>.TriggerEvent(PlayerAction.StopRotation, true);
-            //Vector3 direction = targetPos - playerMesh.transform.position;
-            //direction.y = 0f;
-            //playerMesh.transform.rotation = Quaternion.LookRotation(direction.normalized);
             playerMesh.transform.forward = targetPos;
         }
 
