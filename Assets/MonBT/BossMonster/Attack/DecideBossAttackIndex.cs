@@ -1,7 +1,5 @@
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,6 +9,8 @@ public class DecideBossAttackIndex : Action
     private MonsterView monsterView;
     private Animator animator;
     private NavMeshAgent agent;
+
+    [SerializeField] SharedBool DebugMode;
 
     private int AttackTypeIndex;
     private int AttackIndex;
@@ -33,6 +33,9 @@ public class DecideBossAttackIndex : Action
         animator.ResetTrigger("NextAction");
 
         traceTarget = monsterView.vm.TraceTarget;
+
+        if (DebugMode.Value) return;
+       
         AttackTypeIndex = Random.Range(0, monsterView.AttackMethodCount);
         switch (AttackTypeIndex)
         {

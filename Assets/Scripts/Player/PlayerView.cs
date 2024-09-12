@@ -26,7 +26,7 @@ namespace Player
         private bool isDefense;
         private bool isParring;
         private bool isParryAble;
-        private bool isDie;
+        public bool isDie { get; private set; }
         public bool isSubded { get; private set; }
 
         private Coroutine staminaRecoveryCoroutine;
@@ -145,13 +145,13 @@ namespace Player
                     //체력 UI와 연관
                     if(vm.HP <= 0)
                     {
-                        //var lifeCount = vm.LifeCount - 1;
-                        //vm.RequestPlayerLifeCountChanged(lifeCount);
                         animator.SetBool(hashDie, true);
                         animator.SetTrigger(hashDead);
                     }
 
                     isDie = vm.HP <= 0;
+                    EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsDie, isDie);
+                    EventManager<PlayerMVVM>.TriggerEvent(PlayerMVVM.IsDie, isDie);
                     break;
                 case nameof(vm.Stamina):
                     //stamina UI와 연관
@@ -188,9 +188,7 @@ namespace Player
                     //if (attacker.attackType == "DashAttack") knockbackPower = 20;
                     //else knockbackPower = 10;
 
-                    //SetKnockBackPower(knockbackPower);
-
-                    //EventManager<PlayerAction>.TriggerEvent(PlayerAction.KnockBack, attackerPosition);
+                    //SetKnockBackPower(knockbackPower);                    
                 }
 
                 if (isParring)
@@ -251,6 +249,7 @@ namespace Player
                 }
             }
 
+            // 디버깅용
             if (Input.GetKeyDown(KeyCode.K))
             {
                 var hp = Mathf.Clamp(vm.HP - 20, 0, vm.MaxHP);
@@ -262,12 +261,28 @@ namespace Player
                 var stamina = Mathf.Clamp(vm.Stamina - 100, 0, vm.MaxStamina);
                 vm.RequestPlayerStaminaChanged(stamina);
             }
+
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.DebugMode_AttackTypeChanged, 0);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.DebugMode_AttackTypeChanged, 1);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.DebugMode_AttackTypeChanged, 2);
+            }
         }
 
-        private void SetKnockBackPower(int power)
+        private void SetKnockBackPower(int power, Vector3 attackerPosition)
         {
             KnockBackPower = power;
             EventManager<PlayerAction>.TriggerEvent(PlayerAction.ChangedKnockBackPower, KnockBackPower);
+            EventManager<PlayerAction>.TriggerEvent(PlayerAction.KnockBack, attackerPosition);
         }
 
         private void HurtAnimation(MonsterView attaker)
@@ -282,7 +297,7 @@ namespace Player
             }
             else knockbackPower = 10;
 
-            SetKnockBackPower(knockbackPower);
+            SetKnockBackPower(knockbackPower, attakerPosition);
 
             Vector3 attackDir = transform.position - attakerPosition;
             attackDir.y = 0;
@@ -382,7 +397,22 @@ namespace Player
 
         public void OnClick_DebugModeAttackDamage(InputAction.CallbackContext context)
         {
-            vm.RequestPlayerAttackDamageChanged(1000);
+            vm.RequestPlayerAttackDamageChanged(300);
+        }
+
+        private void OnDrawGizmos()
+        {
+            Debug.DrawRay(transform.position + Vector3.up, transform.forward * 2f, Color.white);
+        }
+
+        public void OnClick_DebugMode(InputAction.CallbackContext context)
+        {
+            if (vm.LockOnTarget == null) return;
+
+            var Monster = vm.LockOnTarget.GetComponent<MonsterView>();
+            if(Monster == null) return;
+
+            EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.DebugMode, Monster.monsterId);
         }
     }
 }

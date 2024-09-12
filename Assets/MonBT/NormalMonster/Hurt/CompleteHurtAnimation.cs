@@ -28,6 +28,8 @@ public class CompleteHurtAnimation : Action
     public override void OnStart()
     {
         dir = monsterView.KnockbackDir;
+
+        Debug.Log("Monster Hurt");
     }
 
     public override TaskStatus OnUpdate()

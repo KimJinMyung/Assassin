@@ -1,4 +1,5 @@
 using BehaviorDesigner.Runtime.Tasks;
+using EventEnum;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,5 +39,10 @@ public class DashEnd : Action
         rb.isKinematic = true;
         agent.enabled = true;
         return TaskStatus.Success;
+    }
+
+    public override void OnEnd()
+    {
+        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.DashAttack, monsterView.monsterId, false);
     }
 }

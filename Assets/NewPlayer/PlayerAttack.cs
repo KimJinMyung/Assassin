@@ -19,6 +19,7 @@ namespace Player
         private bool isDefense;
         private bool isParryAble;
         private bool isHealing;
+        private bool isDie;
 
         private Vector3 originPos;
         private Quaternion originRotation;
@@ -61,6 +62,7 @@ namespace Player
             EventManager<PlayerAction>.Binding<MonsterView>(true, PlayerAction.AttackLockOnEnable, EnableLockOn);
             EventManager<CameraEvent>.Binding(true, CameraEvent.PlayerAttackSuccess, ShakeCamera);
             EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.ChangedBattleMode, SetBattleMode);
+            EventManager<PlayerMVVM>.Binding<bool>(true, PlayerMVVM.IsDie, SetIsDie);
         }
 
         private void RemoveEvent()
@@ -70,6 +72,7 @@ namespace Player
             EventManager<PlayerAction>.Binding<MonsterView>(false, PlayerAction.AttackLockOnEnable, EnableLockOn);
             EventManager<CameraEvent>.Binding(true, CameraEvent.PlayerAttackSuccess, ShakeCamera);
             EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.ChangedBattleMode, SetBattleMode);
+            EventManager<PlayerMVVM>.Binding<bool>(false, PlayerMVVM.IsDie, SetIsDie);
         }
 
         private void OnEnable()
@@ -91,8 +94,6 @@ namespace Player
             {
                 StopCoroutine(BattleModeCheck);
                 BattleModeCheck = null;
-
-
             }
 
             if(isBattleMode &&  isHealing)
@@ -109,7 +110,7 @@ namespace Player
 
             while (elapsedTime < delay)
             {
-                if (isBattleMode)
+                if (isBattleMode || isDie)
                 {
                     BattleModeCheck = null;
                     yield break;
@@ -129,6 +130,13 @@ namespace Player
             isHealing = true;
             EventManager<PlayerAction>.TriggerEvent(PlayerAction.RecoveryHP, true);
             EventManager<PlayerAction>.TriggerEvent(PlayerAction.RecoveryStamina);
+        }
+
+        private void SetIsDie(bool isDie)
+        {
+            if (this.isDie == isDie) return;
+
+            this.isDie = isDie;
         }
 
         private void SetAttackAble(bool isAttackAble)
@@ -151,6 +159,7 @@ namespace Player
         {
             if(context.started)
             {
+                if(isDie) return;
                 if (!isAttackAble) return;
 
                 if (!isBattleMode)
@@ -179,9 +188,10 @@ namespace Player
                     {
                         EnableLockOn(target);
 
+                        // 플레이어 위치 및 방향 설정
                         AssassinatedPos = target.transform.position + target.transform.forward * assassinationDistanceForward;
                         MovePlayerToPosition(AssassinatedPos);
-                        AssassinatedRotation(-target.transform.forward);
+                        AssassinatedRotation(target.transform.position);
 
                         animator.SetFloat(hashFront, 0);
                         
@@ -189,8 +199,11 @@ namespace Player
                         target.animator.SetFloat("Forward", 0);
                         target.vm.RequestTraceTargetChanged(target.monsterId, playerMesh.transform);
 
+                        // 몬스터 위치 및 방향 설정
+                        var monsterPos = playerMesh.transform.position + playerMesh.transform.forward * assassinationDistanceForward;
                         EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.ChangedPosition, target.monsterId, target.transform.position);
-                        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.ChangedRotation, target.monsterId, playerMesh.transform.forward);
+                        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.ChangedRotation, target.monsterId, playerMesh.transform.position);
+                        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.SetAssassinated, target.monsterId, true);
 
                         playerMesh.ViewModel.RequestAssassinatedType(target);
                         
@@ -215,7 +228,7 @@ namespace Player
 
                         AssassinatedPos = target.transform.position - target.transform.forward * assassinationDistanceBack;
                         MovePlayerToPosition(AssassinatedPos);
-                        AssassinatedRotation(target.transform.forward);
+                        AssassinatedRotation(target.transform.position);
 
                         animator.SetFloat(hashFront, 1);
 
@@ -223,8 +236,10 @@ namespace Player
                         target.animator.SetFloat("Forward", 1);
                         target.vm.RequestTraceTargetChanged(target.monsterId, playerMesh.transform);
 
-                        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.ChangedPosition, target.monsterId, target.transform.position);
-                        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.ChangedRotation, target.monsterId, -playerMesh.transform.forward);
+                        var monsterPos = playerMesh.transform.position + playerMesh.transform.forward * assassinationDistanceBack;
+                        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.ChangedPosition, target.monsterId, monsterPos);
+                        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.ChangedRotation, target.monsterId, playerMesh.transform.position);
+                        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.SetAssassinated, target.monsterId, true);
 
                         playerMesh.ViewModel.RequestAssassinatedType(target);
 
@@ -254,6 +269,8 @@ namespace Player
         {
             if(playerMesh.ViewModel.LockOnTarget == monster.transform)
             {
+                if(monster.Type == MonsterType.Boss && monster.vm.LifeCount > 0) return;
+
                 EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsLockOn, false);
             }
         }
@@ -290,6 +307,8 @@ namespace Player
 
         public void OnDefense(InputAction.CallbackContext context)
         {
+            if (isDie) return;
+
             isDefense = context.ReadValue<float>() > 0.5f;
 
             if (isDefense && !animator.GetBool(hashDefense))
@@ -346,7 +365,8 @@ namespace Player
 
         private void AssassinatedRotation(Vector3 targetPos)
         {
-            playerMesh.transform.forward = targetPos;
+            Vector3 direction = (targetPos - playerMesh.transform.position).normalized;
+            playerMesh.transform.forward = direction;
         }
 
         private void characterRotate(Vector3 targetPos)

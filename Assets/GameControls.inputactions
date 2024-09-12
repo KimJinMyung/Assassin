@@ -76,6 +76,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "MonsterDebugMode",
+                    "type": "Button",
+                    "id": "b5e864fb-83a4-4424-b76e-4b84b6e86d48",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -208,6 +217,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "ChangedDebugModeAttackDamage",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d72d67a8-3b59-4e51-b6eb-5fa097f15067",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MonsterDebugMode",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

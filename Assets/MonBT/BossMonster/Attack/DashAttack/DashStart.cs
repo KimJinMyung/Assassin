@@ -1,4 +1,5 @@
 using BehaviorDesigner.Runtime.Tasks;
+using EventEnum;
 using Player;
 using UnityEngine;
 using UnityEngine.AI;
@@ -29,6 +30,7 @@ public class DashStart : Action
     public override void OnStart()
     {
         attackIndex = animtor.GetInteger(hashAttackIndex);
+        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.DashAttack, monsterView.monsterId, true);
     }
 
     public override TaskStatus OnUpdate()
@@ -46,24 +48,10 @@ public class DashStart : Action
 
         if (monsterView.IsAnimationRunning($"DashAttack.attack1{attackIndex}"))
         {
+            rb.useGravity = true;
             return TaskStatus.Success;
         }
 
         return TaskStatus.Running;
-    }
-
-    public override void OnTriggerEnter(Collider other)
-    {
-        base.OnTriggerEnter(other);
-
-        if (other.CompareTag("Player"))
-        {
-            var target = other.GetComponent<PlayerView>();
-            if (target == null) return;
-
-            target.Hurt(monsterView, monsterView._monsterData.ATK);
-            //EventManager<PlayerAction>.TriggerEvent(PlayerAction.KnockBack, Owner.transform.position);
-            Debug.Log("Monster Attack");
-        }
     }
 }

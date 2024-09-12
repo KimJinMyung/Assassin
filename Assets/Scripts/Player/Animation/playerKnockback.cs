@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Player;
+using EventEnum;
 
 public class playerKnockback : StateMachineBehaviour
 {
@@ -13,6 +14,7 @@ public class playerKnockback : StateMachineBehaviour
         owner.isKnockback = true;
 
         animator.SetBool("AttackAble", false);
+        EventManager<PlayerAction>.TriggerEvent(PlayerAction.SetAttackAble, false);
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -27,5 +29,6 @@ public class playerKnockback : StateMachineBehaviour
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.SetBool("AttackAble", true);
+        EventManager<PlayerAction>.TriggerEvent(PlayerAction.SetAttackAble, true);
     }
 }

@@ -23,6 +23,7 @@ namespace EventEnum
         ChangedBattleMode,
         KnockBack,
         ChangedKnockBackPower,
+        IsDie,
     }
 
     public enum GrapplingEvent
@@ -43,6 +44,7 @@ namespace EventEnum
         ChangedRotate,
         ChangedLockOnTarget,
         ChangedAssassinatedTarget,
+        IsDie,
     }
 
     public enum PlayerUI
@@ -85,6 +87,10 @@ namespace EventEnum
         SetAttackType,
         ChangedPosition,
         ChangedRotation,
+        SetAssassinated,
+        DashAttack,
+        DebugMode,
+        DebugMode_AttackTypeChanged,
     }
 
     public enum MonsterUIEvent

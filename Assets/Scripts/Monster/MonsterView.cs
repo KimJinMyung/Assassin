@@ -6,7 +6,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using Player;
-using Monster;
 using EventEnum;
 
 public enum MonsterType
@@ -74,7 +73,11 @@ public class MonsterView : MonoBehaviour
     #endregion
 
     public bool isDead {  get; private set; }
-    private bool isHurtAnimationStart;
+    private bool isDashAttacking;
+    private bool isDebugMode;
+
+    private int hashAttackTypeIndex = Animator.StringToHash("AttackTypeIndex");
+    private int hashAttackIndex = Animator.StringToHash("AttackIndex");
 
     private void Awake()
     {
@@ -98,6 +101,10 @@ public class MonsterView : MonoBehaviour
         EventManager<MonsterEvent>.Binding<string>(true, MonsterEvent.SetAttackType, SetAttackType);
         EventManager<MonsterEvent>.Binding<int, Vector3>(true, MonsterEvent.ChangedPosition, ChangedTransform);
         EventManager<MonsterEvent>.Binding<int, Vector3>(true, MonsterEvent.ChangedRotation, ChangedRotation);
+        EventManager<MonsterEvent>.Binding<int, bool>(true, MonsterEvent.SetAssassinated, SetBTAssassinted);
+        EventManager<MonsterEvent>.Binding<int, bool>(true, MonsterEvent.DashAttack, SetIsDashAttack);
+        EventManager<MonsterEvent>.Binding<int>(true, MonsterEvent.DebugMode, SetDebugMode);
+        EventManager<MonsterEvent>.Binding<int>(true, MonsterEvent.DebugMode_AttackTypeChanged, SetAttackTypeIndex);
     }
 
     private void RemoveEvent()
@@ -106,6 +113,10 @@ public class MonsterView : MonoBehaviour
         EventManager<MonsterEvent>.Binding<string>(false, MonsterEvent.SetAttackType, SetAttackType);
         EventManager<MonsterEvent>.Binding<int, Vector3>(false, MonsterEvent.ChangedPosition, ChangedTransform);
         EventManager<MonsterEvent>.Binding<int, Vector3>(false, MonsterEvent.ChangedRotation, ChangedRotation);
+        EventManager<MonsterEvent>.Binding<int, bool>(false, MonsterEvent.SetAssassinated, SetBTAssassinted);
+        EventManager<MonsterEvent>.Binding<int, bool>(false, MonsterEvent.DashAttack, SetIsDashAttack);
+        EventManager<MonsterEvent>.Binding<int>(false, MonsterEvent.DebugMode, SetDebugMode);
+        EventManager<MonsterEvent>.Binding<int>(false, MonsterEvent.DebugMode_AttackTypeChanged, SetAttackTypeIndex);
     }
 
     private void OnEnable()
@@ -303,6 +314,13 @@ public class MonsterView : MonoBehaviour
 
     private void Update()
     {
+        // µð¹ö±ë ¿ë
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            vm.RequestMonsterStaminaChanged(0, monsterId);
+        }
+
+        if (isDead) return;
         UpdateAttackMethod();
 
         if (vm.TraceTarget != null)
@@ -311,12 +329,6 @@ public class MonsterView : MonoBehaviour
 
             if ((bool)_behaviorTree.GetVariable("isAssassinated").GetValue() || (bool)_behaviorTree.GetVariable("isDead").GetValue() || (bool)_behaviorTree.GetVariable("isHurt").GetValue() || (bool)_behaviorTree.GetVariable("isSubded").GetValue()) return;
             MonsterBattleRotation();
-        }
-
-        // µð¹ö±ë ¿ë
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            vm.RequestMonsterStaminaChanged(0, monsterId);
         }
     }
     
@@ -347,20 +359,9 @@ public class MonsterView : MonoBehaviour
         MonsterManager.Instance.DeadMonster_Update(this);
     }
 
-    public void BossMonsterDead()
-    {
-        if(vm.LifeCount > 0)
-        {
-            vm.RequestMonsterLifeCountChanged(vm.LifeCount-1, monsterId);            
-        }
-        else
-        {
-            MonsterDead();
-        }
-    }
-
     public void Recovery()
     {
+        isDead = false;
         _behaviorTree.SetVariableValue("isDead", false);
         _behaviorTree.SetVariableValue("isSubded", false);
         _behaviorTree.SetVariableValue("isAssassinated", false);
@@ -397,11 +398,10 @@ public class MonsterView : MonoBehaviour
         {            
             if (!(bool)_behaviorTree.GetVariable("isAttacking").GetValue() && UnityEngine.Random.Range(0f, 100f) <= _monsterData.DefencePer)
             {
-                Debug.Log("Monster Defense");
-
                 animator.SetTrigger("Defence");
                 animator.ResetTrigger("Attack");
                 animator.ResetTrigger("NextAction");
+
                 vm.RequestMonsterStaminaChanged(vm.Stamina - attacker.playerData.ATK, monsterId);
                 return;
             }
@@ -482,12 +482,71 @@ public class MonsterView : MonoBehaviour
         agent.Warp(position);
     }
 
-    private void ChangedRotation(int monsterID, Vector3 rotation)
+    private void ChangedRotation(int monsterID, Vector3 targetPos)
     {
         if(this.monsterId != monsterID) return;
-
-        transform.rotation = Quaternion.Euler(rotation);
+        Vector3 direction = (targetPos - transform.position).normalized;
+        transform.forward = direction;
     }
+
+    private void SetBTAssassinted(int monsterID, bool isAssassinated)
+    {
+        if(this.monsterId != monsterId || Type != MonsterType.Boss) return;
+
+        _behaviorTree.SetVariableValue("isAssassinated", isAssassinated);
+    }
+
+    private void SetIsDashAttack(int monsterID, bool isDashAttack)
+    {
+        if (this.monsterId != monsterID || this.isDashAttacking == isDashAttack) return;
+
+        this.isDashAttacking = isDashAttack;
+    }
+
+    private void SetDebugMode(int  monsterID)
+    {
+        if (this.monsterId != monsterID) return;
+
+        isDebugMode = !isDebugMode;
+        _behaviorTree.SetVariableValue("DebugMode", this.isDebugMode);
+    }
+
+    private void SetAttackTypeIndex(int AttackTypeIndex)
+    {
+        if (Type != MonsterType.Boss) return;
+        if (!isDebugMode) return;
+
+        var maxAttackIndex = 0;
+        switch (AttackTypeIndex)
+        {
+            case 0:
+                maxAttackIndex = 2;
+                break;
+            case 1:
+                maxAttackIndex = 3;
+                break;
+            case 2:
+                maxAttackIndex = 1;
+                break;
+        }
+
+        var AttackIndex = UnityEngine.Random.Range(0, maxAttackIndex);
+
+        animator.SetInteger(hashAttackTypeIndex, AttackTypeIndex);
+        animator.SetInteger(hashAttackIndex, AttackIndex);
+    }
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if(isDashAttacking && other.CompareTag("Player"))
+    //    {
+    //        var target = other.GetComponent<PlayerView>();
+    //        if (target == null) return;
+
+    //        target.Hurt(this, _monsterData.ATK);
+    //    }
+    //}
+
 
     // µð¹ö±ë¿ë
     private void OnDrawGizmos()

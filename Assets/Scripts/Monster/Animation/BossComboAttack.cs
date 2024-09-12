@@ -40,7 +40,6 @@ public class BossComboAttack : StateMachineBehaviour
         }
 
         EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, monsterView.monsterId, shouldEnableAttackBox);
-        Debug.Log(shouldEnableAttackBox);
     }
 
     private void Rotation()

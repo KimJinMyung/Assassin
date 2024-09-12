@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using BehaviorDesigner.Runtime;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 
 public class MonsterAssassinated : StateMachineBehaviour
 {
@@ -48,10 +44,10 @@ public class MonsterAssassinated : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(RecoveryTimer >= 3f)
-        {
-           animator.SetBool(hashDead, false);
-        }
+        //if(RecoveryTimer >= 3f)
+        //{
+        //   animator.SetBool(hashDead, false);
+        //}
 
         if (isNotDead && stateInfo.normalizedTime >= 1f)
         {

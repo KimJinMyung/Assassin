@@ -19,8 +19,11 @@ public class MonsterSubduedStart : Action
     [SerializeField] SharedBool isAttackAble;
     [SerializeField] SharedBool isAttacking;
 
-    private int hashIncapacitated = Animator.StringToHash("Incapacitated");
-    private int hashIncapacitate = Animator.StringToHash("Incapacitate");
+    private readonly int hashIncapacitated = Animator.StringToHash("Incapacitated");
+    private readonly int hashIncapacitate = Animator.StringToHash("Incapacitate");
+    private readonly int hashAttack = Animator.StringToHash("Attack");
+    private readonly int hashNextAction = Animator.StringToHash("NextAction");
+    private readonly int hashJump = Animator.StringToHash("Jump");
 
     public override void OnAwake()
     {
@@ -36,6 +39,13 @@ public class MonsterSubduedStart : Action
         rb.isKinematic = true;
 
         agent.ResetPath();
+
+        if(monsterView.Type == MonsterType.Boss)
+        {
+            animator.ResetTrigger(hashAttack);
+            animator.ResetTrigger(hashNextAction);
+            animator.ResetTrigger(hashJump);
+        }
 
         EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, monsterView.monsterId, false);
     }

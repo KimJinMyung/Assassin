@@ -77,7 +77,11 @@ public class StartDieAnimation : Action
             return TaskStatus.Success;
         }
         else
+        {
             EventManager<PlayerAction>.TriggerEvent(PlayerAction.AttackLockOnEnable, this);
+            Owner.gameObject.SetActive(false);
+        }
+            
         //if(isDisable.Value) return TaskStatus.Failure;
 
         //var lifeCount = monsterView.vm.LifeCount - 1;

@@ -39,6 +39,7 @@ public class CheckMonsterHPOnUPdate : Action
 
         agent.ResetPath();
         KnockBackAnimation(monsterView.KnockbackDir);
+
         return TaskStatus.Success;
     }
 

@@ -105,7 +105,11 @@ public class MonsterUI : MonoBehaviour
 
     private void Update()
     {
-        if (BossMonster == null) return;
+        if (BossMonster == null)
+        {
+            ViewBossHud(false);
+            return;
+        }
 
         ViewBossHud(isViewBossMonsterHud);
 

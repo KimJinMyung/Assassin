@@ -85,6 +85,6 @@ public class JumpAttackStart : Action
 
     public override void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform.CompareTag("aaa")) isAction = true;
+        if (collision.gameObject.layer == LayerMask.GetMask("BossMonsterZoneWall")) isAction = true;
     }
 }

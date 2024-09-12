@@ -49,6 +49,7 @@ namespace Player
         private bool isAttacking;
         private bool isLand;
         private bool isStopRotation;
+        private bool isDie;
 
         //юс╫ц©К 
         private Transform target;
@@ -82,6 +83,7 @@ namespace Player
 
         private void Update()
         {
+            if (isDie) return;
             LockOnLookAround();
             LookAround();
             Rotation();
@@ -95,6 +97,7 @@ namespace Player
 
         private void FixedUpdate()
         {
+            if (isDie) return;
             CheckIsGrounded();
             Movement();
             PlayerMeshMovementAnimation();
@@ -113,6 +116,7 @@ namespace Player
             EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.StopRotation, SetStopRotation);
             EventManager<PlayerAction>.Binding<Vector3>(true, PlayerAction.KnockBack, KnockBack);
             EventManager<PlayerAction>.Binding<int>(true, PlayerAction.ChangedKnockBackPower, ChangedKnockBackPower);
+            EventManager<PlayerAction>.Binding<bool>(true, PlayerAction.IsDie, SetIsDie);
         }
 
         private void RemoveEvent()
@@ -127,6 +131,7 @@ namespace Player
             EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.StopRotation, SetStopRotation);
             EventManager<PlayerAction>.Binding<Vector3>(false, PlayerAction.KnockBack, KnockBack);
             EventManager<PlayerAction>.Binding<int>(false, PlayerAction.ChangedKnockBackPower, ChangedKnockBackPower);
+            EventManager<PlayerAction>.Binding<bool>(false, PlayerAction.IsDie, SetIsDie);
         }
 
         private void SetMovementSpeed(float walkSpeed, float runSpeed)
@@ -334,11 +339,19 @@ namespace Player
             EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, true);
             rb.AddForce(AttackDir * KnockbackPower, ForceMode.Impulse);
             EventManager<PlayerAction>.TriggerEvent(PlayerAction.IsNotMoveAble, false);
+            EventManager<PlayerAction>.TriggerEvent(PlayerAction.SetAttackAble, true);
         }
 
         private void ChangedKnockBackPower(int power)
         {
-            this.KnockbackPower = power;
+            this.KnockbackPower = power;           
+        }
+
+        private void SetIsDie(bool isDie)
+        {
+            if (isDie == this.isDie) return;
+
+            this.isDie = isDie;
         }
     }
 }
