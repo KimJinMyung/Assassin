@@ -27,8 +27,6 @@ public class MonsterParriedAnimation : Action
     public override void OnStart()
     {
         base.OnStart();
-
-        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, monsterView.monsterId, false);
     }
 
     public override TaskStatus OnUpdate()
@@ -40,11 +38,13 @@ public class MonsterParriedAnimation : Action
             if (animator.layerCount > 1) animator.SetLayerWeight(1, 0);
             isAttacking.Value = false;
             isAttackAble.Value = false;
-            isAction = true;
-            animator.SetTrigger(hashParried);      
+            isAction = true;  
         }
 
-        if (monsterView.IsAnimationRunning("Parried")) return TaskStatus.Success;
+        if (monsterView.IsAnimationRunning("Parried"))
+        {
+            return TaskStatus.Success;
+        }
         return TaskStatus.Running;
     }
 

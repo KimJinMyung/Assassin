@@ -33,8 +33,14 @@ public class DashEnd : Action
     {
         if (monsterView.IsAnimationRunning($"DashAttack.attack1{attackIndex}"))
         {
+            var distance = Vector3.Distance(Owner.transform.position, monsterView.vm.TraceTarget.position);
+            if (distance <= 15f)
+            {
+                rb.velocity = Vector3.zero;
+            }
+
             return TaskStatus.Running;
-        }
+        }        
 
         rb.isKinematic = true;
         agent.enabled = true;

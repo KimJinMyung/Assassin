@@ -1,4 +1,5 @@
 using BehaviorDesigner.Runtime.Tasks;
+using EventEnum;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -46,6 +47,11 @@ public class CompleteBossMonsterAttack : Conditional
         }
 
         agent.stoppingDistance = 1f;
+
+        if(attackType == "JumpAttack")
+        {
+            EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.JumpAttackColliderOn, monsterView.monsterId, true);
+        }
     }
 
     public override TaskStatus OnUpdate()

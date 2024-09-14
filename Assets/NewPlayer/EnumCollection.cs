@@ -24,6 +24,7 @@ namespace EventEnum
         KnockBack,
         ChangedKnockBackPower,
         IsDie,
+        BossBattleStart,
     }
 
     public enum GrapplingEvent
@@ -80,7 +81,8 @@ namespace EventEnum
         SpawnBossMonster,
         ChangedLockOnAbleMonsterList,
         ChangedLockOnIconEnableList,
-        Attack,
+        AttackColliderOn,
+        JumpAttackColliderOn,
         IsDead,
         SetDetectRange,
         ChangedAttackMethod,

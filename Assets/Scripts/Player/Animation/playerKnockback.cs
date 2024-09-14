@@ -13,7 +13,7 @@ public class playerKnockback : StateMachineBehaviour
         owner = animator.GetComponent<PlayerView>(); 
         owner.isKnockback = true;
 
-        animator.SetBool("AttackAble", false);
+        //animator.SetBool("AttackAble", false);
         EventManager<PlayerAction>.TriggerEvent(PlayerAction.SetAttackAble, false);
     }
 
@@ -22,13 +22,13 @@ public class playerKnockback : StateMachineBehaviour
         if (stateInfo.normalizedTime >= knockbackTimer)
         {
             owner.isKnockback = false;
-            animator.SetBool("isMoveAble", true);
+            //animator.SetBool("isMoveAble", true);
         }
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.SetBool("AttackAble", true);
+        //animator.SetBool("AttackAble", true);
         EventManager<PlayerAction>.TriggerEvent(PlayerAction.SetAttackAble, true);
     }
 }

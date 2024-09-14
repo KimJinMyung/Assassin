@@ -43,9 +43,9 @@ public class MonsterView : MonoBehaviour
     WeaponsMesh[] monsterWeapons;
 
     [SerializeField] 
-    private bool isPatrolAble;
+    private bool isNotPatrolAble;
 
-    public bool IsPatrolAble { get { return isPatrolAble; } }
+    public bool IsNotPatrolAble { get { return isNotPatrolAble; } }
 
     public MonsterViewModel vm { get; private set; }
 
@@ -375,13 +375,17 @@ public class MonsterView : MonoBehaviour
 
     public void Parried(PlayerView attacker)
     {
-        Debug.Log("Parried");
         float addParriedPower;
 
         if (_type != MonsterType.Boss) addParriedPower = attacker.playerData.Strength * 5;
         else addParriedPower = attacker.playerData.Strength * 10;
 
         vm.RequestMonsterStaminaChanged(vm.Stamina - addParriedPower, monsterId);
+        animator.SetTrigger("Parried");
+
+        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.AttackColliderOn, monsterId, false);
+        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.JumpAttackColliderOn, monsterId, false);
+
         _behaviorTree.SetVariableValue("isParried", true);
     }
 

@@ -1,5 +1,6 @@
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
+using EventEnum;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -121,6 +122,21 @@ public class JumpAttackEnd : Action
 
         // 새로운 위치 설정
         Owner.transform.position = newPosition;
+
+        RotationTarget(endPoint);
+    }
+
+    private void RotationTarget(Vector3 Pos)
+    {
+        var dir = (Pos - Owner.transform.position).normalized;
+        dir.y = 0;
+
+        if(dir.magnitude > 0.1f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(dir);
+            Owner.transform.rotation = Quaternion.Slerp(Owner.transform.rotation,
+                targetRotation, Time.deltaTime * 5f);
+        }
     }
 
     public override void OnEnd()

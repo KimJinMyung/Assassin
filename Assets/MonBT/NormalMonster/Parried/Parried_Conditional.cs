@@ -1,5 +1,6 @@
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
+using EventEnum;
 using Monster;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,8 +10,9 @@ using UnityEngine;
 [TaskCategory("Parried")]
 public class Parried_Conditional : Conditional
 {
+    private MonsterView monsterView;
     private Animator animator;
-    private AttackBox_Monster _attackBox;
+    //private AttackBox_Monster _attackBox;
 
     [SerializeField] SharedBool isParried;
     [SerializeField] SharedBool isAssassinated;
@@ -20,8 +22,9 @@ public class Parried_Conditional : Conditional
 
     public override void OnAwake()
     {
+        monsterView = Owner.GetComponent<MonsterView>();
         animator = Owner.GetComponent<Animator>();
-        _attackBox = Owner.GetComponentInChildren<AttackBox_Monster>();
+        //_attackBox = Owner.GetComponentInChildren<AttackBox_Monster>();
     }
 
     public override void OnStart()
@@ -34,7 +37,7 @@ public class Parried_Conditional : Conditional
     {
         if(!isParried.Value || isAssassinated.Value) return TaskStatus.Failure;
 
-        _attackBox.enabled = false;
+        //_attackBox.enabled = false;
         return TaskStatus.Running;
     }
 }

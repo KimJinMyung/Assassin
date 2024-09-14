@@ -293,12 +293,12 @@
     <Compile Include="Assets\Scripts\Monster\UI\Slot_MonsterHud.cs" />
     <Compile Include="Assets\Scripts\Data\Player\PlayerDataMappingExtension.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Quaternion\RotateTowards.cs" />
+    <Compile Include="Assets\MonBT\BossMonster\Die\New\CheckHP.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\PlayerPrefs\GetInt.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Vector2\GetUpVector.cs" />
     <Compile Include="Assets\MonBT\BossMonster\Attack\BossAttack_Conditional.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animator\CrossFade.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Transform\GetLocalRotation.cs" />
-    <Compile Include="Assets\MonBT\BossMonster\Die\New\CheckHP.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Animator\GetLayerWeight.cs" />
     <Compile Include="Assets\MonBT\NormalMonster\Idle\ChangedPatrolDelayTime.cs" />
     <Compile Include="Assets\Scripts\Player\LockOn\LockOnModelExtension.cs" />
@@ -568,6 +568,7 @@
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\AudioSource\GetMinDistance.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Actions\BehaviorTreeReference.cs" />
     <Compile Include="Assets\NewMonster\Boss_Spawn.cs" />
+    <Compile Include="Assets\MonsterParried.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\SetDrag.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Conditionals\Physics\HasEnteredCollision2D.cs" />
     <Compile Include="Assets\Behavior Designer\Runtime\Tasks\Unity\BoxCollider\SetCenter.cs" />

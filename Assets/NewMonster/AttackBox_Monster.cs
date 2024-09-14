@@ -9,24 +9,30 @@ namespace Monster
         [SerializeField] LayerMask _attackTargetLayer;
 
         private BoxCollider boxCollider;
+        private SphereCollider JumpAttackCollider;
         private MonsterView MonsterView;
 
         private void Awake()
         {
             MonsterView = GetComponentInParent<MonsterView>();
+            JumpAttackCollider = GetComponent<SphereCollider>();
             boxCollider = GetComponent<BoxCollider>();
 
-            EventManager<MonsterEvent>.Binding<int, bool>(true, MonsterEvent.Attack, SetEnableAttackBox);
+            EventManager<MonsterEvent>.Binding<int, bool>(true, MonsterEvent.AttackColliderOn, SetEnableAttackBox);
+            EventManager<MonsterEvent>.Binding<int, bool>(true, MonsterEvent.JumpAttackColliderOn, SetJumpAttackBox);
         }
 
         private void OnDestroy()
         {
-            EventManager<MonsterEvent>.Binding<int, bool>(false, MonsterEvent.Attack, SetEnableAttackBox);
+            EventManager<MonsterEvent>.Binding<int, bool>(false, MonsterEvent.AttackColliderOn, SetEnableAttackBox);
+            EventManager<MonsterEvent>.Binding<int, bool>(false, MonsterEvent.JumpAttackColliderOn, SetJumpAttackBox);
         }
 
         private void Start()
         {
             boxCollider.enabled = false;
+            if(JumpAttackCollider == null) return;
+            JumpAttackCollider.enabled = false;
         }
 
         private void SetEnableAttackBox(int instanceID,bool isEnable)
@@ -53,6 +59,13 @@ namespace Monster
 
             if(Player != null) 
                 Player.Hurt(MonsterView, MonsterView._monsterData.ATK);
+        }
+
+        private void SetJumpAttackBox(int monsterId, bool isEnable)
+        {
+            if (MonsterView.monsterId != monsterId || JumpAttackCollider == null) return;
+
+            JumpAttackCollider.enabled = isEnable;
         }
     }
 }

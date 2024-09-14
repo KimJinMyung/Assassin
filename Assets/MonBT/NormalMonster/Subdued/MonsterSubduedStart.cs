@@ -1,8 +1,6 @@
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using EventEnum;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -47,7 +45,7 @@ public class MonsterSubduedStart : Action
             animator.ResetTrigger(hashJump);
         }
 
-        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, monsterView.monsterId, false);
+        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.AttackColliderOn, monsterView.monsterId, false);
     }
 
     public override TaskStatus OnUpdate()

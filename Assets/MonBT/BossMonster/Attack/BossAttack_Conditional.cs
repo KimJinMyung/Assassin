@@ -10,6 +10,7 @@ public class BossAttack_Conditional : Conditional
 {
     private NavMeshAgent agent;
 
+    [SerializeField] SharedBool isAssassinated;
     [SerializeField] SharedBool isAttackAble;
     [SerializeField] SharedBool isAttacking;
     [SerializeField] SharedBool isDie;
@@ -22,7 +23,7 @@ public class BossAttack_Conditional : Conditional
 
     public override TaskStatus OnUpdate()
     {
-        if(isDie.Value || isParried.Value) return TaskStatus.Failure;
+        if(isDie.Value || isParried.Value || isAssassinated.Value) return TaskStatus.Failure;
 
         if(isAttackAble.Value || isAttacking.Value)
         {

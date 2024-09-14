@@ -24,6 +24,14 @@ public class BossComboAttack : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+
+        if ((bool)monsterView._behaviorTree.GetVariable("isParried").GetValue())
+        {
+            EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.AttackColliderOn, monsterView.monsterId, false);
+            EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.JumpAttackColliderOn, monsterView.monsterId, false);
+            return;
+        }
+
         float normalizedTime = Mathf.Clamp(stateInfo.normalizedTime, 0f, 1f);
 
         if (normalizedTime <= EndTime) Rotation();
@@ -39,7 +47,7 @@ public class BossComboAttack : StateMachineBehaviour
             }
         }
 
-        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, monsterView.monsterId, shouldEnableAttackBox);
+        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.AttackColliderOn, monsterView.monsterId, shouldEnableAttackBox);
     }
 
     private void Rotation()

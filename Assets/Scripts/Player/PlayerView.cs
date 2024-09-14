@@ -196,6 +196,7 @@ namespace Player
                     if (attacker.vm.CurrentAttackMethod.AttackType != "Long")
                     {
                         attacker.Parried(this);
+                        Debug.Log("패링됨");
                         return;
                     }
                     //원거리 공격은 아무런 효과가 없음으로 처리
@@ -292,10 +293,10 @@ namespace Player
             var knockbackPower = 0;
             if (attaker.Type == MonsterType.Boss)
             {
-                if (attaker.attackType == "DashAttack") knockbackPower = 80;
-                else knockbackPower = 40;
+                if (attaker.attackType == "DashAttack") knockbackPower = 15;
+                else knockbackPower = 5;
             }
-            else knockbackPower = 10;
+            else knockbackPower = 1;
 
             SetKnockBackPower(knockbackPower, attakerPosition);
 

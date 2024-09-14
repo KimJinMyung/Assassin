@@ -68,6 +68,7 @@ public class StartBossAttackAnimation : Action
                 break;
         }
 
+        isAction = false;
         EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.SetAttackType, attackType);
     }
 

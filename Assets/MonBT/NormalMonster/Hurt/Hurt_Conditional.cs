@@ -20,7 +20,7 @@ public class Hurt_Conditional : Conditional
     public override TaskStatus OnUpdate()
     {
         if(!isHurt.Value || isDead.Value || isAssassinated.Value) return TaskStatus.Failure;
-        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, monsterView.GetInstanceID(), false);
+        EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.AttackColliderOn, monsterView.GetInstanceID(), false);
         return TaskStatus.Running;
     }
 }

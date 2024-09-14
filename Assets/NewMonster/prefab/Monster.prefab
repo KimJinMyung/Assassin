@@ -2615,7 +2615,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70002d82c55b3bd489aa33f37d4349f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 0
+  _type: 2
   monsterMeshes:
   - _monsterType: 0
     mesh: {fileID: 4497211601907435859}
@@ -2683,7 +2683,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 116
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &8066668707708475530
 CapsuleCollider:
@@ -4055,6 +4055,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 933562949817916045, guid: 634330e70800f944cb3fd8d51964748d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6480751727750531666}
+    - targetCorrespondingSourceObject: {fileID: 933562949817916045, guid: 634330e70800f944cb3fd8d51964748d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7811309360126360190}
   m_SourcePrefab: {fileID: 100100000, guid: 634330e70800f944cb3fd8d51964748d, type: 3}
 --- !u!1 &1427502633935146132 stripped
 GameObject:
@@ -4076,6 +4079,27 @@ MonoBehaviour:
   _attackTargetLayer:
     serializedVersion: 2
     m_Bits: 64
+--- !u!135 &7811309360126360190
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1427502633935146132}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0.14}
 --- !u!4 &1427502633989550108 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 933562949729969669, guid: 634330e70800f944cb3fd8d51964748d, type: 3}

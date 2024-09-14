@@ -22,7 +22,9 @@ public class MonsterAttackBox : StateMachineBehaviour
     [SerializeField] private float AttackBoxOffTime;
 
     private bool isAction;
-    protected readonly int hashAttackIndex = Animator.StringToHash("AttackIndex");
+
+    private readonly int hashAttackTypeIndex = Animator.StringToHash("AttackTypeIndex");
+    private readonly int hashAttackIndex = Animator.StringToHash("AttackIndex");
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -73,15 +75,22 @@ public class MonsterAttackBox : StateMachineBehaviour
         {            
             if (normalizeTime >= AttackBoxOnTime && normalizeTime <= AttackBoxOffTime)
             {
-                EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, MonsterView.monsterId, true);
+                EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.AttackColliderOn, MonsterView.monsterId, true);
             }
-            else EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, MonsterView.monsterId, false);
+            else
+            {
+                if (MonsterView.Type == MonsterType.Boss && animator.GetInteger(hashAttackTypeIndex) == 0)
+                {
+                    EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.JumpAttackColliderOn, MonsterView.monsterId, false);
+                }
+                EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.AttackColliderOn, MonsterView.monsterId, false);
+            }
         }        
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         if(!(bool)tree.GetVariable("isAttacking").GetValue())
-            EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.Attack, MonsterView.monsterId, false);
+            EventManager<MonsterEvent>.TriggerEvent(MonsterEvent.AttackColliderOn, MonsterView.monsterId, false);
     }
 }

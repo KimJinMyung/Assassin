@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class PlayerDefenseHit : StateMachineBehaviour
 {
-    private int hashParrAble = Animator.StringToHash("ParryAble");
-    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        animator.SetBool(hashParrAble, false);
-    }
+    //private int hashParrAble = Animator.StringToHash("ParryAble");
+    //public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+    //    animator.SetBool(hashParrAble, false);
+    //}
 
-    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        animator.SetBool(hashParrAble, true);
-    }
+    //public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+    //    animator.SetBool(hashParrAble, true);
+    //}
 }
